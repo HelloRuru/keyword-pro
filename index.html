@@ -10,144 +10,163 @@
   <script src="https://cdn.tailwindcss.com"></script>
   
   <style>
-    /* --- 0. Design System: Wabi-Sabi Palette --- */
+    /* --- 0. Design System --- */
     :root {
-      /* Backgrounds */
-      --bg-paper: #F9F8F4;      /* 更溫暖的生成色 */
-      --bg-backdrop: #EBEAE4;   /* 襯托紙張的深米灰 */
-      
-      /* Typography */
-      --text-primary: #2C2C2C;  /* 墨色 (Sumi) */
-      --text-secondary: #5F6368;
-      
-      /* Accents */
-      --color-indigo: #374B6D;  /* 藍染 (Aizome) */
-      --color-red: #B93A32;     /* 朱赤 (Shu-aka) */
+      --bg-paper: #F9F8F4;      
+      --bg-backdrop: #EBEAE4;   
+      --text-primary: #2C2C2C;  
+      --color-indigo: #374B6D;  
+      --color-red: #B93A32;     
       --border-line: #E0E0DE;
-      
-      /* Highlighters (Hex for JS compatibility reference) */
-      --hi-sakura: #FEECEC;     /* 櫻 */
-      --hi-nanohana: #FFF9C4;   /* 菜の花 */
-      --hi-mizu: #D1EAED;       /* 水 */
     }
 
-    /* --- 1. Global Reset --- */
+    /* --- 1. Global Layout Fix (Crucial) --- */
     html, body { 
       height: 100%; width: 100%; overflow: hidden; 
       font-family: 'Noto Sans JP', sans-serif; 
       background-color: var(--bg-paper); 
       color: var(--text-primary); 
+      margin: 0; padding: 0;
     }
     .serif-font { font-family: 'Noto Serif JP', serif; }
     
-    /* Layout Container */
-    .app-container { display: flex; flex-direction: column; height: 100vh; }
+    .app-container { 
+      display: flex; flex-direction: column; height: 100vh; width: 100vw;
+    }
 
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--color-indigo); }
 
     /* --- 2. Components --- */
     
-    /* Header */
-    .header-area { flex-shrink: 0; z-index: 50; background: var(--bg-paper); }
-
-    /* Main Workspace */
-    .main-workspace { display: flex; flex: 1; overflow: hidden; position: relative; }
-
-    /* Sidebar (Input) */
-    .sidebar-input { 
-      width: 100%; height: 100%; background: #fff; border-right: 1px solid var(--border-line);
-      display: flex; flex-direction: column; z-index: 20;
+    /* Header (Fixed) */
+    .header-area { 
+      flex-shrink: 0; height: 70px; z-index: 50; background: var(--bg-paper); 
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border-line);
+      padding: 0 24px;
     }
-    @media (min-width: 768px) { .sidebar-input { width: 380px; flex-shrink: 0; } }
 
-    .scroll-block { flex: 1; display: flex; flex-direction: column; padding: 24px; border-bottom: 1px solid var(--border-line); overflow: hidden; }
-    textarea { flex: 1; width: 100%; resize: none; background: transparent; outline: none; border: none; font-size: 14px; line-height: 1.8; color: #4b5563; }
+    /* Main Workspace (Split View) */
+    .main-workspace { 
+      display: flex; flex: 1; overflow: hidden; position: relative; 
+      height: calc(100vh - 70px); /* Explicit height calculation */
+    }
 
-    /* Preview Section (The Desk) */
+    /* Sidebar (Left) */
+    .sidebar-input { 
+      width: 380px; height: 100%; background: #fff; border-right: 1px solid var(--border-line);
+      display: flex; flex-direction: column; flex-shrink: 0; z-index: 20;
+    }
+    
+    /* Responsive Sidebar */
+    @media (max-width: 768px) { .sidebar-input { display: none; } }
+
+    .scroll-block { 
+      padding: 24px; border-bottom: 1px solid var(--border-line); 
+    }
+    .scroll-block.flex-grow { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    
+    textarea { 
+      width: 100%; resize: none; background: transparent; outline: none; border: none; 
+      font-size: 14px; line-height: 1.8; color: #4b5563; flex: 1;
+    }
+
+    /* --- 3. Preview Section (The Logic Core) --- */
     .preview-section { 
-      flex: 1; background-color: var(--bg-backdrop); 
-      display: flex; flex-direction: column; overflow: hidden; position: relative;
-      /* Noise Texture for paper feel */
+      flex: 1; 
+      background-color: var(--bg-backdrop); 
       background-image: radial-gradient(#d1d1d1 1px, transparent 1px);
       background-size: 20px 20px;
+      display: flex; flex-direction: column; overflow: hidden; position: relative;
     }
 
-    /* Toolbar */
+    /* Toolbar (Fixed Top of Preview) */
     .inline-toolbar { 
       background: #fff; border-bottom: 1px solid rgba(0,0,0,0.06); 
-      padding: 10px 24px; display: flex; align-items: center; gap: 12px; 
-      box-shadow: 0 2px 10px rgba(0,0,0,0.02); z-index: 40; flex-shrink: 0;
+      height: 50px; flex-shrink: 0;
+      padding: 0 24px; display: flex; align-items: center; gap: 12px; 
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02); z-index: 40;
     }
 
-    /* Editor Paper (The Core Fix) */
+    /* Scrollable Area (The Infinite Scroll Fix) */
     .scrollable-preview-area { 
-      flex: 1; overflow-y: auto; overflow-x: hidden;
-      padding: 40px 20px 100px 20px; /* Bottom padding for scroll space */
-      display: flex; justify-content: center;
-      scroll-behavior: smooth;
+      flex: 1; 
+      overflow-y: auto; 
+      overflow-x: hidden;
+      display: flex; 
+      flex-direction: column; /* Stack vertically */
+      align-items: center;    /* Center horizontally */
+      padding-top: 40px;
+      padding-bottom: 150px;  /* Huge padding to prevent bottom cutoff */
     }
 
+    /* The Paper (The Infinite Height Fix) */
     .editor-paper { 
-      width: 100%; max-width: 760px; min-height: 1000px;
+      width: 100%; max-width: 800px; 
+      min-height: 1200px;          /* Starts tall */
+      height: auto;                /* Allows infinite growth */
       background: #FFFFFF; 
-      /* Fix 1: Breathing Room */
-      padding: 80px 70px; 
-      /* Fix 2: Layout & Overflow */
-      white-space: pre-wrap;       /* 保留換行 */
-      word-wrap: break-word;       /* 長字斷行 */
-      overflow-wrap: break-word;   /* 現代斷行 */
-      line-height: 2.2;            /* 舒適行高 */
+      padding: 80px 70px;          /* Luxury spacing */
+      
+      /* Typography & Break Rules */
+      white-space: pre-wrap;       /* Respect line breaks */
+      word-wrap: break-word;       /* Break long words */
+      overflow-wrap: break-word;   /* Standard break */
+      line-height: 2.2;            
       font-size: 17px; 
       color: #333;
-      /* Aesthetics */
+      
+      /* Visuals */
       box-shadow: 0 4px 25px rgba(0,0,0,0.05), 0 1px 5px rgba(0,0,0,0.02);
       border-radius: 2px;
-      transition: all 0.3s ease;
-    }
-    
-    @media (max-width: 768px) {
-      .editor-paper { padding: 40px 25px; font-size: 16px; }
-      .sidebar-input { display: none; /* Mobile logic handled by tabs later if needed */ }
     }
 
-    /* UI Elements */
-    .icon-btn { padding: 6px; border-radius: 6px; color: #64748b; transition: 0.2s; }
+    /* Mobile Adapt */
+    @media (max-width: 768px) {
+      .editor-paper { padding: 40px 25px; min-height: 800px; width: 95%; }
+      .scrollable-preview-area { padding-bottom: 100px; }
+    }
+
+    /* --- 4. UI Elements --- */
+    .icon-btn { padding: 6px; border-radius: 6px; color: #64748b; transition: 0.2s; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .icon-btn:hover { background: #f1f5f9; color: var(--color-indigo); }
     
-    .swatch-item { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px #e2e8f0; cursor: pointer; transition: transform 0.2s; }
+    .swatch-item { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px #e2e8f0; cursor: pointer; transition: transform 0.2s; }
     .swatch-item:hover { transform: scale(1.15); z-index: 10; }
 
     .btn-primary { 
-      width: 100%; padding: 12px; border-radius: 8px; 
+      width: 100%; padding: 10px; border-radius: 8px; 
       background: var(--color-red); color: white; font-weight: 700;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
+      display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px;
       box-shadow: 0 2px 5px rgba(185, 58, 50, 0.2); transition: 0.2s;
     }
     .btn-primary:hover { background: #a32f27; }
     
     .status-bar { 
-      background: #fff; border-top: 1px solid var(--border-line); 
-      padding: 10px 24px; font-size: 11px; color: #94a3b8; font-weight: 700; 
-      display: flex; justify-content: space-between; flex-shrink: 0;
+      height: 40px; background: #fff; border-top: 1px solid var(--border-line); 
+      padding: 0 24px; font-size: 11px; color: #94a3b8; font-weight: 700; 
+      display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+      position: absolute; bottom: 0; right: 0; left: 0; /* Float over preview */
+      z-index: 60;
     }
     
-    /* Utility Classes */
     .divider { width: 1px; height: 20px; background: #e2e8f0; margin: 0 8px; }
-    .label-text { font-size: 12px; font-weight: 700; color: var(--color-indigo); text-transform: uppercase; letter-spacing: 0.1em; display: flex; align-items: center; margin-bottom: 10px; }
+    .label-text { font-size: 11px; font-weight: 700; color: var(--color-indigo); text-transform: uppercase; letter-spacing: 0.1em; display: flex; align-items: center; margin-bottom: 8px; }
   </style>
 </head>
 <body class="app-container">
 
-  <header class="header-area border-b border-[var(--border-line)] px-6 py-4 flex justify-between items-center">
+  <header class="header-area">
     <div class="flex items-center gap-4">
-      <div class="w-10 h-10 border-2 border-[var(--color-indigo)] flex items-center justify-center rounded text-[var(--color-indigo)]">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 19 7-7 3 3-7 7-3-3Z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5Z"/></svg>
+      <div class="w-9 h-9 border-2 border-[var(--color-indigo)] flex items-center justify-center rounded text-[var(--color-indigo)]">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 19 7-7 3 3-7 7-3-3Z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5Z"/></svg>
       </div>
       <div>
-        <h1 class="text-xl font-black text-[var(--color-indigo)] tracking-[0.2em] serif-font">蛍光ペン PRO</h1>
+        <h1 class="text-lg font-black text-[var(--color-indigo)] tracking-[0.2em] serif-font">蛍光ペン PRO</h1>
       </div>
     </div>
     <button onclick="copyToDocs()" class="px-5 py-2 border border-[var(--text-primary)] rounded-full text-xs font-bold hover:bg-[var(--text-primary)] hover:text-white transition-all tracking-widest">複製文案</button>
@@ -155,28 +174,28 @@
 
   <main class="main-workspace">
     <div class="sidebar-input">
-      <div class="scroll-block">
+      <div class="scroll-block flex-grow" style="flex: 2;">
         <div class="label-text">
-          <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+          <svg class="w-3.5 h-3.5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
           原文輸入 (Source)
         </div>
         <textarea id="sourceText" oninput="syncPreview()" placeholder="請在此貼上文章草稿，右側將即時預覽..."></textarea>
       </div>
       
-      <div class="scroll-block bg-slate-50">
+      <div class="scroll-block bg-slate-50" style="flex: 1; display: flex; flex-direction: column;">
         <div class="label-text">
-          <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+          <svg class="w-3.5 h-3.5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
           SEO 關鍵字庫
         </div>
-        <textarea id="kwList" oninput="runDensityAnalysis()" class="h-24 mb-3 !text-sm border-b border-dashed border-slate-300" placeholder="每行輸入一個關鍵字..."></textarea>
+        <textarea id="kwList" oninput="runDensityAnalysis()" class="h-16 mb-2 !text-sm border-b border-dashed border-slate-300 bg-transparent shrink-0" placeholder="每行一個關鍵字..."></textarea>
         
-        <div id="densityResults" class="flex-1 overflow-y-auto mb-4 pr-1 space-y-1"></div>
+        <div id="densityResults" class="flex-1 overflow-y-auto mb-3 pr-1 space-y-1 min-h-0"></div>
         
-        <button onclick="runAutoMark()" class="btn-primary mb-2 text-sm">
+        <button onclick="runAutoMark()" class="btn-primary mb-2 shrink-0">
           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
           一鍵標註 (Auto Mark)
         </button>
-        <button onclick="resetAll()" class="text-xs text-slate-400 hover:text-red-500 underline text-center w-full block p-2">清除所有內容</button>
+        <button onclick="resetAll()" class="text-[10px] text-slate-400 hover:text-red-500 underline text-center w-full block shrink-0">清除所有內容</button>
       </div>
     </div>
 
@@ -203,7 +222,7 @@
         </div>
         
         <div class="divider"></div>
-        <button onmousedown="event.preventDefault(); applyRedBold()" class="border border-red-200 text-red-600 text-xs font-bold px-3 py-1 rounded-full hover:bg-red-50 transition-colors">A+重點</button>
+        <button onmousedown="event.preventDefault(); applyRedBold()" class="border border-red-200 text-red-600 text-xs font-bold px-3 py-1 rounded-full hover:bg-red-50 transition-colors">A+ 重點</button>
       </div>
 
       <div class="scrollable-preview-area">
@@ -215,13 +234,13 @@
           <span>字數: <span id="totalCount" class="text-slate-900">0</span></span>
           <span>選取: <span id="selectCount" class="text-slate-900">0</span></span>
         </div>
-        <div class="opacity-40 font-normal">Wabi-Sabi Editor v2.0</div>
+        <div class="opacity-40 font-normal">Wabi-Sabi Editor v3.0</div>
       </footer>
     </div>
   </main>
 
   <script>
-    // --- Core Logic ---
+    // --- Logic Core ---
     const editor = document.getElementById('editor'); 
     const source = document.getElementById('sourceText');
     const totalCount = document.getElementById('totalCount'); 
@@ -229,24 +248,19 @@
     const kwListArea = document.getElementById('kwList'); 
     const densityResults = document.getElementById('densityResults');
 
-    // 1. Basic Command Wrapper
     function cmd(command, value = null) {
       editor.focus();
       document.execCommand(command, false, value);
-      updateCounts(); // update stats after action
+      updateCounts(); 
     }
 
-    // 2. Fixed Color Applicator (Solves the bug)
-    // 直接傳入 Hex Code，不再讓 document.execCommand 去猜 CSS 變數
-    function applyColor(hex) {
-      cmd('foreColor', hex);
-    }
-
+    // Fix: Explicit Hex Codes for Colors
+    function applyColor(hex) { cmd('foreColor', hex); }
+    
+    // Fix: Highlight Compatibility
     function applyHilite(hex) {
-      // Chrome/Safari use 'hiliteColor', IE uses 'BackColor' (handled by browser usually, but hiliteColor is safer for modern)
-      // Double ensure command for better compatibility
       if (!document.execCommand('hiliteColor', false, hex)) {
-        document.execCommand('backColor', false, hex); // Fallback
+        document.execCommand('backColor', false, hex); 
       }
       editor.focus();
     }
@@ -257,19 +271,13 @@
       applyColor('#B93A32');
     }
 
-    // 3. Sync Logic (Source -> Preview)
-    // 注意：這是單向同步。如果在 Preview 編輯，再打 Source 會覆蓋。
     function syncPreview() {
-      // 將 Source 的換行符轉為 HTML break，保留段落感
       const raw = source.value;
-      // 簡單的防 XSS 處理 (Production 建議用庫，但單檔工具此法尚可)
-      // 這裡為了讓編輯器能運作，我們直接塞 innerText，瀏覽器會處理基本的 tag
       editor.innerText = raw; 
       updateCounts();
       runDensityAnalysis();
     }
 
-    // 4. Stats & Density Logic
     function updateCounts() {
       totalCount.innerText = editor.innerText.replace(/\s/g, '').length;
     }
@@ -292,54 +300,42 @@
         const count = (content.match(regex) || []).length;
         const density = ((count * kw.trim().length / totalChars) * 100).toFixed(1);
         
-        const div = document.createElement('div');
-        div.className = "flex justify-between items-center text-xs border-b border-gray-100 pb-1 pt-1";
-        
-        // Dynamic Density Color
         let badgeClass = "bg-gray-100 text-gray-600";
         if (density > 0 && density <= 1) badgeClass = "bg-green-100 text-green-700";
         if (density > 1 && density <= 3) badgeClass = "bg-blue-100 text-blue-700";
         if (density > 3) badgeClass = "bg-red-100 text-red-700";
 
+        const div = document.createElement('div');
+        div.className = "flex justify-between items-center text-xs border-b border-gray-100 pb-1 pt-1";
         div.innerHTML = `
-          <span class="text-slate-600 truncate mr-2 w-24" title="${kw}">${kw}</span>
+          <span class="text-slate-600 truncate mr-2 w-20" title="${kw}">${kw}</span>
           <span class="px-2 py-0.5 rounded-full ${badgeClass} font-mono font-bold">${density}%</span>
         `;
         densityResults.appendChild(div);
       });
     }
 
-    // 5. Auto Mark (HTML Injector)
     function runAutoMark() {
       const list = kwListArea.value.split('\n').filter(t => t.trim() !== "");
       if (list.length === 0) return;
 
-      let html = editor.innerText; // Get raw text to strip previous formatting
-      // Escape HTML special chars to prevent XSS during replace
+      let html = editor.innerText;
+      // Basic HTML Escape for security
       html = html.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
       list.forEach(kw => {
-        const cleanKw = kw.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escape regex
+        const cleanKw = kw.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); 
         const regex = new RegExp(`(${cleanKw})`, 'gi');
-        // Apply red text + dashed underline
         html = html.replace(regex, `<span style="color:#B93A32; font-weight:bold; text-decoration: underline; text-decoration-style: dashed; text-decoration-color: #B93A32;">$1</span>`);
       });
       
-      // Convert newlines back to breaks for HTML display
-      // Note: editor uses pre-wrap, but innerHTML injection needs care.
-      // We rely on css white-space: pre-wrap, so \n works fine usually inside tags if not stripped.
       editor.innerHTML = html;
       updateCounts();
     }
 
-    // 6. Utils
     function resetAll() {
       if (confirm("確定要清空所有內容嗎？")) {
-        source.value = "";
-        kwListArea.value = "";
-        editor.innerHTML = "";
-        densityResults.innerHTML = "";
-        updateCounts();
+        source.value = ""; kwListArea.value = ""; editor.innerHTML = ""; densityResults.innerHTML = ""; updateCounts();
       }
     }
 
@@ -350,17 +346,16 @@
       
       try {
         await navigator.clipboard.write(data);
-        const originalText = document.querySelector('header button').innerText;
-        document.querySelector('header button').innerText = "✨ 已複製！";
-        setTimeout(() => document.querySelector('header button').innerText = originalText, 2000);
+        const btn = document.querySelector('header button');
+        const originalText = btn.innerText;
+        btn.innerText = "✨ 已複製！";
+        setTimeout(() => btn.innerText = originalText, 2000);
       } catch (err) {
-        alert('複製失敗，請手動複製。');
+        alert('複製失敗。');
       }
     }
 
-    // Init
-    source.value = ""; 
-    editor.focus();
+    source.value = ""; editor.focus();
   </script>
 </body>
 </html>
