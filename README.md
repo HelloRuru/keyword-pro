@@ -1,63 +1,240 @@
-# ⛩️ 蛍光ペン Pro｜文案寫手の數位工具
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>關鍵字螢光筆 Pro - SEO 寫手視覺旗艦版</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --bg-paper: #FBFBF9; /* 紙張色 */
+      --bg-cream: #F3F2EE; /* 奶油底色 */
+      --text-sumi: #2C2C2C; /* 墨色 */
+      --color-indigo: #374B6D; /* 靛藍 */
+      --color-red-accent: #B93A32; /* 朱赤 */
+      --border-line: #E0E0DE; /* 線條色 */
+      /* 文字色票 */
+      --txt-sumi: #2C2C2C; --txt-red: #B93A32; --txt-indigo: #374B6D; --txt-green: #3F6C45;
+      /* 螢光筆色票 */
+      --hi-sakura: #FEF4F4; --hi-nanohana: #FFF799; --hi-wakae: #E0EBDF; --hi-mizu: #BCE2E8; --hi-fuji: #E6E6FA;
+    }
 
-[![Made by Ruru Tsai](https://img.shields.io/badge/Made%20by-Ruru%20Tsai-374B6D?style=flat-square)](https://github.com/HelloRuru)
-[![Year](https://img.shields.io/badge/Year-2025-E0E0DE?style=flat-square)](#)
-[![License](https://img.shields.io/badge/License-Copyright-B93A32?style=flat-square)](#)
+    html, body { 
+      height: 100%; overflow: hidden; 
+      font-family: 'Noto Sans JP', sans-serif; 
+      background-color: var(--bg-paper); color: var(--text-sumi); 
+      letter-spacing: 0.04em;
+    }
 
-> **「文字是有溫度的，而排版是它的衣裳。」** > 這是一款專為 SEO 文案寫手與內容創作者設計的專業排版輔助工具。融合日系文青雜誌的美學線條與極致的生產力邏輯，讓繁瑣的關鍵字標註與 SEO 分析變得優雅且直覺。
+    .serif-font { font-family: 'Noto Serif JP', serif; }
+    .app-container { display: flex; flex-direction: column; height: 100vh; }
 
----
+    /* 手機版分頁標籤 */
+    .tab-nav { display: flex; border-bottom: 1px solid var(--border-line); background: var(--bg-paper); }
+    .tab-btn { flex: 1; padding: 14px; font-size: 13px; font-weight: 700; text-align: center; border-bottom: 2px solid transparent; transition: 0.3s; color: #94a3b8; }
+    .tab-btn.active { color: var(--color-indigo); border-bottom-color: var(--color-indigo); background: #fdfdfd; }
 
-## 🖋️ 產品願景 (Vision)
+    .main-workspace { display: flex; flex: 1; overflow: hidden; position: relative; }
 
-在 SEO 寫作過程中，寫手往往需要在「創作內容」與「標註關鍵字」之間反覆切換。**蛍光ペン Pro** 旨在提供一個全凍結、不干擾的純淨編輯環境，透過專業的字數監控與密度預警，確保每一篇文案都能精準達成搜尋引擎優化目標，同時保有印刷品般的視覺品質。
+    /* 左右版塊區隔設計 */
+    .sidebar-input { 
+      width: 100%; height: 100%; background: var(--bg-paper); 
+      display: flex; flex-direction: column; position: absolute;
+      left: 0; top: 0; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 20;
+    }
+    .preview-section { 
+      width: 100%; height: 100%; background-color: var(--bg-cream); 
+      display: flex; flex-direction: column; position: absolute;
+      left: 0; top: 0; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
----
+    @media (min-width: 768px) {
+      .sidebar-input { position: static; width: 380px; border-right: 1px solid var(--border-line); transform: none !important; }
+      .preview-section { position: static; flex: 1; transform: none !important; }
+      .tab-nav { display: none; }
+    }
 
-## ✨ 核心特色 (Key Features)
+    .scroll-block { flex: 1; overflow-y: auto; padding: 28px; border-bottom: 1px solid var(--border-line); }
+    .scroll-block:last-child { border-bottom: none; }
+    
+    .inline-toolbar { 
+      background: var(--bg-paper); border-bottom: 1px solid var(--border-line); 
+      padding: 10px 24px; display: flex; align-items: center; gap: 14px; shrink-0; overflow-x: auto; 
+    }
+    .inline-toolbar::-webkit-scrollbar { display: none; }
 
-### 1. 日系雜誌美學 (Literary Magazine Aesthetic)
-* **和色色彩系統**：選用日本傳統色（如朱赤、墨、櫻色、若苗色）作為文字與螢光筆樣式，減少長時間盯螢幕的視覺疲勞。
-* **線條感 UI**：以極細線條區隔工作區，採用 Noto Serif JP 襯線體，營造靜謐、專注的書寫氛圍。
+    .scrollable-preview-area { flex: 1; overflow-y: auto; padding: 30px md:padding: 60px; display: flex; flex-direction: column; align-items: center; }
+    
+    /* 雜誌感編輯紙張 */
+    .editor-paper { 
+      width: 100%; max-width: 800px; min-height: 1100px; 
+      background: var(--bg-paper); padding: 50px md:padding: 80px; 
+      border: 1px solid var(--border-line); box-shadow: 0 4px 40px rgba(0,0,0,0.02); 
+      outline: none; line-height: 2.3; font-size: 16px md:font-size: 17px; 
+    }
 
-### 2. SEO 生產力套件 (SEO Productivity Suite)
-* **一鍵紅字粗體 (Red Bold)**：專屬快捷鍵 `Ctrl + Shift + R`，瞬間完成 SEO 核心關鍵字標註。
-* **常用字庫管理**：整合 `localStorage` 技術，支援儲存與切換多組專案關鍵字清單（例如：家具專案、SEO核心詞）。
-* **智慧密度預警**：即時計算關鍵字佔比，並依據 SEO 規則給予「理想、偏高、過度」三段式警示，避免關鍵字堆砌。
+    /* SEO 密度元件 */
+    .density-tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+    .density-good { background: #E2ECE1; color: #3F6C45; }
+    .density-over { background: #FFF0F0; color: #B93A32; }
 
-### 3. 極致人性化操作 (Human-Centered Design)
-* **全凍結佈局**：版面完全凍結，各區塊（來源、清單、預覽）具備獨立滾動條，處理千字長文依然穩固。
-* **即時字數統計**：底部狀態列同步顯示「全文總字數」與「滑鼠選取字數」，精確掌控金句長度。
-* **分頁標籤系統**：手機版自動切換為 Tab 模式，確保在行動裝置上也能擁有最大的編輯視野。
+    /* 圖標按鈕視覺優化 */
+    .toolbar-icon-btn { p: 2; border-radius: 6px; transition: 0.2s; color: var(--text-sumi); opacity: 0.7; }
+    .toolbar-icon-btn:hover { background: #f0f0f0; opacity: 1; }
 
-### 4. 完美導出 (One-Click Export)
-* **格式封裝技術**：一鍵複製內容，完美保留文字顏色、背景色與粗體格式，直接貼上 Google Docs 無需二次調整。
+    .btn-red-bold { 
+      color: var(--color-red-accent); border: 1.5px solid var(--color-red-accent); 
+      padding: 5px 16px; border-radius: 4px; font-weight: 900; 
+      display: flex; align-items: center; gap: 8px; transition: 0.2s; font-size: 12px;
+    }
 
----
+    .swatch-item { width: 22px; height: 22px; border-radius: 50%; border: 1px solid #eee; cursor: pointer; position: relative; flex-shrink: 0; }
+    .swatch-item:hover { transform: scale(1.2); }
+    .swatch-item::after { 
+      content: attr(data-name); position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%); 
+      background: #333; color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; 
+      white-space: nowrap; opacity: 0; pointer-events: none; transition: 0.2s; 
+    }
+    .swatch-item:hover::after { opacity: 1; }
 
-## 🛠️ 技術規格 (Technical Specs)
+    .status-bar { width: 100%; background: var(--bg-paper); border-top: 1px solid var(--border-line); padding: 12px 24px; font-size: 10px; color: #94a3b8; display: flex; gap: 24px; font-weight: 700; }
+  </style>
+</head>
+<body class="app-container">
 
-* **架構**：單一 HTML 靜態檔案，無後端依賴，部署極速。
-* **前端框架**：Tailwind CSS (響應式設計)。
-* **圖標系統**：Lucide Icons (向量線條風格)。
-* **資料儲存**：Browser LocalStorage (本地隱私存儲)。
+  <header class="border-b border-[var(--border-line)] px-6 md:px-10 py-5 flex justify-between items-center bg-[var(--bg-paper)] shrink-0">
+    <div class="flex items-center gap-4">
+      <div class="border-[1.5px] border-[var(--color-indigo)] p-1.5 rounded-md">
+        <i data-lucide="pen-nib" class="w-6 h-6 text-[var(--color-indigo)]"></i>
+      </div>
+      <div>
+        <h1 class="text-xl font-black text-[var(--color-indigo)] tracking-widest serif-font">蛍光ペン Pro</h1>
+        <span class="text-[9px] text-slate-500 serif-font block mt-1 tracking-wider opacity-70">| 文案寫手の數位工具</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-6">
+      <button onclick="copyToDocs()" class="border border-[var(--text-sumi)] px-6 py-2 rounded-full text-[10px] font-bold hover:bg-[var(--text-sumi)] hover:text-white transition-all serif-font tracking-wide">複製到 Google Docs</button>
+    </div>
+  </header>
 
----
+  <nav class="tab-nav md:hidden">
+    <button id="tabInput" onclick="switchTab('input')" class="tab-btn active serif-font">編輯清單</button>
+    <button id="tabPreview" onclick="switchTab('preview')" class="tab-btn serif-font">即時預覽</button>
+  </nav>
 
-## 🚀 快速開始 (Quick Start)
+  <main class="main-workspace">
+    <div id="sidePane" class="sidebar-input">
+      <div class="scroll-block h-1/2">
+        <div class="flex items-center justify-between font-black text-[11px] text-[var(--color-indigo)] mb-4 serif-font uppercase tracking-widest">
+          <span><i data-lucide="file-text" class="w-3.5 h-3.5 inline mr-1.5"></i>01. 內容來源</span>
+        </div>
+        <textarea id="sourceText" oninput="syncPreview()" class="w-full h-full bg-transparent outline-none resize-none text-sm leading-relaxed serif-font" placeholder="從 Word 或 Docs 直接貼上內容..."></textarea>
+      </div>
 
-1. **下載檔案**：複製 `index.html` 內容至您的本地目錄。
-2. **直接運行**：使用任何瀏覽器開啟 `index.html` 即可使用。
-3. **雲端部署**：將檔案推送到 GitHub 並連動 Vercel，即可獲得專屬的線上編輯工具網址。
+      <div class="scroll-block h-1/2">
+        <div class="flex items-center justify-between font-black text-[11px] text-[var(--color-indigo)] mb-4 serif-font uppercase tracking-widest">
+          <span><i data-lucide="database" class="w-3.5 h-3.5 inline mr-1.5"></i>02. SEO 字庫</span>
+          <div class="flex gap-2">
+            <button onclick="saveKeywordSet()" class="text-[9px] border px-2 py-0.5 rounded hover:bg-slate-50 transition-colors">儲存</button>
+            <select id="keywordBankSelect" onchange="loadKeywordSet()" class="text-[9px] border rounded bg-white max-w-[90px] outline-none">
+              <option value="">載入字庫</option>
+            </select>
+          </div>
+        </div>
+        <textarea id="kwList" oninput="runDensityAnalysis()" class="w-full h-32 bg-transparent border-b border-[var(--border-line)] outline-none resize-none text-sm mb-4" placeholder="每行一個關鍵字..."></textarea>
+        <div id="densityResults" class="space-y-1.5 overflow-y-auto max-h-32 mb-4"></div>
+        <button onclick="runAutoMark()" class="w-full border border-[var(--color-red-accent)] text-[var(--color-red-accent)] py-3 rounded-lg text-xs font-black hover:bg-[var(--color-red-accent)] hover:text-white transition-all serif-font shadow-sm uppercase tracking-widest">一鍵 SEO 標註</button>
+      </div>
+    </div>
 
----
+    <div id="previewPane" class="preview-section translate-x-full md:translate-x-0">
+      <div class="inline-toolbar">
+        <div class="flex gap-1 shrink-0">
+          <button onclick="cmd('undo')" class="toolbar-icon-btn"><i data-lucide="undo-2" class="w-4 h-4"></i></button>
+          <button onclick="cmd('redo')" class="toolbar-icon-btn"><i data-lucide="redo-2" class="w-4 h-4"></i></button>
+        </div>
+        <div class="w-px h-5 bg-slate-200 shrink-0"></div>
+        
+        <button id="redBoldBtn" onclick="applyRedBold()" class="btn-red-bold serif-font shrink-0" title="Ctrl+Shift+R">
+          <i data-lucide="type" class="w-3.5 h-3.5"></i> A+紅粗
+        </button>
 
-## 📜 版權宣告 (License)
+        <div class="w-px h-5 bg-slate-200 shrink-0"></div>
+        
+        <div class="flex gap-2 shrink-0 items-center">
+          <div class="swatch-item" style="background-color: var(--txt-sumi);" data-name="墨" onclick="cmd('foreColor', 'var(--txt-sumi)')"></div>
+          <div class="swatch-item" style="background-color: var(--txt-red);" data-name="朱赤" onclick="cmd('foreColor', 'var(--txt-red)')"></div>
+          <div class="swatch-item" style="background-color: var(--txt-indigo);" data-name="靛藍" onclick="cmd('foreColor', 'var(--txt-indigo)')"></div>
+        </div>
+        <div class="w-px h-5 bg-slate-200 shrink-0"></div>
+        <div class="flex gap-2 shrink-0 items-center">
+          <div class="swatch-item" style="background-color: var(--hi-sakura);" data-name="櫻色" onclick="applyHighlight('var(--hi-sakura)')"></div>
+          <div class="swatch-item" style="background-color: var(--hi-nanohana);" data-name="菜色" onclick="applyHighlight('var(--hi-nanohana)')"></div>
+          <div class="swatch-item" style="background-color: var(--hi-mizu);" data-name="水色" onclick="applyHighlight('var(--hi-mizu)')"></div>
+          <button onclick="applyHighlight('transparent')" class="toolbar-icon-btn p-1 ml-1" title="清除背景色"><i data-lucide="ban" class="w-3.5 h-3.5 text-slate-300"></i></button>
+        </div>
+      </div>
 
-Made by **Ruru Tsai** | © 2025 Ruru Tsai 版權所有
+      <div class="scrollable-preview-area">
+        <div id="editor" contenteditable="true" class="editor-paper serif-font" placeholder="紙張に筆を走らせるように..."></div>
+      </div>
 
-本工具之介面設計、功能邏輯與視覺風格受版權保護。歡迎個人使用，如需商業授權或二次開發請聯繫原作者。
+      <footer class="status-bar serif-font uppercase">
+        <div class="flex gap-6">
+          <span>Total: <span id="totalCount" class="text-slate-600">0</span></span>
+          <span>Select: <span id="selectCount" class="text-slate-600">0</span></span>
+        </div>
+        <div class="ml-auto opacity-40 text-[9px] hidden md:block">Made by Ruru Tsai | © 2025 Ruru Tsai</div>
+      </footer>
+    </div>
+  </main>
 
----
+  <script>
+    lucide.createIcons();
+    const editor = document.getElementById('editor');
+    const source = document.getElementById('sourceText');
+    const totalCount = document.getElementById('totalCount');
+    const selectCount = document.getElementById('selectCount');
+    const kwListArea = document.getElementById('kwList');
+    const densityResults = document.getElementById('densityResults');
 
-> 「讓每一筆關鍵字，都成為文案中的點睛之筆。」 — *Ruru Tsai*
+    // 分頁切換
+    function switchTab(tab) {
+      const side = document.getElementById('sidePane');
+      const prev = document.getElementById('previewPane');
+      const btnIn = document.getElementById('tabInput');
+      const btnPre = document.getElementById('tabPreview');
+      if(tab === 'input') {
+        side.style.transform = "translateX(0)"; prev.style.transform = "translateX(100%)";
+        btnIn.classList.add('active'); btnPre.classList.remove('active');
+      } else {
+        side.style.transform = "translateX(-100%)"; prev.style.transform = "translateX(0)";
+        btnPre.classList.add('active'); btnIn.classList.remove('active');
+      }
+    }
+
+    // SEO 分析邏輯
+    function runDensityAnalysis() {
+      const keywords = kwListArea.value.split('\n').filter(k => k.trim() !== "");
+      const content = editor.innerText || "";
+      const totalChars = content.replace(/\s/g, '').length;
+      densityResults.innerHTML = "";
+      if (totalChars === 0) return;
+      keywords.forEach(kw => {
+        const regex = new RegExp(kw.trim(), 'gi');
+        const count = (content.match(regex) || []).length;
+        const density = ((count * kw.trim().length / totalChars) * 100).toFixed(1);
+        let statusClass = density > 3.0 ? "density-over" : "density-good";
+        let msg = density > 3.0 ? "過度" : "理想";
+        const div = document.createElement('div');
+        div.className = "flex justify-between items-center text-[10px] border-b border-gray-50 pb-0.5";
+        div.innerHTML = `<span class="serif-font text-gray-500 tracking-tight">${kw}</span><span class="density-tag ${statusClass}">${density}% ${msg}</span>`;
+        densityResults.appendChild(div);
+      });
+    }
+
+    // 快捷鍵偵測
+    window.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'R') { e.preventDefault(); apply
