@@ -17,17 +17,37 @@
       --hi-sakura: #FEF4F4; --hi-nanohana: #FFF799; --hi-wakae: #E0EBDF; --hi-mizu: #BCE2E8; --hi-fuji: #E6E6FA;
     }
 
+    /* 全局佈局控制 */
     html, body { height: 100%; overflow: hidden; font-family: 'Noto Sans JP', sans-serif; background-color: var(--bg-paper); color: var(--text-sumi); letter-spacing: 0.04em; }
     .serif-font { font-family: 'Noto Serif JP', serif; }
-    .app-container { display: flex; flex-direction: column; height: 100vh; }
+    .app-container { display: flex; flex-direction: column; height: 100vh; width: 100vw; }
 
-    .tab-nav { display: flex; border-bottom: 1px solid var(--border-line); background: var(--bg-paper); }
+    /* 自定義極簡滾動條 */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--color-indigo); }
+
+    .tab-nav { display: flex; border-bottom: 1px solid var(--border-line); background: var(--bg-paper); shrink-0; }
     .tab-btn { flex: 1; padding: 16px; font-size: 14px; font-weight: 700; text-align: center; border-bottom: 3px solid transparent; transition: 0.3s; color: #94a3b8; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .tab-btn.active { color: var(--color-indigo); border-bottom-color: var(--color-indigo); background: #fdfdfd; }
 
-    .main-workspace { display: flex; flex: 1; overflow: hidden; position: relative; }
-    .sidebar-input { width: 100%; height: 100%; background: var(--bg-paper); display: flex; flex-direction: column; position: absolute; left: 0; top: 0; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 20; }
-    .preview-section { width: 100%; height: 100%; background-color: var(--bg-cream); display: flex; flex-direction: column; position: absolute; left: 0; top: 0; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    .main-workspace { display: flex; flex: 1; overflow: hidden; position: relative; min-height: 0; }
+    
+    /* 側邊欄佈局優化 */
+    .sidebar-input { 
+      width: 100%; height: 100%; background: var(--bg-paper); 
+      display: flex; flex-direction: column; position: absolute; 
+      left: 0; top: 0; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 20;
+    }
+    
+    /* 預覽區佈局優化 */
+    .preview-section { 
+      width: 100%; height: 100%; background-color: var(--bg-cream); 
+      display: flex; flex-direction: column; position: absolute; 
+      left: 0; top: 0; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden; /* 防止預覽區整體溢出 */
+    }
     
     @media (min-width: 768px) {
       .sidebar-input { position: static; width: 400px; border-right: 1px solid var(--border-line); transform: none !important; }
@@ -35,24 +55,38 @@
       .tab-nav { display: none; }
     }
 
-    .scroll-block { flex: 1; overflow-y: auto; padding: 32px; border-bottom: 1px solid var(--border-line); }
+    .scroll-block { flex: 1; display: flex; flex-direction: column; padding: 24px; border-bottom: 1px solid var(--border-line); overflow: hidden; min-height: 0; }
+    .scroll-block textarea { flex: 1; width: 100%; overflow-y: auto; resize: none; min-height: 0; }
+
     .inline-toolbar { background: var(--bg-paper); border-bottom: 1px solid var(--border-line); padding: 12px 24px; display: flex; align-items: center; gap: 16px; shrink-0; overflow-x: auto; }
-    .inline-toolbar::-webkit-scrollbar { display: none; }
-    .scrollable-preview-area { flex: 1; overflow-y: auto; padding: 40px; display: flex; flex-direction: column; align-items: center; }
-    .editor-paper { width: 100%; max-width: 850px; min-height: 1100px; background: var(--bg-paper); padding: 60px md:padding: 90px; border: 1px solid var(--border-line); box-shadow: 0 4px 40px rgba(0,0,0,0.02); outline: none; line-height: 2.5; font-size: 18px; margin-bottom: 60px; }
+    
+    /* 修正編輯區滾動邏輯 */
+    .scrollable-preview-area { 
+      flex: 1; overflow-y: auto; padding: 40px; 
+      display: flex; flex-direction: column; align-items: center;
+      min-height: 0; 
+    }
+    
+    .editor-paper { 
+      width: 100%; max-width: 850px; min-height: 1100px; 
+      background: var(--bg-paper); padding: 60px md:padding: 90px; 
+      border: 1px solid var(--border-line); box-shadow: 0 4px 40px rgba(0,0,0,0.02); 
+      outline: none; line-height: 2.5; font-size: 18px; margin-bottom: 60px;
+      word-break: break-word; /* 確保長單詞不撐破版面 */
+    }
 
     .icon-svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
     .icon-lg { width: 26px; height: 26px; }
     .icon-frame { display: flex; align-items: center; justify-content: center; border: 1.2px solid var(--color-indigo); width: 28px; height: 28px; border-radius: 4px; margin-right: 12px; color: var(--color-indigo); }
-    .section-header { display: flex; align-items: center; font-weight: 900; font-size: 12px; color: var(--color-indigo); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.15em; }
+    .section-header { display: flex; align-items: center; font-weight: 900; font-size: 12px; color: var(--color-indigo); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.15em; shrink-0; }
 
     .btn-red-bold { color: var(--color-red-accent); border: 2px solid var(--color-red-accent); padding: 8px 20px; border-radius: 9999px; font-weight: 900; display: flex; align-items: center; gap: 8px; transition: 0.2s; font-size: 13px; }
     .btn-red-bold:hover { background: #FFF5F5; transform: scale(1.02); }
 
-    .btn-action-primary { width: 100%; height: 56px; border: 1.5px solid var(--color-red-accent); color: var(--color-red-accent); border-radius: 12px; font-size: 14px; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; margin-top: 8px; }
+    .btn-action-primary { width: 100%; height: 50px; border: 1.5px solid var(--color-red-accent); color: var(--color-red-accent); border-radius: 12px; font-size: 14px; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; margin-top: 8px; shrink-0; }
     .btn-action-primary:hover { background: var(--color-red-accent); color: white; box-shadow: 0 6px 16px rgba(185, 58, 50, 0.2); }
 
-    .btn-action-reset { width: 100%; height: 50px; border: 1px solid var(--border-line); color: #94a3b8; border-radius: 12px; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; margin-top: 14px; }
+    .btn-action-reset { width: 100%; height: 45px; border: 1px solid var(--border-line); color: #94a3b8; border-radius: 12px; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; margin-top: 10px; shrink-0; }
     .btn-action-reset:hover { background: #f8f9fa; color: var(--text-sumi); border-color: var(--text-sumi); }
 
     .swatch-item { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid #eee; cursor: pointer; position: relative; flex-shrink: 0; transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -62,26 +96,25 @@
 
     .toolbar-icon-btn { padding: 12px; border-radius: 8px; transition: 0.2s; color: var(--text-sumi); opacity: 0.7; display: flex; align-items: center; justify-content: center; }
     .toolbar-icon-btn:hover { background: #f0f0f0; opacity: 1; }
-    .density-tag { font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: bold; }
-    .status-bar { width: 100%; background: var(--bg-paper); border-top: 1px solid var(--border-line); padding: 14px 28px; font-size: 11px; color: #94a3b8; display: flex; gap: 28px; font-weight: 700; }
+    .status-bar { width: 100%; background: var(--bg-paper); border-top: 1px solid var(--border-line); padding: 14px 28px; font-size: 11px; color: #94a3b8; display: flex; gap: 28px; font-weight: 700; shrink-0; }
   </style>
 </head>
 <body class="app-container">
 
-  <header class="border-b border-[var(--border-line)] px-6 md:px-10 py-7 flex justify-between items-center bg-[var(--bg-paper)] shrink-0">
+  <header class="border-b border-[var(--border-line)] px-6 md:px-10 py-5 flex justify-between items-center bg-[var(--bg-paper)] shrink-0">
     <div class="flex items-center gap-6">
       <div class="flex items-center justify-center border-[1.8px] border-[var(--color-indigo)] w-12 h-12 rounded-sm">
         <svg class="icon-svg icon-lg" viewBox="0 0 24 24"><path d="m12 19 7-7 3 3-7 7-3-3Z"></path><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5Z"></path><path d="m2 2 5 2.25"></path><path d="m11 4 2 1.5"></path></svg>
       </div>
       <div>
         <h1 class="text-2xl md:text-3xl font-black text-[var(--color-indigo)] tracking-[0.25em] serif-font leading-none">蛍光ペン Pro</h1>
-        <div class="flex items-center gap-3 mt-3">
+        <div class="flex items-center gap-3 mt-2">
           <span class="h-px w-6 bg-[var(--border-line)]"></span>
           <span class="text-[11px] md:text-sm text-slate-500 serif-font tracking-widest uppercase opacity-70">文案寫手の數位工具</span>
         </div>
       </div>
     </div>
-    <button onclick="copyToDocs()" class="border-2 border-[var(--text-sumi)] px-8 py-3.5 rounded-full text-xs md:text-sm font-bold hover:bg-[var(--text-sumi)] hover:text-white transition-all serif-font tracking-widest shadow-sm">
+    <button onclick="copyToDocs()" class="border-2 border-[var(--text-sumi)] px-8 py-3 rounded-full text-xs md:text-sm font-bold hover:bg-[var(--text-sumi)] hover:text-white transition-all serif-font tracking-widest shadow-sm">
       複製到 Google Docs
     </button>
   </header>
@@ -99,15 +132,15 @@
 
   <main class="main-workspace">
     <div id="sidePane" class="sidebar-input">
-      <div class="scroll-block h-1/2">
+      <div class="scroll-block">
         <div class="section-header serif-font">
           <div class="icon-frame"><svg class="icon-svg icon-sm" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg></div>
           <span>01. 內容來源</span>
         </div>
-        <textarea id="sourceText" oninput="syncPreview()" class="w-full h-full bg-transparent outline-none resize-none text-base leading-loose serif-font" placeholder="從 Word 或 Docs 直接貼上內容..."></textarea>
+        <textarea id="sourceText" oninput="syncPreview()" class="bg-transparent outline-none text-base leading-loose serif-font" placeholder="從 Word 或 Docs 直接貼上內容..."></textarea>
       </div>
 
-      <div class="scroll-block h-1/2">
+      <div class="scroll-block">
         <div class="section-header serif-font">
           <div class="icon-frame"><svg class="icon-svg icon-sm" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg></div>
           <span>02. SEO 字庫</span>
@@ -116,8 +149,8 @@
             <select id="keywordBankSelect" onchange="loadKeywordSet()" class="text-[10px] border rounded bg-white max-w-[100px] outline-none"><option value="">載入字庫</option></select>
           </div>
         </div>
-        <textarea id="kwList" oninput="runDensityAnalysis()" class="w-full h-32 bg-transparent border-b border-[var(--border-line)] outline-none resize-none text-sm mb-4" placeholder="每行一個關鍵字..."></textarea>
-        <div id="densityResults" class="space-y-1.5 overflow-y-auto max-h-24 mb-4"></div>
+        <textarea id="kwList" oninput="runDensityAnalysis()" class="bg-transparent border-b border-[var(--border-line)] outline-none text-sm mb-4 h-32 shrink-0" placeholder="每行一個關鍵字..."></textarea>
+        <div id="densityResults" class="space-y-1.5 overflow-y-auto flex-1 mb-4 min-height-0"></div>
         <button onclick="runAutoMark()" class="btn-action-primary serif-font tracking-widest">
             <svg class="icon-svg icon-sm" viewBox="0 0 24 24"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>
             一鍵 SEO 標註
@@ -151,9 +184,11 @@
           <button onclick="applyHighlight('transparent')" class="toolbar-icon-btn p-1 ml-1" title="清除背景色"><svg class="icon-svg icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg></button>
         </div>
       </div>
+      
       <div class="scrollable-preview-area">
         <div id="editor" contenteditable="true" class="editor-paper serif-font" placeholder="紙張に筆を走らせるように..."></div>
       </div>
+      
       <footer class="status-bar serif-font uppercase">
         <div class="flex gap-6"><span>Total: <span id="totalCount" class="text-slate-600">0</span></span><span>Select: <span id="selectCount" class="text-slate-600">0</span></span></div>
         <div class="ml-auto opacity-40 text-[9px] hidden md:block">Made by Ruru Tsai | © 2025</div>
