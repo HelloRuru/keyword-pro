@@ -237,4 +237,63 @@
 
     // 快捷鍵偵測
     window.addEventListener('keydown', (e) => {
-      if (e.ctrlKey && e.shiftKey && e.key === 'R') { e.preventDefault(); apply
+      if (e.ctrlKey && e.shiftKey && e.key === 'R') { e.preventDefault(); applyRedBold(); }
+    });
+
+    function syncPreview() { editor.innerText = source.value; updateCounts(); runDensityAnalysis(); }
+    function updateCounts() { totalCount.innerText = (editor.innerText || "").replace(/\s/g, '').length; }
+    document.addEventListener('selectionchange', () => { selectCount.innerText = window.getSelection().toString().replace(/\s/g, '').length; });
+
+    // 字庫存取
+    function saveKeywordSet() {
+      const name = prompt("字庫名稱："); if (!name) return;
+      let bank = JSON.parse(localStorage.getItem('kwBank') || "{}");
+      bank[name] = kwListArea.value;
+      localStorage.setItem('kwBank', JSON.stringify(bank));
+      refreshBankUI();
+    }
+    function refreshBankUI() {
+      const select = document.getElementById('keywordBankSelect');
+      const bank = JSON.parse(localStorage.getItem('kwBank') || "{}");
+      select.innerHTML = '<option value="">載入字庫</option>';
+      Object.keys(bank).forEach(name => {
+        const opt = document.createElement('option'); opt.value = name; opt.textContent = name; select.appendChild(opt);
+      });
+    }
+    function loadKeywordSet() {
+      const select = document.getElementById('keywordBankSelect');
+      const bank = JSON.parse(localStorage.getItem('kwBank') || "{}");
+      if (select.value && bank[select.value]) { kwListArea.value = bank[select.value]; runDensityAnalysis(); }
+    }
+
+    function cmd(c, v = null) {
+      if (v && v.startsWith('var')) v = getComputedStyle(document.documentElement).getPropertyValue(v.slice(4, -1));
+      document.execCommand(c, false, v); editor.focus();
+    }
+    function applyRedBold() { cmd('bold'); cmd('foreColor', '#B93A32'); }
+    function applyHighlight(color) {
+      const actualColor = color.startsWith('var') ? getComputedStyle(document.documentElement).getPropertyValue(color.slice(4, -1)) : color;
+      document.execCommand('hiliteColor', false, actualColor); editor.focus();
+    }
+
+    function runAutoMark() {
+      const list = kwListArea.value.split('\n').filter(t => t.trim() !== "");
+      let html = editor.innerText;
+      list.forEach(kw => {
+        const regex = new RegExp(`(${kw.trim()})`, 'g');
+        html = html.replace(regex, `<span style="color:#B93A32; font-weight:bold; border-bottom: 1px dashed #B93A32;">$1</span>`);
+      });
+      editor.innerHTML = html; updateCounts(); runDensityAnalysis();
+    }
+
+    async function copyToDocs() {
+      const blob = new Blob([editor.innerHTML], { type: 'text/html' });
+      const data = [new ClipboardItem({ 'text/html': blob, 'text/plain': new Blob([editor.innerText], { type: 'text/plain' }) })];
+      await navigator.clipboard.write(data); alert('✨ 已複製內容。');
+    }
+
+    editor.addEventListener('input', () => { updateCounts(); runDensityAnalysis(); });
+    refreshBankUI();
+  </script>
+</body>
+</html>
