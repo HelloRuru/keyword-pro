@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>關鍵字螢光筆 Pro - 全自動安全版</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; background-color: #f1f5f9; padding: 20px; }
+    .step-title { font-size: 24px; font-weight: 800; color: #0f172a; border-left: 8px solid #6366f1; padding-left: 12px; margin-bottom: 20px; }
+    /* 核心編輯區 */
+    .editor-container { min-height: 450px; font-size: 20px; line-height: 1.8; border-radius: 24px; padding: 30px; background: white; outline: none; border: 3px solid #e2e8f0; transition: all 0.3s; }
+    .editor-container:focus { border-color: #6366f1; box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.1); }
+    /* 超大氣泡滑桿 */
+    .slider-bubble { position: absolute; top: -65px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 12px 24px; border-radius: 16px; font-size: 30px; font-weight: 800; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+    /* 固定色票與格式按鈕 */
+    .swatch { width: 48px; height: 48px; border-radius: 12px; cursor: pointer; border: 3px solid transparent; transition: 0.2s; }
+    .swatch.active { border-color: #6366f1; transform: scale(1.15); }
+    .btn-format { flex: 1; py: 20px; border: 2px solid #e2e8f0; border-radius: 16px; font-weight: 900; font-size: 28px; background: white; }
+  </style>
+</head>
+<body class="max-w-6xl mx-auto">
+
+  <header class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
+    <h1 class="text-4xl font-black text-slate-900 flex items-center gap-3">
+      <i data-lucide="zap" class="text-indigo-600 w-10 h-10"></i> 關鍵字螢光筆 <span class="text-indigo-600">Pro</span>
+    </h1>
+    <button onclick="copyToDocs()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-10 py-5 rounded-2xl font-black text-2xl shadow-2xl transition-all active:scale-95">
+      🚀 複製到 Google Docs
+    </button>
+  </header>
+
+  <main class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+    <div class="lg:col-span-8 space-y-8">
+      <section>
+        <h2 class="step-title">1. 文章與自動標註</h2>
+        <div id="editor" contenteditable="true" class="editor-container shadow-sm mb-6" placeholder="在此貼上文章內容..."></div>
+        
+        <div class="bg-white p-6 rounded-3xl border-2 border-slate-200">
+          <label class="block text-xl font-bold mb-3 text-slate-600">自定義關鍵字 (每行一個)</label>
+          <textarea id="kwList" class="w-full h-32 p-4 border-2 rounded-xl text-xl mb-4 outline-none focus:border-indigo-500" placeholder="例如：&#10;核心功能&#10;全自動"></textarea>
+          <button onclick="autoMark()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-2xl hover:bg-slate-800 flex items-center justify-center gap-3">
+            ✨ 執行全自動標註 (紅字粗體)
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <aside class="lg:col-span-4 space-y-8">
+      <div class="bg-white p-8 rounded-[32px] border border-slate-200 shadow-xl sticky top-6">
+        <h2 class="text-2xl font-black mb-8 flex items-center gap-2"><i data-lucide="sliders"></i> 樣式操控台</h2>
+
+        <div class="mb-16 relative pt-12">
+          <div id="bubble" class="slider-bubble">12pt</div>
+          <input type="range" id="sizeSlider" min="10" max="48" value="12" class="w-full h-5 bg-slate-200 rounded-xl appearance-none cursor-pointer accent-indigo-600" oninput="updateFontSize(this.value)">
+          <div class="flex justify-between mt-4 font-black text-slate-400"><span>10pt</span><span>48pt</span></div>
+        </div>
+
+        <div class="flex gap-3 mb-8">
+          <button onclick="cmd('bold')" class="flex-1 py-4 border-2 rounded-xl font-black text-3xl">B</button>
+          <button onclick="cmd('underline')" class="flex-1 py-4 border-2 rounded-xl underline text-3xl">U</button>
+          <button onclick="cmd('italic')" class="flex-1 py-4 border-2 rounded-xl italic text-3xl">I</button>
+        </div>
+
+        <div class="grid grid-cols-4 gap-4 mb-10">
+          <div class="swatch active shadow-lg" style="background-color: #EF4444;" onclick="applyColor('#EF4444', this)"></div>
+          <div class="swatch shadow-lg" style="background-color: #3B82F6;" onclick="applyColor('#3B82F6', this)"></div>
+          <div class="swatch shadow-lg" style="background-color: #22C55E;" onclick="applyColor('#22C55E', this)"></div>
+          <div class="swatch shadow-lg" style="background-color: #000000;" onclick="applyColor('#000000', this)"></div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-3 pt-6 border-t">
+          <button onclick="preset(18, true)" class="w-full py-4 border-2 rounded-2xl font-bold text-xl hover:bg-indigo-50">標題 (18pt / 粗體)</button>
+          <button onclick="preset(14, true)" class="w-full py-4 border-2 rounded-2xl font-bold text-lg hover:bg-indigo-50">副標 (14pt / 粗體)</button>
+          <button onclick="preset(12, false)" class="w-full py-4 border-2 rounded-2xl text-lg hover:bg-indigo-50">內文 (12pt / 標準)</button>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    const editor = document.getElementById('editor');
+    const bubble = document.getElementById('bubble');
+
+    function updateFontSize(val) {
+      bubble.innerText = val + 'pt';
+      document.execCommand('fontSize', false, '7');
+      const fonts = editor.getElementsByTagName('font');
+      for (let f of fonts) { if (f.size === "7") { f.removeAttribute('size'); f.style.fontSize = val + 'pt'; } }
+    }
+
+    function cmd(c) { document.execCommand(c, false, null); editor.focus(); }
+    
+    function applyColor(color, el) {
+      document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+      el.classList.add('active');
+      document.execCommand('foregroundColor', false, color);
+      editor.focus();
+    }
+
+    function preset(s, b) {
+      document.getElementById('sizeSlider').value = s;
+      updateFontSize(s);
+      if(b) document.execCommand('bold', false, null);
+      else document.execCommand('removeFormat', false, null); // 簡化處理
+      editor.focus();
+    }
+
+    // 全自動標註邏輯 (紅字粗體整合)
+    function autoMark() {
+      const list = document.getElementById('kwList').value.split('\n').filter(t => t.trim() !== "");
+      if(list.length === 0) return alert('請先輸入關鍵字清單');
+      let html = editor.innerHTML;
+      list.forEach(kw => {
+        const regex = new RegExp(`(${kw})`, 'g');
+        html = html.replace(regex, `<span style="color:#EF4444; font-weight:bold;">$1</span>`);
+      });
+      editor.innerHTML = html;
+      alert('⚡ 全自動標註完成！');
+    }
+
+    async function copyToDocs() {
+      const blob = new Blob([editor.innerHTML], { type: 'text/html' });
+      const data = [new ClipboardItem({ 'text/html': blob, 'text/plain': new Blob([editor.innerText], { type: 'text/plain' }) })];
+      await navigator.clipboard.write(data);
+      alert('🎉 格式已複製！請到 Google Docs 按下 Ctrl+V 貼上。');
+    }
+  </script>
+</body>
+</html>
