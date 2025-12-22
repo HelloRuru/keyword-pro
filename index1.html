@@ -3,130 +3,336 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>關鍵字螢光筆 Pro - 全自動安全版</title>
+  <title>關鍵字螢光筆 Pro - 文案寫手の數位工具</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    body { font-family: 'Inter', system-ui, sans-serif; background-color: #f1f5f9; padding: 20px; }
-    .step-title { font-size: 24px; font-weight: 800; color: #0f172a; border-left: 8px solid #6366f1; padding-left: 12px; margin-bottom: 20px; }
-    /* 核心編輯區 */
-    .editor-container { min-height: 450px; font-size: 20px; line-height: 1.8; border-radius: 24px; padding: 30px; background: white; outline: none; border: 3px solid #e2e8f0; transition: all 0.3s; }
-    .editor-container:focus { border-color: #6366f1; box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.1); }
-    /* 超大氣泡滑桿 */
-    .slider-bubble { position: absolute; top: -65px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 12px 24px; border-radius: 16px; font-size: 30px; font-weight: 800; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-    /* 固定色票與格式按鈕 */
-    .swatch { width: 48px; height: 48px; border-radius: 12px; cursor: pointer; border: 3px solid transparent; transition: 0.2s; }
-    .swatch.active { border-color: #6366f1; transform: scale(1.15); }
-    .btn-format { flex: 1; py: 20px; border: 2px solid #e2e8f0; border-radius: 16px; font-weight: 900; font-size: 28px; background: white; }
+    :root {
+      --bg-paper: #FBFBF9;
+      --bg-cream: #F3F2EE;
+      --text-sumi: #2C2C2C;
+      --color-indigo: #374B6D;
+      --color-red-accent: #B93A32;
+      --border-line: #E0E0DE;
+    }
+
+    /* 網頁版面完全凍結 */
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Noto Sans JP', sans-serif;
+      background-color: var(--bg-paper);
+      color: var(--text-sumi);
+      letter-spacing: 0.04em;
+    }
+
+    .serif-font { font-family: 'Noto Serif JP', serif; }
+
+    /* 佈局架構 */
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .main-workspace {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* 左側輸入區 */
+    .sidebar-input {
+      width: 320px;
+      border-right: 1px solid var(--border-line);
+      background: var(--bg-paper);
+      padding: 24px;
+      overflow-y: auto;
+      z-index: 10;
+    }
+
+    /* 右側即時預覽區 (寬度占比優化) */
+    .preview-section {
+      flex: 1;
+      background-color: var(--bg-cream);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* 工具列 (條列化於預覽區上排) */
+    .inline-toolbar {
+      background: var(--bg-paper);
+      border-bottom: 1px solid var(--border-line);
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      shrink-0;
+    }
+
+    /* 核心：即時預覽內部的獨立滾動條 */
+    .scrollable-preview-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* 保持紙張在正中間 */
+    }
+
+    /* 紙張預覽區塊 */
+    .editor-paper {
+      width: 100%;
+      max-width: 800px;
+      min-height: 1000px;
+      background: var(--bg-paper);
+      padding: 60px;
+      border: 1px solid var(--border-line);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+      outline: none;
+      line-height: 2;
+      font-size: 16px;
+      margin-bottom: 40px;
+    }
+
+    /* 字數統計列 (與紙張同寬並固定於預覽區底部) */
+    .status-bar {
+      width: 100%;
+      background: var(--bg-paper);
+      border-top: 1px solid var(--border-line);
+      padding: 10px 40px;
+      font-size: 11px;
+      color: #94a3b8;
+      display: flex;
+      gap: 20px;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+
+    /* 線條風格 UI 元件 */
+    .toolbar-btn {
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .toolbar-btn:hover { background: #F3F2EE; border-color: var(--border-line); }
+
+    .btn-red-bold {
+      color: var(--color-red-accent);
+      border: 1px solid var(--color-red-accent);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 10px;
+    }
+
+    .input-lined {
+      width: 100%;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-line);
+      background: transparent;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .swatch-grid {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      border: 1px solid var(--border-line);
+      padding: 8px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      z-index: 100;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .group:hover .swatch-grid { display: grid; }
+    .swatch-item { width: 22px; height: 22px; border-radius: 50%; border: 1px solid #eee; cursor: pointer; }
   </style>
 </head>
-<body class="max-w-6xl mx-auto">
+<body class="app-container">
 
-  <header class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
-    <h1 class="text-4xl font-black text-slate-900 flex items-center gap-3">
-      <i data-lucide="zap" class="text-indigo-600 w-10 h-10"></i> 關鍵字螢光筆 <span class="text-indigo-600">Pro</span>
-    </h1>
-    <button onclick="copyToDocs()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-10 py-5 rounded-2xl font-black text-2xl shadow-2xl transition-all active:scale-95">
-      🚀 複製到 Google Docs
-    </button>
+  <header class="border-b border-[var(--border-line)] px-8 py-4 flex justify-between items-center bg-[var(--bg-paper)] shrink-0">
+    <div class="flex items-center gap-4">
+      <i data-lucide="edit-3" class="w-6 h-6 text-[var(--color-indigo)]"></i>
+      <div>
+        <h1 class="text-xl font-black text-[var(--color-indigo)] tracking-widest serif-font">蛍光ペン Pro</h1>
+        <span class="text-[10px] text-slate-500 serif-font block">| 文案寫手の數位工具</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-6">
+      <div class="text-[10px] text-slate-400 serif-font text-right hidden md:block leading-tight">
+        Made by Ruru Tsai<br>© 2025 Ruru Tsai 版權所有
+      </div>
+      <button onclick="copyToDocs()" class="border border-[var(--text-sumi)] px-6 py-2 rounded-full text-xs font-bold hover:bg-[var(--text-sumi)] hover:text-white transition-all serif-font">
+        <i data-lucide="share-2" class="inline w-3 h-3 mr-1"></i> 複製到 Google Docs
+      </button>
+    </div>
   </header>
 
-  <main class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-    <div class="lg:col-span-8 space-y-8">
+  <main class="main-workspace">
+    <div class="sidebar-input space-y-10">
       <section>
-        <h2 class="step-title">1. 文章與自動標註</h2>
-        <div id="editor" contenteditable="true" class="editor-container shadow-sm mb-6" placeholder="在此貼上文章內容..."></div>
-        
-        <div class="bg-white p-6 rounded-3xl border-2 border-slate-200">
-          <label class="block text-xl font-bold mb-3 text-slate-600">自定義關鍵字 (每行一個)</label>
-          <textarea id="kwList" class="w-full h-32 p-4 border-2 rounded-xl text-xl mb-4 outline-none focus:border-indigo-500" placeholder="例如：&#10;核心功能&#10;全自動"></textarea>
-          <button onclick="autoMark()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-2xl hover:bg-slate-800 flex items-center justify-center gap-3">
-            ✨ 執行全自動標註 (紅字粗體)
-          </button>
-        </div>
+        <h2 class="text-xs font-bold text-[var(--color-indigo)] mb-4 serif-font uppercase tracking-widest">01. 原文來源</h2>
+        <textarea id="sourceText" oninput="syncPreview()" class="input-lined h-40 resize-none leading-relaxed" placeholder="在此處貼上文案..."></textarea>
+      </section>
+
+      <section>
+        <h2 class="text-xs font-bold text-[var(--color-indigo)] mb-4 serif-font uppercase tracking-widest">02. 關鍵字名單</h2>
+        <textarea id="kwList" class="input-lined h-24 resize-none" placeholder="每行一個關鍵字..."></textarea>
+        <button onclick="runAutoMark()" class="w-full mt-4 border border-[var(--color-red-accent)] text-[var(--color-red-accent)] py-3 rounded text-sm font-bold hover:bg-[var(--color-red-accent)] hover:text-white transition-all serif-font">
+          <i data-lucide="zap" class="inline w-4 h-4 mr-1"></i> 一鍵紅字粗體標註
+        </button>
       </section>
     </div>
 
-    <aside class="lg:col-span-4 space-y-8">
-      <div class="bg-white p-8 rounded-[32px] border border-slate-200 shadow-xl sticky top-6">
-        <h2 class="text-2xl font-black mb-8 flex items-center gap-2"><i data-lucide="sliders"></i> 樣式操控台</h2>
+    <div class="preview-section">
+      <div class="inline-toolbar">
+        <button onclick="cmd('undo')" class="toolbar-btn"><i data-lucide="undo-2" class="w-4 h-4"></i></button>
+        <button onclick="cmd('redo')" class="toolbar-btn"><i data-lucide="redo-2" class="w-4 h-4"></i></button>
+        <div class="w-px h-4 bg-slate-200 mx-2"></div>
 
-        <div class="mb-16 relative pt-12">
-          <div id="bubble" class="slider-bubble">12pt</div>
-          <input type="range" id="sizeSlider" min="10" max="48" value="12" class="w-full h-5 bg-slate-200 rounded-xl appearance-none cursor-pointer accent-indigo-600" oninput="updateFontSize(this.value)">
-          <div class="flex justify-between mt-4 font-black text-slate-400"><span>10pt</span><span>48pt</span></div>
+        <button onclick="applyRedBold()" class="toolbar-btn btn-red-bold">
+          <i data-lucide="bold" class="w-3 h-3"></i> A+紅粗
+        </button>
+
+        <div class="w-px h-4 bg-slate-200 mx-2"></div>
+
+        <div class="flex items-center gap-1 group relative">
+          <i data-lucide="type" class="w-4 h-4 text-slate-400"></i>
+          <span id="fontSizeDisplay" class="text-[11px] font-bold w-6 text-center">12</span>
+          <div class="absolute top-full left-0 mt-2 p-4 bg-white border rounded shadow-xl hidden group-hover:block z-50 w-40">
+            <input type="range" min="10" max="48" value="12" class="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[var(--color-indigo)]" oninput="updateFontSize(this.value)">
+          </div>
         </div>
 
-        <div class="flex gap-3 mb-8">
-          <button onclick="cmd('bold')" class="flex-1 py-4 border-2 rounded-xl font-black text-3xl">B</button>
-          <button onclick="cmd('underline')" class="flex-1 py-4 border-2 rounded-xl underline text-3xl">U</button>
-          <button onclick="cmd('italic')" class="flex-1 py-4 border-2 rounded-xl italic text-3xl">I</button>
+        <div class="w-px h-4 bg-slate-200 mx-2"></div>
+
+        <button onclick="cmd('bold')" class="toolbar-btn" title="粗體"><i data-lucide="bold" class="w-4 h-4"></i></button>
+        <button onclick="cmd('italic')" class="toolbar-btn" title="斜體"><i data-lucide="italic" class="w-4 h-4"></i></button>
+        <button onclick="cmd('underline')" class="toolbar-btn" title="底線"><i data-lucide="underline" class="w-4 h-4"></i></button>
+
+        <div class="w-px h-4 bg-slate-200 mx-2"></div>
+
+        <div class="group relative">
+          <button class="toolbar-btn flex-col gap-0.5">
+            <i data-lucide="baseline" class="w-4 h-4"></i>
+            <div class="h-0.5 w-3.5 bg-black" id="textColorIndicator"></div>
+          </button>
+          <div class="swatch-grid">
+            <div class="swatch-item bg-black" onclick="applyColor('#2C2C2C')"></div>
+            <div class="swatch-item bg-[#B93A32]" onclick="applyColor('#B93A32')"></div>
+            <div class="swatch-item bg-[#374B6D]" onclick="applyColor('#374B6D')"></div>
+            <div class="swatch-item bg-[#3F6C45]" onclick="applyColor('#3F6C45')"></div>
+          </div>
         </div>
 
-        <div class="grid grid-cols-4 gap-4 mb-10">
-          <div class="swatch active shadow-lg" style="background-color: #EF4444;" onclick="applyColor('#EF4444', this)"></div>
-          <div class="swatch shadow-lg" style="background-color: #3B82F6;" onclick="applyColor('#3B82F6', this)"></div>
-          <div class="swatch shadow-lg" style="background-color: #22C55E;" onclick="applyColor('#22C55E', this)"></div>
-          <div class="swatch shadow-lg" style="background-color: #000000;" onclick="applyColor('#000000', this)"></div>
-        </div>
-
-        <div class="grid grid-cols-1 gap-3 pt-6 border-t">
-          <button onclick="preset(18, true)" class="w-full py-4 border-2 rounded-2xl font-bold text-xl hover:bg-indigo-50">標題 (18pt / 粗體)</button>
-          <button onclick="preset(14, true)" class="w-full py-4 border-2 rounded-2xl font-bold text-lg hover:bg-indigo-50">副標 (14pt / 粗體)</button>
-          <button onclick="preset(12, false)" class="w-full py-4 border-2 rounded-2xl text-lg hover:bg-indigo-50">內文 (12pt / 標準)</button>
+        <div class="group relative">
+          <button class="toolbar-btn flex-col gap-0.5">
+            <i data-lucide="highlighter" class="w-4 h-4"></i>
+            <div class="h-0.5 w-3.5 bg-[#F2E6CE]" id="bgColorIndicator"></div>
+          </button>
+          <div class="swatch-grid">
+            <div class="swatch-item bg-[#F2E6CE]" onclick="applyHighlight('#F2E6CE')"></div>
+            <div class="swatch-item bg-[#DDE4E8]" onclick="applyHighlight('#DDE4E8')"></div>
+            <div class="swatch-item bg-[#E2EADB]" onclick="applyHighlight('#E2EADB')"></div>
+            <div class="swatch-item border flex items-center justify-center text-[8px]" onclick="applyHighlight('transparent')">✕</div>
+          </div>
         </div>
       </div>
-    </aside>
+
+      <div class="scrollable-preview-area">
+        <div id="editor" contenteditable="true" class="editor-paper serif-font" placeholder="感受文字的溫度..."></div>
+      </div>
+
+      <footer class="status-bar">
+        <span>Total: <span id="totalCount" class="text-slate-600">0</span></span>
+        <span>Select: <span id="selectCount" class="text-slate-600">0</span></span>
+      </footer>
+    </div>
   </main>
 
   <script>
     lucide.createIcons();
     const editor = document.getElementById('editor');
-    const bubble = document.getElementById('bubble');
+    const source = document.getElementById('sourceText');
+    const totalCount = document.getElementById('totalCount');
+    const selectCount = document.getElementById('selectCount');
+    const fontSizeDisplay = document.getElementById('fontSizeDisplay');
+
+    // 1. 同步與字數監控
+    function syncPreview() { 
+      editor.innerText = source.value; 
+      updateTotalCount();
+    }
+
+    function updateTotalCount() {
+      const text = editor.innerText || "";
+      totalCount.innerText = text.replace(/\s/g, '').length;
+    }
+
+    // 選取字數偵測
+    document.addEventListener('selectionchange', () => {
+      const selection = window.getSelection().toString();
+      selectCount.innerText = selection.replace(/\s/g, '').length;
+    });
+
+    // 2. 編輯指令
+    function cmd(c) { document.execCommand(c, false, null); editor.focus(); }
+    
+    function applyRedBold() {
+      document.execCommand('bold', false, null);
+      document.execCommand('foregroundColor', false, '#B93A32');
+      editor.focus();
+    }
 
     function updateFontSize(val) {
-      bubble.innerText = val + 'pt';
+      fontSizeDisplay.innerText = val;
       document.execCommand('fontSize', false, '7');
       const fonts = editor.getElementsByTagName('font');
       for (let f of fonts) { if (f.size === "7") { f.removeAttribute('size'); f.style.fontSize = val + 'pt'; } }
-    }
-
-    function cmd(c) { document.execCommand(c, false, null); editor.focus(); }
-    
-    function applyColor(color, el) {
-      document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
-      el.classList.add('active');
-      document.execCommand('foregroundColor', false, color);
       editor.focus();
     }
 
-    function preset(s, b) {
-      document.getElementById('sizeSlider').value = s;
-      updateFontSize(s);
-      if(b) document.execCommand('bold', false, null);
-      else document.execCommand('removeFormat', false, null); // 簡化處理
-      editor.focus();
+    function applyColor(c) {
+      document.execCommand('foregroundColor', false, c);
+      document.getElementById('textColorIndicator').style.backgroundColor = c;
     }
 
-    // 全自動標註邏輯 (紅字粗體整合)
-    function autoMark() {
+    function applyHighlight(c) {
+      document.execCommand('hiliteColor', false, c);
+      document.getElementById('bgColorIndicator').style.backgroundColor = c;
+    }
+
+    function runAutoMark() {
       const list = document.getElementById('kwList').value.split('\n').filter(t => t.trim() !== "");
-      if(list.length === 0) return alert('請先輸入關鍵字清單');
       let html = editor.innerHTML;
       list.forEach(kw => {
         const regex = new RegExp(`(${kw})`, 'g');
-        html = html.replace(regex, `<span style="color:#EF4444; font-weight:bold;">$1</span>`);
+        html = html.replace(regex, `<span style="color:#B93A32; font-weight:bold;">$1</span>`);
       });
       editor.innerHTML = html;
-      alert('⚡ 全自動標註完成！');
+      updateTotalCount();
     }
 
     async function copyToDocs() {
       const blob = new Blob([editor.innerHTML], { type: 'text/html' });
       const data = [new ClipboardItem({ 'text/html': blob, 'text/plain': new Blob([editor.innerText], { type: 'text/plain' }) })];
       await navigator.clipboard.write(data);
-      alert('🎉 格式已複製！請到 Google Docs 按下 Ctrl+V 貼上。');
+      alert('✨ 已複製內容。請至 Google Docs 貼上。');
     }
+
+    editor.addEventListener('input', updateTotalCount);
   </script>
 </body>
 </html>
