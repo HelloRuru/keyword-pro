@@ -32,7 +32,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   
   <style>
-    /* --- Design System: Rikyu & Kurumi (V9.3) --- */
+    /* --- Design System: Rikyu & Kurumi (V9.4) --- */
     :root {
       --bg-canvas: #EBE9E4; 
       --bg-card: #FFFEFA;
@@ -201,7 +201,6 @@
     .group-struct { display: flex; gap: 4px; }
     .group-edit { display: flex; gap: 4px; align-items: center; }
     
-    /* Structure Buttons (Updated Event) */
     .btn-struct {
       height: 32px; padding: 0 10px;
       background: #FFFFFF; border: 1px solid var(--border-light);
@@ -310,7 +309,15 @@
       box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
     }
     html[data-theme="dark"] .editor-paper { background: #2B2822; color: #E7E5E4; }
-    html[data-theme="dark"] .editor-paper span[style*="color: rgb(44, 44, 44)"] { color: #E7E5E4 !important; }
+    
+    /* V9.4 VISUAL FORCE - High Specificity to override default 12pt */
+    .editor-paper h1 { font-size: 24pt !important; font-weight: bold !important; line-height: 1.5 !important; margin-bottom: 12px !important; color: #333; }
+    .editor-paper h2 { font-size: 18pt !important; font-weight: bold !important; line-height: 1.5 !important; margin-bottom: 10px !important; color: #333; }
+    .editor-paper p { font-size: 12pt !important; line-height: 2.0 !important; color: #333; }
+    
+    html[data-theme="dark"] .editor-paper h1,
+    html[data-theme="dark"] .editor-paper h2,
+    html[data-theme="dark"] .editor-paper p { color: #E7E5E4 !important; }
 
     /* Status Bar */
     .status-bar {
@@ -333,7 +340,7 @@
     .count-toggle-btn:hover { background: rgba(0,0,0,0.06); border-color: var(--border-light); }
     .count-val { font-family: sans-serif; font-weight: 700; color: var(--text-ink); }
     
-    /* FIX: Icon Size */
+    /* FIX: Giant Icon - Locked size */
     .icon-switch { width: 14px; height: 14px; opacity: 0.6; min-width: 14px; }
 
     .geo-faq {
@@ -458,13 +465,13 @@
       <div class="toolbar-container">
         
         <div class="group-struct">
-          <button onmousedown="event.preventDefault(); applyBlock('H1')" class="btn-struct" title="大標題 (24pt)">
+          <button onclick="applyBlock('H1')" class="btn-struct" title="大標題 (24pt)">
             H1 <span class="pt-hint">24pt</span>
           </button>
-          <button onmousedown="event.preventDefault(); applyBlock('H2')" class="btn-struct" title="副標題 (18pt)">
+          <button onclick="applyBlock('H2')" class="btn-struct" title="副標題 (18pt)">
             H2 <span class="pt-hint">18pt</span>
           </button>
-          <button onmousedown="event.preventDefault(); applyBlock('P')" class="btn-struct" title="內文 (12pt)">
+          <button onclick="applyBlock('P')" class="btn-struct" title="內文 (12pt)">
             內文 <span class="pt-hint">12pt</span>
           </button>
         </div>
@@ -485,12 +492,12 @@
              </select>
            </div>
 
-           <button onmousedown="event.preventDefault(); cmd('undo')" class="btn-edit" title="復原"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg></button>
-           <button onmousedown="event.preventDefault(); cmd('redo')" class="btn-edit" title="重做"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/></svg></button>
+           <button onclick="cmd('undo')" class="btn-edit" title="復原"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg></button>
+           <button onclick="cmd('redo')" class="btn-edit" title="重做"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/></svg></button>
            
            <div class="w-px h-6 bg-[var(--border-light)] mx-1"></div>
            
-           <button onmousedown="event.preventDefault(); applyRedBold()" class="btn-emphasis" title="紅字+粗體">A+ 重點</button>
+           <button onclick="applyRedBold()" class="btn-emphasis" title="紅字+粗體">A+ 重點</button>
            <button onclick="copyToDocs(this)" class="btn-copy" title="複製到剪貼簿 (微軟正黑)">
              複製
            </button>
@@ -498,26 +505,26 @@
 
         <div class="tool-sep-strong"></div>
 
-        <button onmousedown="event.preventDefault(); applyCleanStyle()" class="btn-restore" title="移除所有格式">
+        <button onclick="applyCleanStyle()" class="btn-restore" title="移除所有格式">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
           還回預設
         </button>
 
         <div class="ml-auto flex items-center gap-4">
            <div class="group-color">
-             <div class="swatch-item bg-[#2C2C2C]" onmousedown="event.preventDefault(); applyColor('#2C2C2C')" title="墨"></div>
-             <div class="swatch-item bg-[#B93A32]" onmousedown="event.preventDefault(); applyColor('#B93A32')" title="朱赤"></div>
-             <div class="swatch-item bg-[#192F60]" onmousedown="event.preventDefault(); applyColor('#192F60')" title="紺青"></div>
-             <button onmousedown="event.preventDefault(); applyColor('inherit')" class="btn-color-reset" title="回復預設色">✕</button>
+             <div class="swatch-item bg-[#2C2C2C]" onclick="applyColor('#2C2C2C')" title="墨"></div>
+             <div class="swatch-item bg-[#B93A32]" onclick="applyColor('#B93A32')" title="朱赤"></div>
+             <div class="swatch-item bg-[#192F60]" onclick="applyColor('#192F60')" title="紺青"></div>
+             <button onclick="applyColor('inherit')" class="btn-color-reset" title="回復預設色">✕</button>
            </div>
            
            <div class="w-px h-4 bg-[var(--border-light)] opacity-50"></div>
            
            <div class="group-color">
-             <div class="swatch-item bg-[#FFF9C4]" onmousedown="event.preventDefault(); applyHilite('#FFF9C4')" title="黃"></div>
-             <div class="swatch-item bg-[#FEECEC]" onmousedown="event.preventDefault(); applyHilite('#FEECEC')" title="紅"></div>
-             <div class="swatch-item bg-[#D1EAED]" onmousedown="event.preventDefault(); applyHilite('#D1EAED')" title="藍"></div>
-             <button onmousedown="event.preventDefault(); applyHilite('transparent')" class="btn-color-reset" title="清除背景">✕</button>
+             <div class="swatch-item bg-[#FFF9C4]" onclick="applyHilite('#FFF9C4')" title="黃"></div>
+             <div class="swatch-item bg-[#FEECEC]" onclick="applyHilite('#FEECEC')" title="紅"></div>
+             <div class="swatch-item bg-[#D1EAED]" onclick="applyHilite('#D1EAED')" title="藍"></div>
+             <button onclick="applyHilite('transparent')" class="btn-color-reset" title="清除背景">✕</button>
            </div>
         </div>
 
@@ -530,7 +537,7 @@
       <footer class="status-bar">
         <div class="flex gap-4">
           <div class="count-toggle-btn" title="點擊切換計算模式" onclick="toggleCountMode()">
-            <svg class="icon-switch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M21 21v-5h-5"/></svg>
+            <svg class="icon-switch" style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M21 21v-5h-5"/></svg>
             <span>字數:</span>
             <span id="totalCount" class="count-val">0</span>
             <span id="countModeLabel" class="text-[10px] opacity-70 font-medium">(含標點)</span>
@@ -574,7 +581,7 @@
     const saveStatus = document.getElementById('saveStatus');
     const toast = document.getElementById('toast');
     const countModeLabel = document.getElementById('countModeLabel');
-    const STORAGE_KEY = 'highlight_pro_v93_data';
+    const STORAGE_KEY = 'highlight_pro_v94_data';
     const THEME_KEY = 'highlight_pro_theme';
     let countMode = 'all'; 
     let savedRange = null; // Selection Memory
@@ -774,7 +781,6 @@
       if (window.innerWidth < 1024) switchTab('preview', document.querySelectorAll('.tab-btn')[1]);
     }
 
-    /* FIX: Style Baking for Google Docs */
     async function copyToDocs(btn) {
       const clone = editor.cloneNode(true);
       
