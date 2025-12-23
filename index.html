@@ -5,8 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>蛍光ペン PRO - SEO文案數位工具</title>
   
+  <meta name="description" content="免費 SEO 寫作工具。一鍵自動標註關鍵字、計算密度，完美複製到 Google Docs 不跑版。支援繁簡轉換與微軟正黑體輸出。">
+  <meta name="keywords" content="SEO工具, 關鍵字密度, Google Docs 格式, 繁簡轉換, 寫作軟體, 蛍光ペン PRO">
+  <meta name="author" content="Kaoru Tsai">
+
+  <title>蛍光ペン PRO - SEO Writer Suite (V8.5)</title>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "蛍光ペン PRO",
+    "applicationCategory": "ProductivityApplication",
+    "operatingSystem": "Browser",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD" },
+    "description": "SEO 寫手專用的數位螢光筆。解決 Google Docs 貼上跑版問題。",
+    "author": { "@type": "Person", "name": "Kaoru Tsai" }
+  }
+  </script>
+
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a58f86' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 19 7-7 3 3-7 7-3-3Z'/%3E%3Cpath d='m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5Z'/%3E%3Cpath d='m2 2 5 2.25'/%3E%3Cpath d='m11 4 2 1.5'/%3E%3C/svg%3E">
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white' style='background-color:%23b3ada0' stroke='%23a58f86' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 19 7-7 3 3-7 7-3-3Z'/%3E%3Cpath d='m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5Z'/%3E%3Cpath d='m2 2 5 2.25'/%3E%3Cpath d='m11 4 2 1.5'/%3E%3C/svg%3E">
   
@@ -14,37 +32,20 @@
   <script src="https://cdn.tailwindcss.com"></script>
   
   <style>
-    /* --- Design System: Rikyu & Kurumi (V8.1) --- */
+    /* --- Design System: Rikyu & Kurumi (V8.5) --- */
     :root {
-      /* 基調：枯野色與潤色的混合，更具紙張感 */
       --bg-canvas: #EBE9E4; 
-      
-      /* 卡片：極致的紙白 */
       --bg-card: #FFFEFA;
-      
-      /* 文字：油色 (Aburairo) */
       --text-ink: #3E3C38; 
-      
-      /* 次要文字/強調：胡桃染 (Kurumizome) - 溫暖的褐色 */
       --text-sub: #A58F86; 
-      
-      /* 邊框：利休白茶 (Rikyu-shirocha) - 雅緻的灰綠褐 */
       --border-light: #B3ADA0;
-      
-      /* 品牌色：鶯茶 (Uguisucha) - 用於選取與重要圖示 */
       --color-brand: #715C1F; 
-      
-      /* JUMP: Auto Mark - 茜色 (Deep Red) */
       --color-jump-action: #B7282E; 
-      
-      /* JUMP: Finish - 紺青 (Navy) */
       --color-jump-finish: #192F60;
-      
       --shadow-card: 0 4px 12px -2px rgba(165, 143, 134, 0.1);
       --radius-btn: 4px;
     }
 
-    /* Dark Mode (Midnight Tea) */
     html[data-theme="dark"] {
       --bg-canvas: #1F1D19;
       --bg-card: #292622;
@@ -63,7 +64,6 @@
       color: var(--text-ink); 
       margin: 0; padding: 0;
       transition: background-color 0.3s;
-      /* 增加紙張顆粒感 */
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
     }
 
@@ -74,7 +74,19 @@
       min-height: 500px; 
     }
 
-    /* --- Header --- */
+    /* Toast Notification */
+    .toast {
+      position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-20px);
+      background-color: var(--color-jump-finish); color: white;
+      padding: 10px 20px; border-radius: 50px;
+      font-size: 13px; font-weight: 500; letter-spacing: 0.05em;
+      opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* Header */
     .header-area { 
       flex-shrink: 0; height: 60px; z-index: 50; 
       background: rgba(255, 254, 250, 0.95); 
@@ -85,7 +97,7 @@
     }
     html[data-theme="dark"] .header-area { background: rgba(41, 38, 34, 0.95); }
 
-    /* --- Workspace --- */
+    /* Workspace */
     .main-workspace { 
       display: flex; flex: 1; overflow: hidden; position: relative; 
       gap: 20px; padding: 20px; 
@@ -101,7 +113,7 @@
       display: flex; flex-direction: column;
     }
 
-    /* --- Sidebar --- */
+    /* Sidebar */
     .sidebar-input { 
       flex: 0 0 340px; width: 340px; 
       z-index: 20; transition: transform 0.3s;
@@ -115,6 +127,8 @@
       font-family: 'Noto Sans JP', sans-serif;
     }
     textarea:focus { color: var(--text-ink); }
+    textarea::placeholder { color: #968C83; opacity: 1; font-style: normal; }
+    html[data-theme="dark"] textarea::placeholder { color: #6B655D; }
     
     .label-header { 
       font-family: 'Noto Serif JP', serif;
@@ -122,13 +136,13 @@
       letter-spacing: 0.1em; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;
     }
 
-    /* --- Action Card --- */
+    /* Action Card */
     .jp-action-card {
       background-color: #FFFEFA;
       border: 1px solid var(--border-light);
       border-radius: 6px; padding: 20px;
       text-align: center; position: relative; margin-top: auto;
-      box-shadow: inset 0 0 20px rgba(179, 173, 160, 0.1); /* Rikyu shadow */
+      box-shadow: inset 0 0 20px rgba(179, 173, 160, 0.1); 
     }
     
     .btn-jp-hero {
@@ -160,11 +174,11 @@
       background: #FFF5F5; border: 1px solid #F5E6E6; border-radius: 4px;
       color: #C44338; padding: 5px 8px; font-size: 12px; cursor: pointer;
       font-family: 'Noto Serif JP', serif; outline: none; flex: 1;
-      text-align: center;
+      text-align: center; appearance: none;
     }
     .select-reset:hover { border-color: #C44338; }
 
-    /* --- Toolbar --- */
+    /* Toolbar */
     .preview-section { flex: 1; position: relative; min-width: 0; }
 
     .toolbar-container {
@@ -181,11 +195,10 @@
     .group-struct { display: flex; gap: 4px; }
     .group-edit { display: flex; gap: 4px; align-items: center; }
     
-    /* Structure Buttons */
     .btn-struct {
       height: 32px; padding: 0 10px;
       background: #FFFFFF; border: 1px solid var(--border-light);
-      color: var(--text-sub); /* Kurumizome */
+      color: var(--text-sub); 
       font-family: 'Noto Serif JP', serif; font-size: 14px; font-weight: 700;
       border-radius: var(--radius-btn); 
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -194,16 +207,20 @@
     .btn-struct span.pt-hint { font-family: sans-serif; font-size: 9px; opacity: 0.6; margin-top: 1px; font-weight: 400; color: var(--border-light); }
     .btn-struct:hover { border-color: var(--color-brand); color: var(--color-brand); background: #FDFCF8; }
 
-    /* Font Size Select (Task 4) */
+    .font-size-wrapper { position: relative; display: inline-block; }
     .font-size-select {
-      height: 32px; padding: 0 8px;
+      height: 32px; padding: 0 24px 0 10px;
       background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-btn);
       color: var(--text-ink); font-size: 13px; font-family: 'Noto Serif JP', serif; font-weight: 600;
-      cursor: pointer; outline: none; text-align: center;
+      cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; -moz-appearance: none; line-height: 1.2;
     }
     .font-size-select:hover { border-color: var(--color-brand); }
+    .font-size-wrapper::after {
+      content: ''; position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 8px; height: 8px; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a58f86' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-size: contain; background-repeat: no-repeat;
+    }
 
-    /* Edit Icons */
     .btn-edit {
       height: 32px; min-width: 32px; padding: 0 8px;
       background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-btn);
@@ -214,7 +231,6 @@
     .btn-edit:hover { border-color: var(--color-brand); color: var(--color-brand); background: #FDFCF8; }
     .btn-edit svg { width: 16px; height: 16px; }
 
-    /* Primary Actions (Jump Colors) */
     .btn-emphasis { 
       background: #FFF5F5; color: var(--color-jump-action); border: 1px solid #FECACA;
       height: 34px; padding: 0 16px; border-radius: var(--radius-btn); 
@@ -233,7 +249,6 @@
     }
     .btn-copy:hover { filter: brightness(1.2); transform: translateY(-1px); box-shadow: 0 4px 10px rgba(25, 47, 96, 0.3); }
 
-    /* Restore Default */
     .btn-restore {
       height: 32px; padding: 0 10px;
       background: transparent; border: 1px dashed var(--border-light); border-radius: var(--radius-btn);
@@ -242,7 +257,6 @@
     }
     .btn-restore:hover { border-color: var(--color-jump-finish); color: var(--color-jump-finish); background: #F0F4FF; }
 
-    /* Color Swatches */
     .group-color { display: flex; gap: 6px; align-items: center; }
     .swatch-item { 
       width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--border-light); 
@@ -259,7 +273,7 @@
     /* Editor Canvas */
     .scrollable-preview-area { 
       flex: 1; overflow-y: auto; overflow-x: hidden; display: block; 
-      background-color: #E6E3DB; /* Darker textured beige */
+      background-color: #E6E3DB; 
       text-align: center; padding-top: 30px; padding-bottom: 60px;
       scrollbar-gutter: stable; 
     }
@@ -273,7 +287,7 @@
       text-align: justify;
       white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word;    
       line-height: 2.1; 
-      font-size: 12pt; /* Default 12pt */
+      font-size: 12pt; 
       color: #333; 
       box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
     }
@@ -289,9 +303,19 @@
       font-size: 12px; color: var(--text-sub);
       font-family: 'Noto Serif JP', serif;
     }
+    .count-item { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
+    .count-item:hover .count-val { color: var(--color-brand); }
     .count-val { font-family: sans-serif; font-weight: 700; color: var(--text-ink); }
 
-    /* Responsive */
+    /* FAQ Details */
+    .geo-faq {
+      margin-top: 20px; border-top: 1px dashed var(--border-light); padding-top: 10px;
+      font-size: 11px; color: var(--text-sub);
+    }
+    .geo-faq summary { cursor: pointer; margin-bottom: 5px; font-weight: bold; list-style: none; }
+    .geo-faq summary::-webkit-details-marker { display: none; }
+    .geo-faq p { margin-bottom: 5px; line-height: 1.5; }
+
     .mobile-tab-bar { display: none; }
     
     @media (max-width: 1024px) {
@@ -331,6 +355,8 @@
   </style>
 </head>
 <body class="app-container">
+
+  <div id="toast" class="toast"></div>
 
   <header class="header-area">
     <div class="flex items-center gap-3 overflow-hidden">
@@ -389,6 +415,12 @@
              </select>
           </div>
         </div>
+        
+        <details class="geo-faq">
+          <summary>常見問題 (FAQ)</summary>
+          <p><strong>Q: 為什麼貼到 Google Docs 字體會跑掉？</strong><br>A: 蛍光ペン PRO 使用獨家封裝技術，強制指定微軟正黑體，解決此問題。</p>
+          <p><strong>Q: 資料安全嗎？</strong><br>A: 安全。所有資料僅儲存於您的瀏覽器 (Local Storage)。</p>
+        </details>
 
       </div>
     </div>
@@ -411,16 +443,18 @@
         <div class="tool-sep"></div>
 
         <div class="group-edit">
-           <select id="fontSizeSelect" onchange="changeFontSize(this.value)" class="font-size-select" title="選擇字體大小">
-             <option value="10">10pt</option>
-             <option value="11">11pt</option>
-             <option value="12" selected>12pt</option>
-             <option value="14">14pt</option>
-             <option value="18">18pt</option>
-             <option value="24">24pt</option>
-             <option value="30">30pt</option>
-             <option value="36">36pt</option>
-           </select>
+           <div class="font-size-wrapper">
+             <select id="fontSizeSelect" onchange="changeFontSize(this.value)" class="font-size-select" title="選擇字體大小">
+               <option value="10">10pt</option>
+               <option value="11">11pt</option>
+               <option value="12" selected>12pt</option>
+               <option value="14">14pt</option>
+               <option value="18">18pt</option>
+               <option value="24">24pt</option>
+               <option value="30">30pt</option>
+               <option value="36">36pt</option>
+             </select>
+           </div>
 
            <button onmousedown="event.preventDefault(); cmd('undo')" class="btn-edit" title="復原"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg></button>
            <button onmousedown="event.preventDefault(); cmd('redo')" class="btn-edit" title="重做"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/></svg></button>
@@ -466,9 +500,10 @@
       
       <footer class="status-bar">
         <div class="flex gap-4">
-          <div class="count-item">
-            <span>總字數:</span>
+          <div class="count-item" title="點擊切換計算模式" onclick="toggleCountMode()">
+            <span>字數:</span>
             <span id="totalCount" class="count-val">0</span>
+            <span id="countModeLabel" class="text-[10px] opacity-50">(含標點)</span>
           </div>
           <div class="w-px h-3 bg-[var(--border-light)]"></div>
           <div class="count-item">
@@ -476,8 +511,10 @@
             <span id="selectCount" class="count-val text-[var(--color-brand)]">0</span>
           </div>
         </div>
-        <div class="text-[10px] text-[var(--text-sub)]">
-           &copy; 2025 Kaoru Tsai. All Rights Reserved.
+        <div class="flex items-center gap-2 text-[10px] text-[var(--text-sub)]">
+           <span id="saveStatus">☁️ 已儲存</span>
+           <span>|</span>
+           <span>&copy; 2025 Kaoru Tsai.</span>
         </div>
       </footer>
     </div>
@@ -502,8 +539,12 @@
     const autoPuncToggle = document.getElementById('autoPunc');
     const totalCount = document.getElementById('totalCount');
     const selectCount = document.getElementById('selectCount');
-    const STORAGE_KEY = 'highlight_pro_v81_data';
+    const saveStatus = document.getElementById('saveStatus');
+    const toast = document.getElementById('toast');
+    const countModeLabel = document.getElementById('countModeLabel');
+    const STORAGE_KEY = 'highlight_pro_v84_data';
     const THEME_KEY = 'highlight_pro_theme';
+    let countMode = 'all'; // 'all' or 'no-punc'
 
     const TS_DICT = {
       '么':'麼','于':'於','为':'為','干':'乾','后':'後','里':'裡','制':'製','面':'麵','发':'發','郁':'鬱','松':'鬆','才':'才','台':'臺',
@@ -521,6 +562,12 @@
     const ST_DICT = {};
     Object.keys(TS_DICT).forEach(key => { ST_DICT[TS_DICT[key]] = key; });
 
+    function showToast(msg) {
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => { toast.classList.remove('show'); }, 2000);
+    }
+
     function convertText(mode) {
       let text = source.value;
       if (!text) return;
@@ -531,7 +578,8 @@
         converted += map[char] || char;
       }
       source.value = converted;
-      syncPreview(); 
+      syncPreview();
+      showToast(mode === 'S2T' ? '✅ 已轉換為繁體' : '✅ 已轉換為簡體');
     }
 
     function cmd(command, value = null) { editor.focus(); document.execCommand(command, false, value); updateCounts(); }
@@ -555,6 +603,7 @@
         catch (e) { document.execCommand('styleWithCSS', false, true); document.execCommand('foreColor', false, "#B93A32"); document.execCommand('bold', false, null); }
       }
       updateCounts();
+      showToast('✨ 已標註 A+ 重點');
     }
 
     function applyBlock(tag) { editor.focus(); document.execCommand('formatBlock', false, tag); updateCounts(); }
@@ -564,10 +613,10 @@
          const cleanText = editor.innerText;
          editor.innerHTML = cleanText; 
          updateCounts();
+         showToast('🧹 格式已清除');
       }
     }
 
-    // New Font Size Logic using specific PT
     function changeFontSize(val) {
       editor.focus();
       const selection = window.getSelection();
@@ -578,14 +627,10 @@
       
       const range = selection.getRangeAt(0);
       try {
-         // This wraps selection in a span with explicit pt size
          range.surroundContents(span);
       } catch (e) {
-         // Fallback if structure is complex
          document.execCommand('styleWithCSS', false, true);
-         document.execCommand('fontSize', false, '3'); // dummy
-         // Ideally we need more complex logic for nested tags, 
-         // but surroundContents works for flat text selection which is 90% use case.
+         document.execCommand('fontSize', false, '3');
       }
     }
 
@@ -601,14 +646,30 @@
       runDensityAnalysis(); updateCounts(); saveData(); 
     }
 
-    function updateCounts() {
-      const text = editor.innerText || "";
-      const total = text.replace(/\s/g, '').length;
-      totalCount.innerText = total;
-      const selection = window.getSelection().toString();
-      const selected = selection.replace(/\s/g, '').length;
-      selectCount.innerText = selected;
+    function toggleCountMode() {
+      countMode = countMode === 'all' ? 'no-punc' : 'all';
+      countModeLabel.innerText = countMode === 'all' ? '(含標點)' : '(不含標點)';
+      updateCounts();
     }
+
+    function updateCounts() {
+      let text = editor.innerText || "";
+      if (countMode === 'no-punc') {
+        text = text.replace(/[^\w\u4e00-\u9fa5]/g, ''); // Remove punctuation
+      } else {
+        text = text.replace(/\s/g, ''); // Just remove spaces
+      }
+      totalCount.innerText = text.length;
+      
+      let selection = window.getSelection().toString();
+      if (countMode === 'no-punc') {
+        selection = selection.replace(/[^\w\u4e00-\u9fa5]/g, '');
+      } else {
+        selection = selection.replace(/\s/g, '');
+      }
+      selectCount.innerText = selection.length;
+    }
+    
     document.addEventListener('selectionchange', updateCounts);
     editor.addEventListener('keyup', updateCounts);
 
@@ -641,6 +702,7 @@
       });
       editor.innerHTML = html;
       updateCounts();
+      showToast('✨ 已自動標註');
       if (window.innerWidth < 1024) switchTab('preview', document.querySelectorAll('.tab-btn')[1]);
     }
 
@@ -653,9 +715,7 @@
       const data = [new ClipboardItem({ 'text/html': blobHtml, 'text/plain': blobText })];
       try {
         await navigator.clipboard.write(data);
-        const originalHtml = btn.innerHTML;
-        btn.innerHTML = `✓ 已複製`; btn.style.backgroundColor = "#059669"; 
-        setTimeout(() => { btn.innerHTML = originalHtml; btn.style.backgroundColor = ""; }, 2000);
+        showToast('📋 已複製至剪貼簿 (微軟正黑)');
       } catch (err) { alert('複製失敗'); }
     }
 
@@ -671,6 +731,7 @@
         else if(select.value === 'kw') { kwListArea.value = ""; densityResults.innerHTML = ""; }
         else if(select.value === 'all') { source.value = ""; kwListArea.value = ""; editor.innerText = ""; densityResults.innerHTML = ""; }
         updateCounts(); saveData();
+        showToast('🗑️ 資料已清空');
       }
       select.value = ""; 
     }
@@ -696,7 +757,16 @@
       if(data.source) { source.value = data.source; editor.innerText = data.source; }
       if(data.keywords) { kwListArea.value = data.keywords; runDensityAnalysis(); }
     }
-    function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify({ source: source.value, keywords: kwListArea.value })); }
+    
+    let saveTimeout;
+    function saveData() { 
+      saveStatus.innerText = "💾 儲存中...";
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ source: source.value, keywords: kwListArea.value }));
+        saveStatus.innerText = "☁️ 已儲存";
+      }, 800);
+    }
     
     source.addEventListener('input', () => syncPreview());
     kwListArea.addEventListener('input', () => runDensityAnalysis());
