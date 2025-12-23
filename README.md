@@ -22,7 +22,7 @@
 
 我們針對 SEO 寫手最常遇到的四大痛點，提供了一站式解決方案：
 
-| 寫手的痛點 (Pain Points) | 蛍光ペン PRO 的解法 (Solution) |
+| 文案困擾 (Pain Points) | 蛍光ペン PRO 的解法 (Solution) |
 | :--- | :--- |
 | **Google Docs 格式災難** | 獨家 **Format Injection 技術**，複製時自動轉為適合中文閱讀的 **微軟正黑體**，並鎖定紅字/粗體樣式不丟失。 |
 | **關鍵字堆砌風險** | 內建 **關鍵字密度檢測 (Density Monitor)**，即時計算百分比，避免因過度優化 (Keyword Stuffing) 遭演算法懲罰。 |
