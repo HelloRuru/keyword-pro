@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>關鍵字螢光筆 Pro (V6.1 Auto-Save)</title>
+  <title>關鍵字螢光筆 Pro (V7.0 UX Polish)</title>
   
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23374B6D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 19 7-7 3 3-7 7-3-3Z'/%3E%3Cpath d='m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5Z'/%3E%3Cpath d='m2 2 5 2.25'/%3E%3Cpath d='m11 4 2 1.5'/%3E%3C/svg%3E">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;600;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   
   <style>
-    /* --- Design System: Nippon Colors V6 --- */
+    /* --- Design System: Nippon Colors V7 --- */
     :root {
-      --bg-paper: #F9F8F4;      /* 生成色 (Warm White) */
-      --bg-backdrop: #E8E7E3;   /* 灰白 (Paper Gray) */
-      --text-primary: #2C2C2C;  /* 墨 (Sumi) */
+      --bg-paper: #F9F8F4;      /* 生成色 */
+      --bg-backdrop: #E8E7E3;   /* 灰白 */
+      --text-primary: #2C2C2C;  /* 墨 */
       
-      --color-brand: #374B6D;   /* 藍鐵 (Aitetsu) */
-      --color-accent: #B93A32;  /* 朱赤 (Shu-aka) */
+      --color-brand: #374B6D;   /* 藍鐵 (Indigo) - Used for Copy Button */
+      --color-accent: #B93A32;  /* 朱赤 (Red) - Used for A+ Button */
       
       --border-soft: #E0E0DE;
     }
@@ -36,13 +36,15 @@
       display: flex; flex-direction: column; height: 100vh; width: 100vw;
     }
 
-    /* --- 2. Header --- */
+    /* --- 2. Header (Cleaned Up) --- */
     .header-area { 
-      flex-shrink: 0; height: 64px; z-index: 50; background: #fff; 
-      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0; height: 60px; z-index: 50; background: #fff; 
+      display: flex; align-items: center; justify-content: center; /* Centered Logo */
       border-bottom: 1px solid var(--border-soft); padding: 0 24px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.02);
     }
+    /* Mobile Header align left */
+    @media (max-width: 768px) { .header-area { justify-content: flex-start; } }
 
     /* --- 3. Main Workspace --- */
     .main-workspace { 
@@ -67,7 +69,6 @@
     }
     textarea::placeholder { color: #94a3b8; font-weight: 400; }
 
-    /* Heading Style */
     .label-header { 
       font-size: 13px; font-weight: 800; color: var(--color-brand); 
       text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px; 
@@ -84,14 +85,14 @@
       position: relative; overflow: hidden;
     }
 
-    /* Toolbar */
+    /* Toolbar (Redesigned for Copy Button) */
     .inline-toolbar { 
       background: #fff; 
-      height: 60px; 
+      height: 64px; /* Slightly taller */
       flex-shrink: 0; 
       padding: 0 20px; display: flex; align-items: center; gap: 14px; 
       box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.06); z-index: 40;
-      overflow-x: auto;
+      overflow-x: auto; /* Allows horizontal scroll on mobile */
     }
     
     /* Scrollable Canvas */
@@ -142,7 +143,7 @@
       .show-preview .preview-section { opacity: 1; pointer-events: auto; z-index: 35; }
 
       .editor-paper { width: 100%; padding: 40px 24px 100px 24px; min-height: 100%; }
-      .inline-toolbar { padding: 0 12px; gap: 10px; height: 54px; }
+      .inline-toolbar { padding: 0 12px; gap: 10px; height: 60px; }
       
       .mobile-tab-bar { 
         display: flex; height: 56px; background: #fff; border-top: 1px solid var(--border-soft);
@@ -155,70 +156,61 @@
       .tab-btn.active { color: var(--color-brand); background: #f1f5f9; }
     }
 
-    /* --- Print Optimization (New in V6.1) --- */
+    /* --- Print Optimization --- */
     @media print {
       html, body { overflow: visible !important; height: auto !important; background: #fff; }
       .app-container { height: auto; display: block; }
-      
-      /* Hide UI */
-      .header-area, .sidebar-input, .inline-toolbar, .status-bar, .mobile-tab-bar { 
-        display: none !important; 
-      }
-
-      /* Preview Layout for Print */
-      .preview-section { 
-        position: static; overflow: visible; background: #fff; display: block; 
-      }
-      .scrollable-preview-area { 
-        overflow: visible; padding: 0; display: block; background: none;
-      }
-      .editor-paper { 
-        box-shadow: none; margin: 0; width: 100%; max-width: 100%; padding: 0;
-        min-height: 0;
-      }
+      .header-area, .sidebar-input, .inline-toolbar, .status-bar, .mobile-tab-bar { display: none !important; }
+      .preview-section { position: static; overflow: visible; background: #fff; display: block; }
+      .scrollable-preview-area { overflow: visible; padding: 0; display: block; background: none; }
+      .editor-paper { box-shadow: none; margin: 0; width: 100%; max-width: 100%; padding: 0; min-height: 0; }
     }
 
     /* --- Interactive Components --- */
     .icon-btn { 
       padding: 9px; border-radius: 8px; color: #64748b; 
       display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      border: 1px solid transparent;
+      transition: all 0.2s; border: 1px solid transparent; flex-shrink: 0;
     }
     .icon-btn:hover { 
       background: #f8fafc; color: var(--color-brand); 
       border-color: #e2e8f0; transform: translateY(-1px); 
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
     
     .swatch-group { 
       display: flex; align-items: center; gap: 6px; padding: 4px 6px; 
-      border-radius: 99px; background: #f8fafc; border: 1px solid #f1f5f9; 
+      border-radius: 99px; background: #f8fafc; border: 1px solid #f1f5f9; flex-shrink: 0;
     }
     .swatch-item { 
       width: 26px; height: 26px; border-radius: 50%; border: 2px solid #fff; 
       box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: pointer; transition: all 0.2s; 
     }
-    .swatch-item:hover { transform: scale(1.2) translateY(-1px); z-index: 10; border-color: #fff; }
-    
+    .swatch-item:hover { transform: scale(1.2); border-color: #fff; }
     .swatch-reset { 
       width: 26px; height: 26px; border-radius: 50%; border: 1px dashed #cbd5e1; 
       display: flex; align-items: center; justify-content: center; color: #64748b; 
       cursor: pointer; transition: 0.2s;
     }
-    .swatch-reset:hover { background: #fff; color: #ef4444; border-color: #ef4444; transform: scale(1.1); }
+    .swatch-reset:hover { background: #fff; color: #ef4444; border-color: #ef4444; }
 
+    /* Button: A+ Emphasis (Red) */
     .btn-emphasis { 
       background: var(--color-accent); color: white; border: none;
-      padding: 8px 18px; border-radius: 99px; font-weight: 700; font-size: 13px;
+      padding: 8px 16px; border-radius: 99px; font-weight: 700; font-size: 13px;
       display: flex; align-items: center; gap: 6px; transition: all 0.2s;
-      box-shadow: 0 2px 6px rgba(185, 58, 50, 0.25);
-      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(185, 58, 50, 0.25); cursor: pointer; flex-shrink: 0;
     }
-    .btn-emphasis:hover { 
-      background: #9B2C2C; transform: translateY(-1px); 
-      box-shadow: 0 4px 12px rgba(185, 58, 50, 0.35); 
+    .btn-emphasis:hover { background: #9B2C2C; transform: translateY(-1px); }
+
+    /* Button: Copy Action (Blue, New Position) */
+    .btn-copy {
+      margin-left: auto; /* Push to the far right */
+      background: var(--color-brand); color: white; border: none;
+      padding: 8px 20px; border-radius: 99px; font-weight: 700; font-size: 13px;
+      display: flex; align-items: center; gap: 8px; transition: all 0.2s;
+      box-shadow: 0 3px 8px rgba(55, 75, 109, 0.3); cursor: pointer; flex-shrink: 0;
     }
+    .btn-copy:hover { background: #2A3B55; transform: translateY(-1px); box-shadow: 0 5px 12px rgba(55, 75, 109, 0.4); }
 
     .btn-primary { 
       width: 100%; padding: 14px; border-radius: 10px; 
@@ -226,7 +218,7 @@
       display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px;
       box-shadow: 0 4px 6px rgba(55, 75, 109, 0.2); transition: all 0.2s;
     }
-    .btn-primary:hover { background: #2A3B55; transform: translateY(-1px); box-shadow: 0 6px 12px rgba(55, 75, 109, 0.3); }
+    .btn-primary:hover { background: #2A3B55; transform: translateY(-1px); }
 
     .clear-select-wrapper { position: relative; width: 100%; margin-top: 12px; }
     .clear-select {
@@ -241,7 +233,6 @@
       padding: 0 24px; font-size: 11px; color: #94a3b8; font-weight: 700; 
       display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
     }
-    
     .divider { width: 1px; height: 28px; background: #e2e8f0; margin: 0 8px; flex-shrink: 0; }
   </style>
 </head>
@@ -254,10 +245,7 @@
       </div>
       <h1 class="text-xl font-black text-[var(--color-brand)] tracking-[0.15em] serif-font">蛍光ペン PRO</h1>
     </div>
-    <button onclick="copyToDocs()" class="px-6 py-2.5 border-2 border-[var(--color-brand)] rounded-full text-xs font-bold text-[var(--color-brand)] hover:bg-[var(--color-brand)] hover:text-white transition-all tracking-widest shadow-sm">
-      複製文案
-    </button>
-  </header>
+    </header>
 
   <main class="main-workspace" id="mainWorkspace">
     <div class="sidebar-input">
@@ -322,6 +310,11 @@
         
         <div class="divider"></div>
         <button onmousedown="event.preventDefault(); applyRedBold()" class="btn-emphasis">A+ 重點</button>
+
+        <button onclick="copyToDocs(this)" class="btn-copy">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+          複製文案
+        </button>
       </div>
 
       <div class="scrollable-preview-area">
@@ -501,20 +494,22 @@
       select.value = "";
     }
 
-    async function copyToDocs() {
+    async function copyToDocs(btn) {
       const blobHtml = new Blob([editor.innerHTML], { type: 'text/html' });
       const blobText = new Blob([editor.innerText], { type: 'text/plain' });
       const data = [new ClipboardItem({ 'text/html': blobHtml, 'text/plain': blobText })];
       
       try {
         await navigator.clipboard.write(data);
-        const btn = document.querySelector('header button');
-        const oldText = btn.innerText;
-        btn.innerText = "✨ 已複製";
-        btn.classList.add("bg-[#374B6D]", "text-white");
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          已複製
+        `;
+        btn.style.backgroundColor = "#2C2C2C"; // Temporary success color
         setTimeout(() => {
-           btn.innerText = oldText;
-           btn.classList.remove("bg-[#374B6D]", "text-white");
+           btn.innerHTML = originalHtml;
+           btn.style.backgroundColor = ""; // Reset to CSS default
         }, 2000);
       } catch (err) {
         alert('複製失敗，請手動複製。');
