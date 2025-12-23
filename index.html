@@ -32,7 +32,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   
   <style>
-    /* --- Design System: Rikyu & Kurumi (V8.8) --- */
+    /* --- Design System: Rikyu & Kurumi (V8.9) --- */
     :root {
       --bg-canvas: #EBE9E4; 
       --bg-card: #FFFEFA;
@@ -148,7 +148,7 @@
       border-radius: 6px; padding: 20px;
       text-align: center; position: relative; margin-top: auto;
       box-shadow: inset 0 0 20px rgba(179, 173, 160, 0.1); 
-      flex-shrink: 0; /* Prevent action card from shrinking */
+      flex-shrink: 0; 
     }
     
     .btn-jp-hero {
@@ -213,21 +213,20 @@
     .btn-struct span.pt-hint { font-family: sans-serif; font-size: 9px; opacity: 0.6; margin-top: 1px; font-weight: 400; color: var(--border-light); }
     .btn-struct:hover { border-color: var(--color-brand); color: var(--color-brand); background: #FDFCF8; }
 
-    /* --- Font Size Select FIX (Wrapper Style) --- */
+    /* Font Size Select Wrapper */
     .font-size-wrapper { 
       position: relative; display: inline-block;
       height: 32px;
       background: #FFFFFF; 
       border: 1px solid var(--border-light); 
       border-radius: var(--radius-btn);
-      /* Moves border to wrapper to prevent breaking */
     }
     .font-size-wrapper:hover { border-color: var(--color-brand); }
     
     .font-size-select {
       height: 100%; width: 100%;
       padding: 0 24px 0 10px;
-      background: transparent; border: none; /* No border on select itself */
+      background: transparent; border: none;
       color: var(--text-ink); font-size: 13px; font-family: 'Noto Serif JP', serif; font-weight: 600;
       cursor: pointer; outline: none; 
       appearance: none; -webkit-appearance: none; -moz-appearance: none;
@@ -321,15 +320,27 @@
       font-size: 12px; color: var(--text-sub);
       font-family: 'Noto Serif JP', serif;
     }
-    .count-item { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
-    .count-item:hover .count-val { color: var(--color-brand); }
+    
+    /* Interactive Count Toggle (Pill Button) */
+    .count-toggle-btn {
+      display: flex; align-items: center; gap: 6px; 
+      cursor: pointer; user-select: none;
+      padding: 2px 10px; border-radius: 12px;
+      background: rgba(0,0,0,0.03); transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+    .count-toggle-btn:hover { background: rgba(0,0,0,0.06); border-color: var(--border-light); }
     .count-val { font-family: sans-serif; font-weight: 700; color: var(--text-ink); }
+    
+    /* Switch Icon */
+    .icon-switch {
+      width: 12px; height: 12px; opacity: 0.5;
+    }
 
     /* FAQ Details */
     .geo-faq {
       margin-top: 20px; border-top: 1px dashed var(--border-light); padding-top: 10px;
       font-size: 11px; color: var(--text-sub);
-      /* Prevent clipping */
       flex-shrink: 0; 
     }
     .geo-faq summary { cursor: pointer; margin-bottom: 5px; font-weight: bold; list-style: none; }
@@ -520,12 +531,15 @@
       
       <footer class="status-bar">
         <div class="flex gap-4">
-          <div class="count-item" title="點擊切換計算模式" onclick="toggleCountMode()">
+          <div class="count-toggle-btn" title="點擊切換計算模式" onclick="toggleCountMode()">
+            <svg class="icon-switch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M21 21v-5h-5"/></svg>
             <span>字數:</span>
             <span id="totalCount" class="count-val">0</span>
-            <span id="countModeLabel" class="text-[10px] opacity-50">(含標點)</span>
+            <span id="countModeLabel" class="text-[10px] opacity-70 font-medium">(含標點)</span>
           </div>
+          
           <div class="w-px h-3 bg-[var(--border-light)]"></div>
+          
           <div class="count-item">
             <span>選取:</span>
             <span id="selectCount" class="count-val text-[var(--color-brand)]">0</span>
@@ -562,9 +576,9 @@
     const saveStatus = document.getElementById('saveStatus');
     const toast = document.getElementById('toast');
     const countModeLabel = document.getElementById('countModeLabel');
-    const STORAGE_KEY = 'highlight_pro_v87_data';
+    const STORAGE_KEY = 'highlight_pro_v89_data';
     const THEME_KEY = 'highlight_pro_theme';
-    let countMode = 'all'; // 'all' or 'no-punc'
+    let countMode = 'all'; 
 
     const TS_DICT = {
       '么':'麼','于':'於','为':'為','干':'乾','后':'後','里':'裡','制':'製','面':'麵','发':'發','郁':'鬱','松':'鬆','才':'才','台':'臺',
@@ -675,9 +689,9 @@
     function updateCounts() {
       let text = editor.innerText || "";
       if (countMode === 'no-punc') {
-        text = text.replace(/[^\w\u4e00-\u9fa5]/g, ''); // Remove punctuation
+        text = text.replace(/[^\w\u4e00-\u9fa5]/g, ''); 
       } else {
-        text = text.replace(/\s/g, ''); // Just remove spaces
+        text = text.replace(/\s/g, ''); 
       }
       totalCount.innerText = text.length;
       
@@ -727,15 +741,25 @@
     }
 
     async function copyToDocs(btn) {
+      // 1. Create a clean wrapper for clipboard
       const wrapper = document.createElement('div');
-      wrapper.style.fontFamily = "'Microsoft JhengHei', 'Microsoft YaHei', sans-serif";
+      
+      // 2. INJECT INLINE STYLES FOR GOOGLE DOCS (KEY FIX)
+      // Google Docs strips external CSS/classes, but keeps inline styles on the wrapper.
+      // We force font-size: 12pt and line-height: 2.0 to persist.
+      wrapper.style.cssText = "font-family: 'Microsoft JhengHei', 'Microsoft YaHei', sans-serif; font-size: 12pt; line-height: 2.0; color: #333333;";
+      
+      // 3. Clone inner HTML
       wrapper.innerHTML = editor.innerHTML;
+      
+      // 4. Copy process
       const blobHtml = new Blob([wrapper.outerHTML], { type: 'text/html' });
       const blobText = new Blob([editor.innerText], { type: 'text/plain' });
       const data = [new ClipboardItem({ 'text/html': blobHtml, 'text/plain': blobText })];
+      
       try {
         await navigator.clipboard.write(data);
-        showToast('📋 已複製至剪貼簿 (微軟正黑)');
+        showToast('📋 已複製至剪貼簿 (微軟正黑 12pt)');
       } catch (err) { alert('複製失敗'); }
     }
 
