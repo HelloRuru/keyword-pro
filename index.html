@@ -32,7 +32,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   
   <style>
-    /* --- Design System: Rikyu & Kurumi (V9.0) --- */
+    /* --- Design System: Rikyu & Kurumi (V9.1) --- */
     :root {
       --bg-canvas: #EBE9E4; 
       --bg-card: #FFFEFA;
@@ -213,7 +213,7 @@
     .btn-struct span.pt-hint { font-family: sans-serif; font-size: 9px; opacity: 0.6; margin-top: 1px; font-weight: 400; color: var(--border-light); }
     .btn-struct:hover { border-color: var(--color-brand); color: var(--color-brand); background: #FDFCF8; }
 
-    /* Font Size Wrapper (V8.8 Fix) */
+    /* Font Size Wrapper */
     .font-size-wrapper { 
       position: relative; display: inline-block;
       height: 32px;
@@ -304,7 +304,7 @@
       text-align: justify;
       white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word;    
       line-height: 2.1; 
-      font-size: 12pt; /* Default */
+      font-size: 12pt; 
       color: #333; 
       box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
     }
@@ -320,20 +320,11 @@
       font-size: 12px; color: var(--text-sub);
       font-family: 'Noto Serif JP', serif;
     }
-    
-    /* Interactive Count Toggle */
-    .count-toggle-btn {
-      display: flex; align-items: center; gap: 6px; 
-      cursor: pointer; user-select: none;
-      padding: 2px 10px; border-radius: 12px;
-      background: rgba(0,0,0,0.03); transition: all 0.2s;
-      border: 1px solid transparent;
-    }
-    .count-toggle-btn:hover { background: rgba(0,0,0,0.06); border-color: var(--border-light); }
+    .count-item { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
+    .count-item:hover .count-val { color: var(--color-brand); }
     .count-val { font-family: sans-serif; font-weight: 700; color: var(--text-ink); }
-    
-    .icon-switch { width: 12px; height: 12px; opacity: 0.5; }
 
+    /* FAQ Details */
     .geo-faq {
       margin-top: 20px; border-top: 1px dashed var(--border-light); padding-top: 10px;
       font-size: 11px; color: var(--text-sub);
@@ -456,13 +447,13 @@
       <div class="toolbar-container">
         
         <div class="group-struct">
-          <button onmousedown="event.preventDefault(); applyBlock('H1')" class="btn-struct" title="大標題 (24pt)">
+          <button onmousedown="event.preventDefault(); applyBlock('H1')" tabindex="-1" class="btn-struct" title="大標題 (24pt)">
             H1 <span class="pt-hint">24pt</span>
           </button>
-          <button onmousedown="event.preventDefault(); applyBlock('H2')" class="btn-struct" title="副標題 (18pt)">
+          <button onmousedown="event.preventDefault(); applyBlock('H2')" tabindex="-1" class="btn-struct" title="副標題 (18pt)">
             H2 <span class="pt-hint">18pt</span>
           </button>
-          <button onmousedown="event.preventDefault(); applyBlock('P')" class="btn-struct" title="內文 (12pt)">
+          <button onmousedown="event.preventDefault(); applyBlock('P')" tabindex="-1" class="btn-struct" title="內文 (12pt)">
             內文 <span class="pt-hint">12pt</span>
           </button>
         </div>
@@ -572,7 +563,7 @@
     const saveStatus = document.getElementById('saveStatus');
     const toast = document.getElementById('toast');
     const countModeLabel = document.getElementById('countModeLabel');
-    const STORAGE_KEY = 'highlight_pro_v90_data';
+    const STORAGE_KEY = 'highlight_pro_v91_data';
     const THEME_KEY = 'highlight_pro_theme';
     let countMode = 'all'; 
 
@@ -636,8 +627,13 @@
       showToast('✨ 已標註 A+ 重點');
     }
 
-    /* Fixed: Removed editor.focus() to prevent selection loss */
-    function applyBlock(tag) { document.execCommand('formatBlock', false, tag); updateCounts(); }
+    /* FIX 1: Focus Lock & Block Application */
+    function applyBlock(tag) { 
+      document.execCommand('formatBlock', false, tag); 
+      // Ensure specific size is applied for H tags in editor view too, though CSS handles it mostly
+      // This is just a helper to trigger count update
+      updateCounts(); 
+    }
 
     function applyCleanStyle() {
       if(confirm('確定要移除所有格式（變回純文字）嗎？')) {
@@ -721,19 +717,18 @@
       if (window.innerWidth < 1024) switchTab('preview', document.querySelectorAll('.tab-btn')[1]);
     }
 
-    /* Fixed: Baking Styles for Google Docs */
+    /* FIX 2: Style Baking for Google Docs */
     async function copyToDocs(btn) {
-      // 1. Clone the content to modify it safely
       const clone = editor.cloneNode(true);
       
-      // 2. Bake styles into H1, H2, P tags
+      // Force bake styles into standard tags
       const h1s = clone.querySelectorAll('h1');
-      h1s.forEach(el => el.setAttribute('style', 'font-size: 24pt; font-weight: bold; line-height: 1.5; margin-bottom: 12px; color: #333;'));
+      h1s.forEach(el => el.setAttribute('style', 'font-size: 24pt !important; font-weight: bold; line-height: 1.5; margin-bottom: 12px; color: #333;'));
       
       const h2s = clone.querySelectorAll('h2');
-      h2s.forEach(el => el.setAttribute('style', 'font-size: 18pt; font-weight: bold; line-height: 1.5; margin-bottom: 10px; color: #333;'));
+      h2s.forEach(el => el.setAttribute('style', 'font-size: 18pt !important; font-weight: bold; line-height: 1.5; margin-bottom: 10px; color: #333;'));
       
-      // Bake base style into the wrapper div for normal text
+      // Default wrapper for paragraphs and spans
       const wrapper = document.createElement('div');
       wrapper.style.cssText = "font-family: 'Microsoft JhengHei', 'Microsoft YaHei', sans-serif; font-size: 12pt; line-height: 2.0; color: #333333;";
       wrapper.innerHTML = clone.innerHTML;
@@ -744,7 +739,7 @@
       
       try {
         await navigator.clipboard.write(data);
-        showToast('📋 已複製至剪貼簿 (WYSIWYG Mode)');
+        showToast('📋 已複製 (含樣式鎖定)');
       } catch (err) { alert('複製失敗'); }
     }
 
