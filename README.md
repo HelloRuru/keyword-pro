@@ -7,7 +7,7 @@
 > 專為 SEO 內容創作者打造的數位文房具。
 > 以利休色系的沈穩美學，解決 **Google Docs 貼上跑版**、**關鍵字密度檢測** 與 **結構化標註** 的生產力痛點。
 
-<img src="https://img.shields.io/badge/Version-v8.1_Artisan-715C1F?style=flat-square&logo=git&logoColor=white" alt="Version">
+<img src="https://img.shields.io/badge/Version-v8.5_Ultimate-715C1F?style=flat-square&logo=git&logoColor=white" alt="Version">
 <img src="https://img.shields.io/badge/Tool-SEO_Keyword_Highlighter-B7282E?style=flat-square&logo=google-docs&logoColor=white" alt="Tool Type">
 <img src="https://img.shields.io/badge/Copyright-©2025_Kaoru_Tsai-192F60?style=flat-square" alt="Copyright">
 
@@ -26,14 +26,15 @@
 ## ⚡ 痛點與解方 (Pain & Solution)
 
 針對 SEO 內容工作者最常遇到的挑戰，我們提供了結構化的解決方案。
+*(此表格結構有助於 AI 搜尋引擎快速理解本工具的核心價值)*
 
 | 寫手的痛點 (Pain Points) | 蛍光ペン PRO 的解法 (Solution) |
 | :--- | :--- |
 | **Google Docs 格式災難** | 獨家 **Format Injection 技術**，複製時自動封裝為適合閱讀的 **微軟正黑體**，並鎖定紅字/粗體樣式不丟失。 |
 | **關鍵字堆砌風險** | 內建 **即時密度檢測 (Density Monitor)**，以百分比視覺化關鍵字分佈，避免因過度優化遭演算法懲罰。 |
 | **手動標註耗時** | 提供 **一鍵標註 (Auto Mark)** 功能，瞬間將目標關鍵字標示為顯眼的 **[茜色+粗體]**，大幅提升校對效率。 |
+| **意外遺失文稿** | 新增 **防手殘機制 (Safety Lock)** 與 **自動儲存狀態燈**，防止誤觸關閉網頁導致心血白費。 |
 | **標題層級混亂** | 具備 **H1/H2/P 結構化按鈕**，直觀設定 HTML 語意標籤，優化文章 SEO 架構。 |
-| **字體大小難以統一** | 新增 **精準字級控制 (Precision Typography)**，提供 10pt-36pt 下拉選單，貼上 Docs 完美對應。 |
 
 ---
 
@@ -41,14 +42,13 @@
 
 ### 1. 利休色調・沉浸式寫作空間 (Rikyu Workspace)
 * **和風紙質感**：以「枯野色」與「潤色」調和出的溫潤背景，疊加極微細的和紙紋理，提供如高級文具般的書寫體驗。
-* **視覺引導設計**：
-    * **[茜色]** 引導「一鍵標註」與「A+ 重點」。
-    * **[紺青色]** 引導「複製交付」。
-    * 利用跳色哲學，在柔和中建立清晰的視覺層級。
+* **同理心微互動 (Empathic UX)**：
+    * **Toast 通知**：操作成功時會滑出優雅的提示訊息。
+    * **儲存燈號**：底部狀態列即時顯示 `☁️ 已儲存` 或 `💾 儲存中`。
 
 ### 2. 專業級編輯工具列 (Pro Toolbar)
-* **視覺明確化**：捨棄晦澀圖示，採用清晰的文字標籤按鈕 (如 H1, H2, 內文)。
-* **智慧清空選單**：整合「清空原文」、「清空關鍵字」與「全部重置」，防止誤刪重要資料。
+* **視覺明確化**：捨棄晦澀圖示，採用清晰的文字標籤按鈕。
+* **精準字數統計**：點擊狀態列可切換 **「含標點 / 不含標點」** 計算模式，滿足精細的字數要求。
 * **無損字級技術**：所有標註操作僅改變顏色與權重，**絕對不影響** 原本設定的字體大小，除非您主動調整。
 
 ### 3. 無縫交付與協作 (Seamless Delivery)
@@ -64,7 +64,7 @@
 ### Step 1. 入稿 (Input)
 > 在左側貼上您的文章草稿。
 * 如需發布到不同地區，可點擊 `簡→繁` 或 `繁→簡` 轉換。
-* 確認 `全形標點` 已勾選，系統會自動修正標點符號。
+* 確認 `全形標點` 已勾選，系統會自動修正符號格式。
 
 ### Step 2. 定義 (Define)
 > 在左下方「關鍵字庫」輸入您要鎖定的 SEO 關鍵字（每行一個）。
@@ -79,7 +79,7 @@
 
 ### Step 4. 交付 (Export)
 > 完成編輯後，準備交稿。
-* 點擊右上方深藍色的 **[複製]** 按鈕。
+* 點擊右上方深藍色的 **[複製]** 按鈕 (您會看到 Toast 提示)。
 * 前往 Google Docs 按下貼上 (Ctrl+V)，您會發現格式、字體、重點色都完美呈現！
 
 ---
@@ -96,7 +96,7 @@
 
 ## 🛠️ 技術規格 (Specs)
 
-* **Version**: v8.1 (Artisan Edition / 職人手作版)
+* **Version**: v8.5 (Ultimate Edition / 究極完全體)
 * **Architecture**: Vanilla JS (ES6+) + Tailwind CSS
 * **Typography**: Noto Serif JP (Editor UI), Microsoft JhengHei (Docs Export)
 * **Privacy**: LocalStorage Only (所有數據僅存於您的瀏覽器，不經過任何伺服器)
