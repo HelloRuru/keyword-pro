@@ -32,7 +32,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   
   <style>
-    /* --- Design System: Rikyu & Kurumi (V9.1) --- */
+    /* --- Design System: Rikyu & Kurumi (V9.3) --- */
     :root {
       --bg-canvas: #EBE9E4; 
       --bg-card: #FFFEFA;
@@ -201,6 +201,7 @@
     .group-struct { display: flex; gap: 4px; }
     .group-edit { display: flex; gap: 4px; align-items: center; }
     
+    /* Structure Buttons (Updated Event) */
     .btn-struct {
       height: 32px; padding: 0 10px;
       background: #FFFFFF; border: 1px solid var(--border-light);
@@ -320,11 +321,21 @@
       font-size: 12px; color: var(--text-sub);
       font-family: 'Noto Serif JP', serif;
     }
-    .count-item { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
-    .count-item:hover .count-val { color: var(--color-brand); }
+    
+    /* Interactive Count Toggle */
+    .count-toggle-btn {
+      display: flex; align-items: center; gap: 6px; 
+      cursor: pointer; user-select: none;
+      padding: 2px 10px; border-radius: 12px;
+      background: rgba(0,0,0,0.03); transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+    .count-toggle-btn:hover { background: rgba(0,0,0,0.06); border-color: var(--border-light); }
     .count-val { font-family: sans-serif; font-weight: 700; color: var(--text-ink); }
+    
+    /* FIX: Icon Size */
+    .icon-switch { width: 14px; height: 14px; opacity: 0.6; min-width: 14px; }
 
-    /* FAQ Details */
     .geo-faq {
       margin-top: 20px; border-top: 1px dashed var(--border-light); padding-top: 10px;
       font-size: 11px; color: var(--text-sub);
@@ -447,13 +458,13 @@
       <div class="toolbar-container">
         
         <div class="group-struct">
-          <button onmousedown="event.preventDefault(); applyBlock('H1')" tabindex="-1" class="btn-struct" title="大標題 (24pt)">
+          <button onmousedown="event.preventDefault(); applyBlock('H1')" class="btn-struct" title="大標題 (24pt)">
             H1 <span class="pt-hint">24pt</span>
           </button>
-          <button onmousedown="event.preventDefault(); applyBlock('H2')" tabindex="-1" class="btn-struct" title="副標題 (18pt)">
+          <button onmousedown="event.preventDefault(); applyBlock('H2')" class="btn-struct" title="副標題 (18pt)">
             H2 <span class="pt-hint">18pt</span>
           </button>
-          <button onmousedown="event.preventDefault(); applyBlock('P')" tabindex="-1" class="btn-struct" title="內文 (12pt)">
+          <button onmousedown="event.preventDefault(); applyBlock('P')" class="btn-struct" title="內文 (12pt)">
             內文 <span class="pt-hint">12pt</span>
           </button>
         </div>
@@ -519,7 +530,7 @@
       <footer class="status-bar">
         <div class="flex gap-4">
           <div class="count-toggle-btn" title="點擊切換計算模式" onclick="toggleCountMode()">
-            <svg class="icon-switch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M21 21v-5h-5"/></svg>
+            <svg class="icon-switch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M21 21v-5h-5"/></svg>
             <span>字數:</span>
             <span id="totalCount" class="count-val">0</span>
             <span id="countModeLabel" class="text-[10px] opacity-70 font-medium">(含標點)</span>
@@ -563,9 +574,10 @@
     const saveStatus = document.getElementById('saveStatus');
     const toast = document.getElementById('toast');
     const countModeLabel = document.getElementById('countModeLabel');
-    const STORAGE_KEY = 'highlight_pro_v91_data';
+    const STORAGE_KEY = 'highlight_pro_v93_data';
     const THEME_KEY = 'highlight_pro_theme';
     let countMode = 'all'; 
+    let savedRange = null; // Selection Memory
 
     const TS_DICT = {
       '么':'麼','于':'於','为':'為','干':'乾','后':'後','里':'裡','制':'製','面':'麵','发':'發','郁':'鬱','松':'鬆','才':'才','台':'臺',
@@ -589,6 +601,22 @@
       setTimeout(() => { toast.classList.remove('show'); }, 2000);
     }
 
+    // --- CORE FIX: SELECTION MEMORY ---
+    function saveSelection() {
+      const sel = window.getSelection();
+      if (sel.getRangeAt && sel.rangeCount) {
+        savedRange = sel.getRangeAt(0);
+      }
+    }
+
+    function restoreSelection() {
+      if (savedRange) {
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(savedRange);
+      }
+    }
+
     function convertText(mode) {
       let text = source.value;
       if (!text) return;
@@ -603,35 +631,48 @@
       showToast(mode === 'S2T' ? '✅ 已轉換為繁體' : '✅ 已轉換為簡體');
     }
 
-    function cmd(command, value = null) { editor.focus(); document.execCommand(command, false, value); updateCounts(); }
-    
-    function applyColor(hex) { 
-      if (hex === 'inherit') { document.execCommand('removeFormat', false, null); } 
-      else { cmd('foreColor', hex); }
+    function cmd(command, value = null) { 
+      restoreSelection(); 
+      document.execCommand(command, false, value); 
+      updateCounts(); 
     }
     
-    function applyHilite(hex) { if (!document.execCommand('hiliteColor', false, hex)) document.execCommand('backColor', false, hex); updateCounts(); }
+    function applyColor(hex) { 
+      restoreSelection();
+      if (hex === 'inherit') { document.execCommand('removeFormat', false, null); } 
+      else { document.execCommand('foreColor', false, hex); }
+      updateCounts();
+    }
+    
+    function applyHilite(hex) { 
+      restoreSelection();
+      if (!document.execCommand('hiliteColor', false, hex)) document.execCommand('backColor', false, hex); 
+      updateCounts(); 
+    }
 
     function applyRedBold() {
-      editor.focus();
+      restoreSelection();
       const selection = window.getSelection();
       if (!selection.rangeCount) return;
-      const range = selection.getRangeAt(0);
+      
       const span = document.createElement("span");
       span.style.fontWeight = "700"; span.style.color = "#B93A32";
-      if (range.toString().length > 0) {
-        try { range.surroundContents(span); } 
-        catch (e) { document.execCommand('styleWithCSS', false, true); document.execCommand('foreColor', false, "#B93A32"); document.execCommand('bold', false, null); }
+      
+      const range = selection.getRangeAt(0);
+      try { 
+        range.surroundContents(span); 
+      } catch (e) { 
+        document.execCommand('styleWithCSS', false, true); 
+        document.execCommand('foreColor', false, "#B93A32"); 
+        document.execCommand('bold', false, null); 
       }
       updateCounts();
       showToast('✨ 已標註 A+ 重點');
     }
 
-    /* FIX 1: Focus Lock & Block Application */
     function applyBlock(tag) { 
+      restoreSelection();
       document.execCommand('formatBlock', false, tag); 
-      // Ensure specific size is applied for H tags in editor view too, though CSS handles it mostly
-      // This is just a helper to trigger count update
       updateCounts(); 
     }
 
@@ -645,13 +686,21 @@
     }
 
     function changeFontSize(val) {
-      editor.focus();
+      restoreSelection(); 
       const selection = window.getSelection();
       if (!selection.rangeCount || selection.isCollapsed) return;
+      
       const span = document.createElement("span");
       span.style.fontSize = val + "pt";
+      
       const range = selection.getRangeAt(0);
-      try { range.surroundContents(span); } catch (e) { document.execCommand('styleWithCSS', false, true); document.execCommand('fontSize', false, '3'); }
+      try {
+         range.surroundContents(span);
+      } catch (e) {
+         document.execCommand('styleWithCSS', false, true);
+         document.execCommand('fontSize', false, '3'); 
+      }
+      updateCounts();
     }
 
     function convertPunctuation(text) {
@@ -681,8 +730,16 @@
       selectCount.innerText = selection.length;
     }
     
-    document.addEventListener('selectionchange', updateCounts);
-    editor.addEventListener('keyup', updateCounts);
+    editor.addEventListener('keyup', () => { updateCounts(); saveSelection(); });
+    editor.addEventListener('mouseup', () => { updateCounts(); saveSelection(); });
+    editor.addEventListener('touchend', () => { updateCounts(); saveSelection(); });
+    document.addEventListener('selectionchange', () => {
+      const sel = window.getSelection();
+      if(sel.rangeCount && editor.contains(sel.anchorNode)) {
+        saveSelection();
+        updateCounts();
+      }
+    });
 
     function runDensityAnalysis() {
       const keywords = kwListArea.value.split('\n').map(k => k.trim()).filter(k => k !== "");
@@ -717,18 +774,16 @@
       if (window.innerWidth < 1024) switchTab('preview', document.querySelectorAll('.tab-btn')[1]);
     }
 
-    /* FIX 2: Style Baking for Google Docs */
+    /* FIX: Style Baking for Google Docs */
     async function copyToDocs(btn) {
       const clone = editor.cloneNode(true);
       
-      // Force bake styles into standard tags
       const h1s = clone.querySelectorAll('h1');
       h1s.forEach(el => el.setAttribute('style', 'font-size: 24pt !important; font-weight: bold; line-height: 1.5; margin-bottom: 12px; color: #333;'));
       
       const h2s = clone.querySelectorAll('h2');
       h2s.forEach(el => el.setAttribute('style', 'font-size: 18pt !important; font-weight: bold; line-height: 1.5; margin-bottom: 10px; color: #333;'));
       
-      // Default wrapper for paragraphs and spans
       const wrapper = document.createElement('div');
       wrapper.style.cssText = "font-family: 'Microsoft JhengHei', 'Microsoft YaHei', sans-serif; font-size: 12pt; line-height: 2.0; color: #333333;";
       wrapper.innerHTML = clone.innerHTML;
