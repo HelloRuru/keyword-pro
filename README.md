@@ -1,73 +1,98 @@
-# 蛍光ペン PRO 
-### —— The SEO Writer's Digital Stationery.
+# 蛍光ペン PRO (Highlighter PRO)
+### —— SEO 寫手專用・數位螢光筆 (Digital Stationery)
 
-> 「まるで紙にペンを走らせるように。」
-> 數位時代的寫作，也能擁有紙筆般的優雅與溫度。
+> **「像是紙上作業般的優雅，卻擁有數位的精準。」**
+> 專為 SEO 內容創作者打造，解決 **Google Docs 貼上跑版**、**關鍵字密度檢測** 與 **結構化標註** 的生產力工具。
 
----
-
-## 🖋️ 序言 (Introduction)
-
-在演算法與關鍵字堆砌的數位洪流中，我們深知每一位 **SEO 寫手 (Content Creator)** 的痛點。既要照顧 Google 的喜好，又要維持文章的結構之美，最後還得面對從編輯器貼到 **Google Docs** 時格式崩壞的挫折。
-
-**蛍光ペン PRO (Highlighter PRO)** 為此而生。
-
-它不只是一個工具，更是一張為您鋪好的「數位稿紙」。我們以日系文房具的職人精神，將 **關鍵字密度檢測**、**結構化標註** 與 **格式清洗技術** 完美融合。讓您在追求 SEO 排名的同時，依然保有優雅的寫作心流。
+![Version](https://img.shields.io/badge/Version-v7.5_Flagship-374B6D?style=flat-square)
+![Type](https://img.shields.io/badge/Tool-SEO_Keyword_Highlighter-B93A32?style=flat-square)
+![License](https://img.shields.io/badge/Copyright-Kaoru_Tsai_2025-gray?style=flat-square)
 
 ---
 
-## 🎨 色彩與設計 (Design Philosophy)
+## 📖 產品定義 (What is this?)
 
-本工具採用傳統和色 (Traditional Japanese Colors) 構建介面，旨在提供「清爽、無干擾」的閱讀體驗：
+**蛍光ペン PRO** 是一款結合日系美學與硬派功能的 **SEO 關鍵字螢光筆 (SEO Keyword Highlighter)**。
 
-* **藍鉄 (Aitetsu)**：作為介面主色調，象徵沈穩的理性與專注。
-* **朱色 (Shuiro)**：作為標註色，如同編輯手中的紅筆，精準點出關鍵所在。
-* **胡粉 (Gofun)**：溫潤的背景色，減少螢幕藍光對寫手眼睛的負擔。
+不同於傳統編輯器，它專注於解決 SEO 寫手在「撰稿 -> 標註 -> 交付」過程中的斷層。透過獨家的格式封裝技術，讓您在標註 **H1/H2 標籤** 與 **紅字重點** 後，能完美無縫地將內容轉移至 **Google Docs**，並自動套用 **微軟正黑體**，徹底告別格式跑版的惡夢。
 
 ---
 
-## ✨ 核心機能 (Features)
+## ⚡ 痛點與解決方案 (Pain & Solution)
 
-### 1. 寫作的「呼吸感」 (Zen Mode)
-除去繁雜的儀表板，只保留最必要的元素。支援 **深海夜間模式 (Midnight Mode)**，無論是清晨的咖啡廳還是深夜的書桌，都能提供最舒適的視覺環境。
+我們針對 SEO 寫手最常遇到的四大痛點，提供了一站式解決方案：
 
-### 2. SEO 的「透視眼」 (SEO Intelligence)
-* **關鍵字密度偵測**：即時計算關鍵字出現頻率，將數據轉化為直觀的百分比，避免過度堆砌 (Keyword Stuffing)。
-* **一鍵自動標註 (Auto Mark)**：只需輸入關鍵字，系統即以「**朱色+粗體**」自動標示文中所有關鍵詞，視覺化分佈一目瞭然。
-
-### 3. 完美的「交付力」 (Perfect Delivery)
-專為 **Google Docs** 優化的剪貼簿引擎。
-* **紅字鎖定**：確保標註的顏色與粗細在貼上時不丟失，且**不改變原本的字體大小**。
-* **格式淨化**：自動轉換為適合中文閱讀的 **微軟正黑體 (Microsoft JhengHei)**，告別格式跑版。
-* **標點修正**：內建「半形轉全形」開關，讓您的標點符號符合專業出版標準。
+| 寫手的痛點 (Pain Points) | 蛍光ペン PRO 的解法 (Solution) |
+| :--- | :--- |
+| **Google Docs 格式災難** | 獨家 **Format Injection 技術**，複製時自動轉為適合中文閱讀的 **微軟正黑體**，並鎖定紅字/粗體樣式不丟失。 |
+| **關鍵字堆砌風險** | 內建 **關鍵字密度檢測 (Density Monitor)**，即時計算百分比，避免因過度優化 (Keyword Stuffing) 遭演算法懲罰。 |
+| **手動標註耗時** | 提供 **一鍵標註 (Auto Mark)** 功能，瞬間將所有目標關鍵字標示為 **[朱色+粗體]**，視覺化關鍵字分佈。 |
+| **標題層級混亂** | 具備 **H1/H2/P 結構化按鈕** (對應 24pt/18pt)，直觀設定 HTML 語意標籤，提升 SEO 架構分數。 |
 
 ---
 
-## 📖 使用指南 (How to Use)
+## ✨ 核心機能 (Key Features)
 
-簡單四步驟，完成一篇高品質 SEO 文章：
+### 1. 沉浸式寫作環境 (Zen Workspace)
+* **日系雜誌排版**：採用 `Noto Serif JP` (明朝體) 與 `Noto Sans JP`，提供如紙本般的閱讀體驗。
+* **深海夜間模式**：支援 Dark Mode 切換，減少長時間工作的視覺疲勞。
+* **全裝置響應**：無論是桌機雙欄模式，或手機/平板的分頁模式 (Tabs)，排版永遠完美適應。
 
-1.  **【入稿】**：在左側「原文輸入」區貼上草稿，或直接開始寫作。
-2.  **【定義】**：在左側「關鍵字庫」輸入您想鎖定的 SEO 關鍵字（每行一個）。
-3.  **【校正】**：
-    * 點擊 `一鍵標註`，檢視關鍵字分佈是否均勻。
-    * 選取標題文字，點擊上方的 `[大標]`、`[副標]` 快速設定 H1/H2 權重。
-4.  **【交付】**：點擊右下角的 `複製到 Docs` 按鈕，直接貼上 Google Docs，格式完美呈現。
+### 2. SEO 智能輔助 (SEO Intelligence)
+* **即時密度監控**：在側邊欄即時顯示關鍵字出現次數與密度 (Density %)。
+* **無損字級技術**：標註過程僅改變顏色權重，**絕對不影響** 原本設定的字體大小 (Font Size Agnostic)。
+* **全形標點轉換**：內建轉換開關，一鍵修正半形符號，符合專業出版規範。
 
----
-
-## 📱 全裝置對應 (Responsive)
-
-無論您使用桌機、平板或手機，**蛍光ペン PRO** 都能如水般適應容器。
-* **Desktop**：展開雙欄模式，左寫右看，效率倍增。
-* **Mobile / Tablet**：自動切換為分頁模式 (Tabs)，並優化觸控體驗，隨時隨地捕捉靈感。
+### 3. 無縫交付 (Seamless Delivery)
+* **一鍵複製到 Docs**：按鈕整合了格式清洗邏輯，直接貼上 Google Docs 即可交付，無需二次排版。
+* **純文字備份**：支援 `.txt` 格式導出，方便原始碼保存。
 
 ---
 
-## ⚖️ 權利聲明 (Copyright)
+## 📝 使用教學 (User Guide)
+
+只需四個步驟，完成一篇標準化的 SEO 文章：
+
+1.  **【入稿】Input**
+    * 在左側「原文輸入」貼上草稿，開啟「全形標點」自動修正格式。
+2.  **【定義】Define**
+    * 在「關鍵字庫」輸入目標 SEO 關鍵字（每行一個）。
+    * 點擊 `一鍵標註`，系統將自動為您畫上重點。
+3.  **【結構】Structure**
+    * 選取大標題，點擊上方工具列的 `H1` (24pt)。
+    * 選取副標題，點擊 `H2` (18pt)。
+    * 確保文章結構層級分明，提升易讀性。
+4.  **【交付】Export**
+    * 點擊右下角的 `複製到 Docs` (支援微軟正黑體)。
+    * 前往 Google Docs 按下貼上 (Ctrl+V)，格式完美呈現。
+
+---
+
+## 🔍 適用場景 (Target Audience)
+
+本工具特別適合以下專業人士：
+* **SEO 內容寫手 (Content Writers)**
+* **部落客 (Bloggers)**
+* **數位行銷人員 (Digital Marketers)**
+* **社群小編 (Social Media Editors)**
+
+---
+
+## 🛠️ 技術規格 (Specs)
+
+* **Version**: v7.5 (Flagship Edition)
+* **Stack**: Vanilla JS (ES6+), Tailwind CSS
+* **Font Support**: Microsoft JhengHei (Export), Noto Serif JP (Editor)
+* **Data Privacy**: LocalStorage Only (資料僅存於本地瀏覽器，不經過伺服器)
+
+---
+
+## ©️ 權利聲明 (Copyright)
 
 **蛍光ペン PRO (Highlighter PRO)**
+*The SEO Writer's Digital Stationery.*
 
-Designed & Developed by **Kaoru Tsai** Copyright © 2025 Kaoru Tsai. All Rights Reserved.
+* **Designer & Developer**: Kaoru Tsai
+* **Copyright**: © 2025 Kaoru Tsai. All Rights Reserved.
 
-*本工具之程式碼、設計介面與文案邏輯均受版權保護。*
+*本專案之程式碼邏輯、介面設計與品牌文案均受著作權法保護。*
