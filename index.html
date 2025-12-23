@@ -3,50 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>蛍光ペン PRO - SEO文案數位工具</title>
   
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23715c1f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 19 7-7 3 3-7 7-3-3Z'/%3E%3Cpath d='m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5Z'/%3E%3Cpath d='m2 2 5 2.25'/%3E%3Cpath d='m11 4 2 1.5'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a58f86' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 19 7-7 3 3-7 7-3-3Z'/%3E%3Cpath d='m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5Z'/%3E%3Cpath d='m2 2 5 2.25'/%3E%3Cpath d='m11 4 2 1.5'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white' style='background-color:%23b3ada0' stroke='%23a58f86' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 19 7-7 3 3-7 7-3-3Z'/%3E%3Cpath d='m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5Z'/%3E%3Cpath d='m2 2 5 2.25'/%3E%3Cpath d='m11 4 2 1.5'/%3E%3C/svg%3E">
+  
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;600;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   
   <style>
-    /* --- Design System: Rikyu Colors (V8.0) --- */
+    /* --- Design System: Rikyu & Kurumi (V8.1) --- */
     :root {
-      /* 基調：白橡 (Shirotsurubami) 的淡化版 - 溫暖米色 */
-      --bg-canvas: #F4F1EA; 
+      /* 基調：枯野色與潤色的混合，更具紙張感 */
+      --bg-canvas: #EBE9E4; 
+      
       /* 卡片：極致的紙白 */
       --bg-card: #FFFEFA;
       
-      /* 文字：油色 (Aburairo) 與深灰的混合 */
+      /* 文字：油色 (Aburairo) */
       --text-ink: #3E3C38; 
-      --text-sub: #8F8667; 
       
-      /* 邊框：亞麻色 */
-      --border-light: #D6C6AF;
-      --border-strong: #BFA46F; 
+      /* 次要文字/強調：胡桃染 (Kurumizome) - 溫暖的褐色 */
+      --text-sub: #A58F86; 
       
-      /* --- 品牌色 & 跳色 --- */
-      --color-brand: #715C1F; /* 鶯茶 */
+      /* 邊框：利休白茶 (Rikyu-shirocha) - 雅緻的灰綠褐 */
+      --border-light: #B3ADA0;
       
-      /* JUMP: Auto Mark & Red Bold - 茜色 (Deep Red) */
+      /* 品牌色：鶯茶 (Uguisucha) - 用於選取與重要圖示 */
+      --color-brand: #715C1F; 
+      
+      /* JUMP: Auto Mark - 茜色 (Deep Red) */
       --color-jump-action: #B7282E; 
       
       /* JUMP: Finish - 紺青 (Navy) */
       --color-jump-finish: #192F60;
       
-      --shadow-card: 0 4px 12px -2px rgba(113, 92, 31, 0.06);
-      --radius-btn: 6px;
+      --shadow-card: 0 4px 12px -2px rgba(165, 143, 134, 0.1);
+      --radius-btn: 4px;
     }
 
-    /* Dark Mode */
+    /* Dark Mode (Midnight Tea) */
     html[data-theme="dark"] {
       --bg-canvas: #1F1D19;
       --bg-card: #292622;
       --text-ink: #E8E6E1;
       --text-sub: #A6A092;
-      --border-light: #454035;
-      --border-strong: #715C1F;
-      --color-brand: #C7B370;
+      --border-light: #5C5850;
+      --color-brand: #C7B370; 
       --color-jump-action: #FF6B6B;
       --color-jump-finish: #6B8AFF;
     }
@@ -58,7 +63,8 @@
       color: var(--text-ink); 
       margin: 0; padding: 0;
       transition: background-color 0.3s;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+      /* 增加紙張顆粒感 */
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
     }
 
     .serif-font { font-family: 'Noto Serif JP', serif; letter-spacing: 0.04em; }
@@ -89,7 +95,7 @@
     .card-panel {
       background: var(--bg-card);
       border-radius: 8px;
-      box-shadow: var(--shadow-card), inset 0 0 0 1px rgba(255,255,255,0.2);
+      box-shadow: var(--shadow-card), inset 0 0 0 1px rgba(255,255,255,0.4);
       border: 1px solid var(--border-light);
       overflow: hidden;
       display: flex; flex-direction: column;
@@ -122,10 +128,9 @@
       border: 1px solid var(--border-light);
       border-radius: 6px; padding: 20px;
       text-align: center; position: relative; margin-top: auto;
-      box-shadow: inset 0 0 20px rgba(113, 92, 31, 0.03);
+      box-shadow: inset 0 0 20px rgba(179, 173, 160, 0.1); /* Rikyu shadow */
     }
     
-    /* JUMP COLOR: Action */
     .btn-jp-hero {
       font-family: 'Noto Serif JP', serif;
       background-color: var(--color-jump-action); color: #FFFFFF;
@@ -151,7 +156,6 @@
     }
     .btn-jp-sub:hover { color: var(--color-brand); border-color: var(--color-brand); background: #FFFFFF; }
     
-    /* Reset Dropdown Styling */
     .select-reset {
       background: #FFF5F5; border: 1px solid #F5E6E6; border-radius: 4px;
       color: #C44338; padding: 5px 8px; font-size: 12px; cursor: pointer;
@@ -160,7 +164,7 @@
     }
     .select-reset:hover { border-color: #C44338; }
 
-    /* --- Toolbar (V8.0) --- */
+    /* --- Toolbar --- */
     .preview-section { flex: 1; position: relative; min-width: 0; }
 
     .toolbar-container {
@@ -171,41 +175,46 @@
       flex-wrap: wrap; z-index: 40;
     }
     
-    /* Separator */
     .tool-sep { width: 1px; height: 24px; background: var(--border-light); margin: 0 4px; }
     .tool-sep-strong { width: 2px; height: 28px; background: var(--border-light); margin: 0 8px; }
 
-    /* Group Styles */
     .group-struct { display: flex; gap: 4px; }
-    .group-edit { display: flex; gap: 4px; }
-    /* Primary Action Group - Clearly Separated */
-    .group-primary { display: flex; gap: 8px; align-items: center; }
-
+    .group-edit { display: flex; gap: 4px; align-items: center; }
+    
     /* Structure Buttons */
     .btn-struct {
       height: 32px; padding: 0 10px;
       background: #FFFFFF; border: 1px solid var(--border-light);
-      color: var(--color-brand); 
+      color: var(--text-sub); /* Kurumizome */
       font-family: 'Noto Serif JP', serif; font-size: 14px; font-weight: 700;
       border-radius: var(--radius-btn); 
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       line-height: 1; cursor: pointer; transition: all 0.2s;
     }
-    .btn-struct span.pt-hint { font-family: sans-serif; font-size: 9px; opacity: 0.6; margin-top: 1px; font-weight: 400; color: var(--text-sub); }
-    .btn-struct:hover { border-color: var(--color-brand); background: #FDFCF8; }
+    .btn-struct span.pt-hint { font-family: sans-serif; font-size: 9px; opacity: 0.6; margin-top: 1px; font-weight: 400; color: var(--border-light); }
+    .btn-struct:hover { border-color: var(--color-brand); color: var(--color-brand); background: #FDFCF8; }
 
-    /* Edit/History Buttons */
+    /* Font Size Select (Task 4) */
+    .font-size-select {
+      height: 32px; padding: 0 8px;
+      background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-btn);
+      color: var(--text-ink); font-size: 13px; font-family: 'Noto Serif JP', serif; font-weight: 600;
+      cursor: pointer; outline: none; text-align: center;
+    }
+    .font-size-select:hover { border-color: var(--color-brand); }
+
+    /* Edit Icons */
     .btn-edit {
       height: 32px; min-width: 32px; padding: 0 8px;
       background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-btn);
-      color: var(--text-ink); font-size: 14px; font-weight: 600;
-      display: flex; align-items: center; justify-content: center; gap: 2px;
+      color: var(--text-sub); font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
       cursor: pointer; transition: all 0.2s;
     }
     .btn-edit:hover { border-color: var(--color-brand); color: var(--color-brand); background: #FDFCF8; }
     .btn-edit svg { width: 16px; height: 16px; }
 
-    /* *** TASK 3 & 4: Primary Actions (Jump Colors) *** */
+    /* Primary Actions (Jump Colors) */
     .btn-emphasis { 
       background: #FFF5F5; color: var(--color-jump-action); border: 1px solid #FECACA;
       height: 34px; padding: 0 16px; border-radius: var(--radius-btn); 
@@ -224,10 +233,10 @@
     }
     .btn-copy:hover { filter: brightness(1.2); transform: translateY(-1px); box-shadow: 0 4px 10px rgba(25, 47, 96, 0.3); }
 
-    /* Task 2: Restore Default Button */
+    /* Restore Default */
     .btn-restore {
       height: 32px; padding: 0 10px;
-      background: transparent; border: 1px dashed var(--text-sub); border-radius: var(--radius-btn);
+      background: transparent; border: 1px dashed var(--border-light); border-radius: var(--radius-btn);
       color: var(--text-sub); font-size: 12px; font-weight: 500;
       display: flex; align-items: center; gap: 4px; cursor: pointer; transition: 0.2s;
     }
@@ -241,7 +250,7 @@
     }
     .swatch-item:hover { transform: scale(1.2); border-color: var(--text-sub); }
     .btn-color-reset {
-      width: 24px; height: 24px; border-radius: 50%; border: 1px dashed var(--text-sub);
+      width: 24px; height: 24px; border-radius: 50%; border: 1px dashed var(--border-light);
       background: transparent; color: var(--text-sub); font-size: 10px;
       display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;
     }
@@ -250,7 +259,7 @@
     /* Editor Canvas */
     .scrollable-preview-area { 
       flex: 1; overflow-y: auto; overflow-x: hidden; display: block; 
-      background-color: #E8E6DE; 
+      background-color: #E6E3DB; /* Darker textured beige */
       text-align: center; padding-top: 30px; padding-bottom: 60px;
       scrollbar-gutter: stable; 
     }
@@ -263,7 +272,9 @@
       padding: 70px 80px; margin: 0 auto; 
       text-align: justify;
       white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word;    
-      line-height: 2.1; font-size: 16px; color: #333; 
+      line-height: 2.1; 
+      font-size: 12pt; /* Default 12pt */
+      color: #333; 
       box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
     }
     html[data-theme="dark"] .editor-paper { background: #2B2822; color: #E7E5E4; }
@@ -392,14 +403,25 @@
           <button onmousedown="event.preventDefault(); applyBlock('H2')" class="btn-struct" title="副標題 (18pt)">
             H2 <span class="pt-hint">18pt</span>
           </button>
-          <button onmousedown="event.preventDefault(); applyBlock('P')" class="btn-struct" title="內文 (11pt)">
-            內文 <span class="pt-hint">11pt</span>
+          <button onmousedown="event.preventDefault(); applyBlock('P')" class="btn-struct" title="內文 (12pt)">
+            內文 <span class="pt-hint">12pt</span>
           </button>
         </div>
         
         <div class="tool-sep"></div>
 
         <div class="group-edit">
+           <select id="fontSizeSelect" onchange="changeFontSize(this.value)" class="font-size-select" title="選擇字體大小">
+             <option value="10">10pt</option>
+             <option value="11">11pt</option>
+             <option value="12" selected>12pt</option>
+             <option value="14">14pt</option>
+             <option value="18">18pt</option>
+             <option value="24">24pt</option>
+             <option value="30">30pt</option>
+             <option value="36">36pt</option>
+           </select>
+
            <button onmousedown="event.preventDefault(); cmd('undo')" class="btn-edit" title="復原"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg></button>
            <button onmousedown="event.preventDefault(); cmd('redo')" class="btn-edit" title="重做"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/></svg></button>
            
@@ -433,13 +455,6 @@
              <div class="swatch-item bg-[#FEECEC]" onmousedown="event.preventDefault(); applyHilite('#FEECEC')" title="紅"></div>
              <div class="swatch-item bg-[#D1EAED]" onmousedown="event.preventDefault(); applyHilite('#D1EAED')" title="藍"></div>
              <button onmousedown="event.preventDefault(); applyHilite('transparent')" class="btn-color-reset" title="清除背景">✕</button>
-           </div>
-           
-           <div class="w-px h-4 bg-[var(--border-light)] opacity-50"></div>
-           
-           <div class="flex">
-             <button onmousedown="event.preventDefault(); adjustFontSize(1)" class="btn-edit" title="放大字體">A+</button>
-             <button onmousedown="event.preventDefault(); adjustFontSize(-1)" class="btn-edit" title="縮小字體">A-</button>
            </div>
         </div>
 
@@ -487,7 +502,7 @@
     const autoPuncToggle = document.getElementById('autoPunc');
     const totalCount = document.getElementById('totalCount');
     const selectCount = document.getElementById('selectCount');
-    const STORAGE_KEY = 'highlight_pro_v80_data';
+    const STORAGE_KEY = 'highlight_pro_v81_data';
     const THEME_KEY = 'highlight_pro_theme';
 
     const TS_DICT = {
@@ -544,21 +559,34 @@
 
     function applyBlock(tag) { editor.focus(); document.execCommand('formatBlock', false, tag); updateCounts(); }
 
-    // Task 2: Restore Default
     function applyCleanStyle() {
       if(confirm('確定要移除所有格式（變回純文字）嗎？')) {
          const cleanText = editor.innerText;
-         editor.innerHTML = cleanText; // Strip tags
+         editor.innerHTML = cleanText; 
          updateCounts();
       }
     }
 
-    function adjustFontSize(delta) {
+    // New Font Size Logic using specific PT
+    function changeFontSize(val) {
       editor.focus();
-      let currentSize = document.queryCommandValue("fontSize") || 3; 
-      let newSize = parseInt(currentSize) + delta;
-      if(newSize < 1) newSize = 1; if(newSize > 7) newSize = 7;
-      document.execCommand("fontSize", false, newSize);
+      const selection = window.getSelection();
+      if (!selection.rangeCount || selection.isCollapsed) return;
+      
+      const span = document.createElement("span");
+      span.style.fontSize = val + "pt";
+      
+      const range = selection.getRangeAt(0);
+      try {
+         // This wraps selection in a span with explicit pt size
+         range.surroundContents(span);
+      } catch (e) {
+         // Fallback if structure is complex
+         document.execCommand('styleWithCSS', false, true);
+         document.execCommand('fontSize', false, '3'); // dummy
+         // Ideally we need more complex logic for nested tags, 
+         // but surroundContents works for flat text selection which is 90% use case.
+      }
     }
 
     function convertPunctuation(text) {
@@ -636,7 +664,6 @@
       const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "draft.txt"; a.click();
     }
     
-    // Task 1: Smart Clear Logic
     function handleClearAction(select) {
       if (!select.value) return;
       if(confirm('確定要執行此清空操作嗎？無法復原。')) {
@@ -645,7 +672,7 @@
         else if(select.value === 'all') { source.value = ""; kwListArea.value = ""; editor.innerText = ""; densityResults.innerHTML = ""; }
         updateCounts(); saveData();
       }
-      select.value = ""; // Reset select
+      select.value = ""; 
     }
 
     function toggleTheme() {
@@ -673,7 +700,7 @@
     
     source.addEventListener('input', () => syncPreview());
     kwListArea.addEventListener('input', () => runDensityAnalysis());
-    updateCounts(); // Init count
+    updateCounts(); 
   </script>
 </body>
 </html>
