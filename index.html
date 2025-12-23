@@ -10,36 +10,35 @@
   <script src="https://cdn.tailwindcss.com"></script>
   
   <style>
-    /* --- Design System: Rikyu Colors (V7.9.6) --- */
+    /* --- Design System: Rikyu Colors (V8.0) --- */
     :root {
       /* 基調：白橡 (Shirotsurubami) 的淡化版 - 溫暖米色 */
       --bg-canvas: #F4F1EA; 
       /* 卡片：極致的紙白 */
       --bg-card: #FFFEFA;
       
-      /* 文字：油色 (Aburairo) 與深灰的混合 - 比純黑更柔和 */
+      /* 文字：油色 (Aburairo) 與深灰的混合 */
       --text-ink: #3E3C38; 
-      --text-sub: #8F8667; /* 利休色系 */
+      --text-sub: #8F8667; 
       
-      /* 邊框：亞麻色 (Amairo) */
+      /* 邊框：亞麻色 */
       --border-light: #D6C6AF;
-      --border-strong: #BFA46F; /* 榛色 */
+      --border-strong: #BFA46F; 
       
       /* --- 品牌色 & 跳色 --- */
-      /* 主品牌：鶯茶 (Uguisucha) - 沈穩的抹茶綠褐 */
-      --color-brand: #715C1F; 
+      --color-brand: #715C1F; /* 鶯茶 */
       
-      /* JUMP: Auto Mark - 茜色 (Deep Red) */
+      /* JUMP: Auto Mark & Red Bold - 茜色 (Deep Red) */
       --color-jump-action: #B7282E; 
       
       /* JUMP: Finish - 紺青 (Navy) */
       --color-jump-finish: #192F60;
       
       --shadow-card: 0 4px 12px -2px rgba(113, 92, 31, 0.06);
-      --radius-btn: 4px;
+      --radius-btn: 6px;
     }
 
-    /* Dark Mode (Wafuu Night) */
+    /* Dark Mode */
     html[data-theme="dark"] {
       --bg-canvas: #1F1D19;
       --bg-card: #292622;
@@ -47,7 +46,7 @@
       --text-sub: #A6A092;
       --border-light: #454035;
       --border-strong: #715C1F;
-      --color-brand: #C7B370; /* 木蘭色 (Gold) */
+      --color-brand: #C7B370;
       --color-jump-action: #FF6B6B;
       --color-jump-finish: #6B8AFF;
     }
@@ -117,7 +116,7 @@
       letter-spacing: 0.1em; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;
     }
 
-    /* --- Auto Mark Card (Jump Color) --- */
+    /* --- Action Card --- */
     .jp-action-card {
       background-color: #FFFEFA;
       border: 1px solid var(--border-light);
@@ -126,7 +125,7 @@
       box-shadow: inset 0 0 20px rgba(113, 92, 31, 0.03);
     }
     
-    /* JUMP COLOR: Deep Red for Action */
+    /* JUMP COLOR: Action */
     .btn-jp-hero {
       font-family: 'Noto Serif JP', serif;
       background-color: var(--color-jump-action); color: #FFFFFF;
@@ -140,44 +139,54 @@
     .btn-jp-hero:hover { filter: brightness(1.1); transform: translateY(-1px); }
     
     .jp-secondary-actions {
-      display: flex; gap: 10px; justify-content: center;
+      display: flex; gap: 8px; justify-content: center;
       border-top: 1px dashed var(--border-light); padding-top: 14px;
     }
     
     .btn-jp-sub {
       background: #FAF9F6; border: 1px solid var(--border-light); border-radius: 4px;
-      color: var(--text-sub); padding: 5px 12px;
+      color: var(--text-sub); padding: 5px 12px; flex: 1;
       font-size: 12px; cursor: pointer; transition: all 0.2s;
       font-family: 'Noto Serif JP', serif;
     }
     .btn-jp-sub:hover { color: var(--color-brand); border-color: var(--color-brand); background: #FFFFFF; }
     
-    .btn-reset { color: #C44338; border-color: #E2E8F0; }
-    .btn-reset:hover { border-color: #C44338; background: #FFF5F5; }
+    /* Reset Dropdown Styling */
+    .select-reset {
+      background: #FFF5F5; border: 1px solid #F5E6E6; border-radius: 4px;
+      color: #C44338; padding: 5px 8px; font-size: 12px; cursor: pointer;
+      font-family: 'Noto Serif JP', serif; outline: none; flex: 1;
+      text-align: center;
+    }
+    .select-reset:hover { border-color: #C44338; }
 
-    /* --- Toolbar Redesign (Clear & Conspicuous) --- */
+    /* --- Toolbar (V8.0) --- */
     .preview-section { flex: 1; position: relative; min-width: 0; }
 
     .toolbar-container {
       background: var(--bg-card);
       border-bottom: 1px solid var(--border-light);
       padding: 10px 16px;
-      display: flex; align-items: center; gap: 12px;
+      display: flex; align-items: center; gap: 10px;
       flex-wrap: wrap; z-index: 40;
     }
     
-    /* Vertical Separator */
-    .tool-sep { width: 1px; height: 24px; background: var(--border-light); }
+    /* Separator */
+    .tool-sep { width: 1px; height: 24px; background: var(--border-light); margin: 0 4px; }
+    .tool-sep-strong { width: 2px; height: 28px; background: var(--border-light); margin: 0 8px; }
 
-    /* 1. Structure Group */
+    /* Group Styles */
     .group-struct { display: flex; gap: 4px; }
+    .group-edit { display: flex; gap: 4px; }
+    /* Primary Action Group - Clearly Separated */
+    .group-primary { display: flex; gap: 8px; align-items: center; }
+
+    /* Structure Buttons */
     .btn-struct {
       height: 32px; padding: 0 10px;
-      background: #FFFFFF; 
-      border: 1px solid var(--border-light);
+      background: #FFFFFF; border: 1px solid var(--border-light);
       color: var(--color-brand); 
-      font-family: 'Noto Serif JP', serif;
-      font-size: 14px; font-weight: 700;
+      font-family: 'Noto Serif JP', serif; font-size: 14px; font-weight: 700;
       border-radius: var(--radius-btn); 
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       line-height: 1; cursor: pointer; transition: all 0.2s;
@@ -185,28 +194,7 @@
     .btn-struct span.pt-hint { font-family: sans-serif; font-size: 9px; opacity: 0.6; margin-top: 1px; font-weight: 400; color: var(--text-sub); }
     .btn-struct:hover { border-color: var(--color-brand); background: #FDFCF8; }
 
-    /* 2. Color Group */
-    .group-color { display: flex; gap: 6px; align-items: center; }
-    .color-label { font-size: 10px; color: var(--text-sub); writing-mode: vertical-lr; height: 24px; margin-right: 2px; opacity: 0.5; }
-    
-    .swatch-item { 
-      width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--border-light); 
-      cursor: pointer; transition: transform 0.15s; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .swatch-item:hover { transform: scale(1.2); border-color: var(--text-sub); }
-    
-    /* The "None" / Reset Buttons */
-    .btn-color-reset {
-      width: 24px; height: 24px; border-radius: 50%; border: 1px dashed var(--text-sub);
-      background: transparent; color: var(--text-sub);
-      display: flex; align-items: center; justify-content: center; cursor: pointer;
-      font-size: 10px; transition: all 0.2s;
-    }
-    .btn-color-reset:hover { color: var(--color-jump-action); border-color: var(--color-jump-action); background: white; }
-
-    /* 3. Editing Group (Big & Obvious) */
-    .group-edit { display: flex; gap: 4px; }
+    /* Edit/History Buttons */
     .btn-edit {
       height: 32px; min-width: 32px; padding: 0 8px;
       background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-btn);
@@ -217,30 +205,52 @@
     .btn-edit:hover { border-color: var(--color-brand); color: var(--color-brand); background: #FDFCF8; }
     .btn-edit svg { width: 16px; height: 16px; }
 
-    /* 4. Finish Group (Jump Color - Navy) */
-    .group-finish { margin-left: auto; display: flex; gap: 8px; }
-    
+    /* *** TASK 3 & 4: Primary Actions (Jump Colors) *** */
     .btn-emphasis { 
       background: #FFF5F5; color: var(--color-jump-action); border: 1px solid #FECACA;
-      height: 34px; padding: 0 14px; border-radius: var(--radius-btn); 
+      height: 34px; padding: 0 16px; border-radius: var(--radius-btn); 
       font-family: 'Noto Serif JP', serif; font-weight: 700; font-size: 13px;
       display: flex; align-items: center; gap: 6px; transition: 0.2s; cursor: pointer;
+      box-shadow: 0 2px 5px rgba(183, 40, 46, 0.1);
     }
-    .btn-emphasis:hover { background: var(--color-jump-action); color: white; border-color: var(--color-jump-action); }
+    .btn-emphasis:hover { background: var(--color-jump-action); color: white; border-color: var(--color-jump-action); box-shadow: 0 4px 8px rgba(183, 40, 46, 0.25); }
 
     .btn-copy {
       background: var(--color-jump-finish); color: white; border: none;
-      height: 34px; padding: 0 18px; border-radius: var(--radius-btn); 
+      height: 34px; padding: 0 20px; border-radius: var(--radius-btn); 
       font-family: 'Noto Serif JP', serif; font-weight: 600; font-size: 13px;
       display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s;
-      box-shadow: 0 3px 8px rgba(25, 47, 96, 0.25);
+      box-shadow: 0 2px 5px rgba(25, 47, 96, 0.2);
     }
-    .btn-copy:hover { filter: brightness(1.2); transform: translateY(-1px); }
+    .btn-copy:hover { filter: brightness(1.2); transform: translateY(-1px); box-shadow: 0 4px 10px rgba(25, 47, 96, 0.3); }
+
+    /* Task 2: Restore Default Button */
+    .btn-restore {
+      height: 32px; padding: 0 10px;
+      background: transparent; border: 1px dashed var(--text-sub); border-radius: var(--radius-btn);
+      color: var(--text-sub); font-size: 12px; font-weight: 500;
+      display: flex; align-items: center; gap: 4px; cursor: pointer; transition: 0.2s;
+    }
+    .btn-restore:hover { border-color: var(--color-jump-finish); color: var(--color-jump-finish); background: #F0F4FF; }
+
+    /* Color Swatches */
+    .group-color { display: flex; gap: 6px; align-items: center; }
+    .swatch-item { 
+      width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--border-light); 
+      cursor: pointer; transition: transform 0.15s; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    }
+    .swatch-item:hover { transform: scale(1.2); border-color: var(--text-sub); }
+    .btn-color-reset {
+      width: 24px; height: 24px; border-radius: 50%; border: 1px dashed var(--text-sub);
+      background: transparent; color: var(--text-sub); font-size: 10px;
+      display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-color-reset:hover { color: var(--color-jump-action); border-color: var(--color-jump-action); background: white; }
 
     /* Editor Canvas */
     .scrollable-preview-area { 
       flex: 1; overflow-y: auto; overflow-x: hidden; display: block; 
-      background-color: #E8E6DE; /* Darker tone of Sand */
+      background-color: #E8E6DE; 
       text-align: center; padding-top: 30px; padding-bottom: 60px;
       scrollbar-gutter: stable; 
     }
@@ -270,14 +280,6 @@
     }
     .count-val { font-family: sans-serif; font-weight: 700; color: var(--text-ink); }
 
-    /* Conversion Buttons */
-    .conv-btn {
-      font-size: 10px; padding: 3px 8px; border-radius: 4px; 
-      background: #FFFFFF; color: var(--color-brand); border: 1px solid var(--border-light);
-      transition: 0.2s; font-family: 'Noto Serif JP', serif; font-weight: 600;
-    }
-    .conv-btn:hover { background: var(--color-brand); color: white; border-color: var(--color-brand); }
-
     /* Responsive */
     .mobile-tab-bar { display: none; }
     
@@ -296,6 +298,7 @@
       }
       .toolbar-container { overflow-x: auto; padding: 8px; gap: 8px; }
       .tool-sep { display: none; }
+      .tool-sep-strong { display: inline-block; width: 1px; margin: 0 4px; }
       
       .show-preview .sidebar-input { transform: translateX(-20px); opacity: 0; pointer-events: none; }
       .show-preview .preview-section { opacity: 1; pointer-events: auto; z-index: 35; }
@@ -346,8 +349,8 @@
               <input type="checkbox" id="autoPunc" class="accent-[var(--color-brand)] w-3.5 h-3.5" checked>
             </label>
             <div class="flex gap-1">
-              <button onclick="convertText('S2T')" class="conv-btn" title="簡體轉繁體">簡→繁</button>
-              <button onclick="convertText('T2S')" class="conv-btn" title="繁體轉簡體">繁→簡</button>
+              <button onclick="convertText('S2T')" class="text-[10px] px-2 py-0.5 border border-[var(--border-light)] rounded bg-white text-[var(--text-sub)] hover:text-[var(--color-brand)] hover:border-[var(--color-brand)] transition">簡→繁</button>
+              <button onclick="convertText('T2S')" class="text-[10px] px-2 py-0.5 border border-[var(--border-light)] rounded bg-white text-[var(--text-sub)] hover:text-[var(--color-brand)] hover:border-[var(--color-brand)] transition">繁→簡</button>
             </div>
           </div>
         </div>
@@ -367,7 +370,12 @@
           
           <div class="jp-secondary-actions">
              <button onclick="downloadTxt()" class="btn-jp-sub">下載 .txt</button>
-             <button onclick="clearAll()" class="btn-jp-sub btn-reset">重置</button>
+             <select onchange="handleClearAction(this)" class="select-reset">
+               <option value="" selected disabled>🗑️ 重置...</option>
+               <option value="source">清空原文</option>
+               <option value="kw">清空關鍵字</option>
+               <option value="all">全部清空</option>
+             </select>
           </div>
         </div>
 
@@ -390,47 +398,49 @@
         </div>
         
         <div class="tool-sep"></div>
-        
-        <div class="group-color">
-           <div class="swatch-group">
+
+        <div class="group-edit">
+           <button onmousedown="event.preventDefault(); cmd('undo')" class="btn-edit" title="復原"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg></button>
+           <button onmousedown="event.preventDefault(); cmd('redo')" class="btn-edit" title="重做"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/></svg></button>
+           
+           <div class="w-px h-6 bg-[var(--border-light)] mx-1"></div>
+           
+           <button onmousedown="event.preventDefault(); applyRedBold()" class="btn-emphasis" title="紅字+粗體">A+ 重點</button>
+           <button onclick="copyToDocs(this)" class="btn-copy" title="複製到剪貼簿 (微軟正黑)">
+             複製
+           </button>
+        </div>
+
+        <div class="tool-sep-strong"></div>
+
+        <button onmousedown="event.preventDefault(); applyCleanStyle()" class="btn-restore" title="移除所有格式">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          還回預設
+        </button>
+
+        <div class="ml-auto flex items-center gap-4">
+           <div class="group-color">
              <div class="swatch-item bg-[#2C2C2C]" onmousedown="event.preventDefault(); applyColor('#2C2C2C')" title="墨"></div>
              <div class="swatch-item bg-[#B93A32]" onmousedown="event.preventDefault(); applyColor('#B93A32')" title="朱赤"></div>
              <div class="swatch-item bg-[#192F60]" onmousedown="event.preventDefault(); applyColor('#192F60')" title="紺青"></div>
              <button onmousedown="event.preventDefault(); applyColor('inherit')" class="btn-color-reset" title="回復預設色">✕</button>
            </div>
            
-           <div class="w-px h-4 bg-[var(--border-light)] mx-1 opacity-50"></div>
+           <div class="w-px h-4 bg-[var(--border-light)] opacity-50"></div>
            
-           <div class="swatch-group">
+           <div class="group-color">
              <div class="swatch-item bg-[#FFF9C4]" onmousedown="event.preventDefault(); applyHilite('#FFF9C4')" title="黃"></div>
              <div class="swatch-item bg-[#FEECEC]" onmousedown="event.preventDefault(); applyHilite('#FEECEC')" title="紅"></div>
              <div class="swatch-item bg-[#D1EAED]" onmousedown="event.preventDefault(); applyHilite('#D1EAED')" title="藍"></div>
              <button onmousedown="event.preventDefault(); applyHilite('transparent')" class="btn-color-reset" title="清除背景">✕</button>
            </div>
-        </div>
-
-        <div class="tool-sep"></div>
-
-        <div class="group-edit">
-           <button onmousedown="event.preventDefault(); adjustFontSize(1)" class="btn-edit" title="放大字體">
-             A+
-           </button>
-           <button onmousedown="event.preventDefault(); adjustFontSize(-1)" class="btn-edit" title="縮小字體">
-             A-
-           </button>
-           <button onmousedown="event.preventDefault(); cmd('undo')" class="btn-edit" title="復原">
-             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>
-           </button>
-           <button onmousedown="event.preventDefault(); cmd('redo')" class="btn-edit" title="重做">
-             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/></svg>
-           </button>
-        </div>
-        
-        <div class="group-finish">
-           <button onmousedown="event.preventDefault(); applyRedBold()" class="btn-emphasis" title="紅字+粗體">A+ 重點</button>
-           <button onclick="copyToDocs(this)" class="btn-copy" title="複製到剪貼簿 (微軟正黑)">
-             複製
-           </button>
+           
+           <div class="w-px h-4 bg-[var(--border-light)] opacity-50"></div>
+           
+           <div class="flex">
+             <button onmousedown="event.preventDefault(); adjustFontSize(1)" class="btn-edit" title="放大字體">A+</button>
+             <button onmousedown="event.preventDefault(); adjustFontSize(-1)" class="btn-edit" title="縮小字體">A-</button>
+           </div>
         </div>
 
       </div>
@@ -477,10 +487,9 @@
     const autoPuncToggle = document.getElementById('autoPunc');
     const totalCount = document.getElementById('totalCount');
     const selectCount = document.getElementById('selectCount');
-    const STORAGE_KEY = 'highlight_pro_v796_data';
+    const STORAGE_KEY = 'highlight_pro_v80_data';
     const THEME_KEY = 'highlight_pro_theme';
 
-    // Simplified Conversion Dictionary
     const TS_DICT = {
       '么':'麼','于':'於','为':'為','干':'乾','后':'後','里':'裡','制':'製','面':'麵','发':'發','郁':'鬱','松':'鬆','才':'才','台':'臺',
       '万':'萬','与':'與','丑':'醜','专':'專','业':'業','丛':'叢','东':'東','丝':'絲','两':'兩','严':'嚴','丧':'喪','个':'個','丰':'豐',
@@ -512,13 +521,9 @@
 
     function cmd(command, value = null) { editor.focus(); document.execCommand(command, false, value); updateCounts(); }
     
-    // Explicit Color Reset
     function applyColor(hex) { 
-      if (hex === 'inherit') {
-         document.execCommand('removeFormat', false, null); // Better for reset
-      } else {
-         cmd('foreColor', hex); 
-      }
+      if (hex === 'inherit') { document.execCommand('removeFormat', false, null); } 
+      else { cmd('foreColor', hex); }
     }
     
     function applyHilite(hex) { if (!document.execCommand('hiliteColor', false, hex)) document.execCommand('backColor', false, hex); updateCounts(); }
@@ -538,6 +543,15 @@
     }
 
     function applyBlock(tag) { editor.focus(); document.execCommand('formatBlock', false, tag); updateCounts(); }
+
+    // Task 2: Restore Default
+    function applyCleanStyle() {
+      if(confirm('確定要移除所有格式（變回純文字）嗎？')) {
+         const cleanText = editor.innerText;
+         editor.innerHTML = cleanText; // Strip tags
+         updateCounts();
+      }
+    }
 
     function adjustFontSize(delta) {
       editor.focus();
@@ -563,12 +577,10 @@
       const text = editor.innerText || "";
       const total = text.replace(/\s/g, '').length;
       totalCount.innerText = total;
-      
       const selection = window.getSelection().toString();
       const selected = selection.replace(/\s/g, '').length;
       selectCount.innerText = selected;
     }
-    
     document.addEventListener('selectionchange', updateCounts);
     editor.addEventListener('keyup', updateCounts);
 
@@ -624,8 +636,16 @@
       const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "draft.txt"; a.click();
     }
     
-    function clearAll() {
-      if(confirm('確定清空？')) { source.value = ""; kwListArea.value = ""; editor.innerText = ""; densityResults.innerHTML = ""; updateCounts(); saveData(); }
+    // Task 1: Smart Clear Logic
+    function handleClearAction(select) {
+      if (!select.value) return;
+      if(confirm('確定要執行此清空操作嗎？無法復原。')) {
+        if(select.value === 'source') { source.value = ""; editor.innerText = ""; }
+        else if(select.value === 'kw') { kwListArea.value = ""; densityResults.innerHTML = ""; }
+        else if(select.value === 'all') { source.value = ""; kwListArea.value = ""; editor.innerText = ""; densityResults.innerHTML = ""; }
+        updateCounts(); saveData();
+      }
+      select.value = ""; // Reset select
     }
 
     function toggleTheme() {
