@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>蛍光ペン PRO - SEO 寫手數位工具</title>
+  <title>蛍光ペン PRO - SEO文案數位工具</title>
   
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23374B6D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 19 7-7 3 3-7 7-3-3Z'/%3E%3Cpath d='m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5Z'/%3E%3Cpath d='m2 2 5 2.25'/%3E%3Cpath d='m11 4 2 1.5'/%3E%3C/svg%3E">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;600;900&display=swap" rel="stylesheet">
@@ -12,29 +12,29 @@
   <style>
     /* --- Design System: Wafuu Stationery --- */
     :root {
-      --bg-canvas: #F7F7F5; /* 更溫潤的紙色 */
+      --bg-canvas: #F2F4F6; /* 現代感淺灰藍 */
       --bg-card: #FFFFFF;
       --text-ink: #2C2C2C;
-      --text-sub: #666666;
-      --border-light: #E5E5E5;
+      --text-sub: #64748B;
+      --border-light: #E2E8F0;
       
       --color-brand: #374B6D; /* 藍鉄 */
       --color-brand-hover: #2A3B55;
       --color-accent: #B93A32; /* 朱赤 */
       
-      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-      --shadow-float: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-      --radius-std: 10px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-float: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+      --radius-std: 8px;
     }
 
     /* Dark Mode */
     html[data-theme="dark"] {
-      --bg-canvas: #111827;
-      --bg-card: #1F2937;
-      --text-ink: #F3F4F6;
-      --text-sub: #9CA3AF;
-      --border-light: #374151;
-      --shadow-sm: 0 1px 2px rgba(0,0,0,0.5);
+      --bg-canvas: #0F172A;
+      --bg-card: #1E293B;
+      --text-ink: #F1F5F9;
+      --text-sub: #94A3B8;
+      --border-light: #334155;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.5);
     }
     
     html, body { 
@@ -46,7 +46,7 @@
       transition: background-color 0.3s;
     }
 
-    .serif-font { font-family: 'Noto Serif JP', serif; letter-spacing: 0.04em; }
+    .serif-font { font-family: 'Noto Serif JP', serif; letter-spacing: 0.03em; }
 
     .app-container { 
       display: flex; flex-direction: column; height: 100vh; width: 100vw;
@@ -56,13 +56,11 @@
     /* --- Header --- */
     .header-area { 
       flex-shrink: 0; height: 60px; z-index: 50; 
-      background: rgba(255, 255, 255, 0.85); 
-      backdrop-filter: blur(12px); /* 毛玻璃質感 */
+      background: var(--bg-card);
       display: flex; align-items: center; justify-content: space-between;
       border-bottom: 1px solid var(--border-light);
       padding: 0 24px;
     }
-    html[data-theme="dark"] .header-area { background: rgba(31, 41, 55, 0.9); }
 
     /* --- Workspace --- */
     .main-workspace { 
@@ -83,135 +81,117 @@
     /* --- Sidebar --- */
     .sidebar-input { 
       flex: 0 0 320px; width: 320px; 
-      z-index: 20; transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      z-index: 20; transition: transform 0.3s;
     }
     
     .input-group { padding: 16px; display: flex; flex-direction: column; }
     
     textarea { 
       width: 100%; resize: none; border: none; outline: none; background: transparent;
-      font-size: 14px; line-height: 1.8; color: var(--text-sub);
+      font-size: 14px; line-height: 1.7; color: var(--text-sub);
     }
     textarea:focus { color: var(--text-ink); }
     
     .label-header { 
       font-size: 11px; font-weight: 800; color: var(--color-brand); 
-      letter-spacing: 0.08em; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+      letter-spacing: 0.05em; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;
       text-transform: uppercase;
     }
 
-    /* --- Preview & Toolbar (Redesigned) --- */
+    /* --- Toolbars --- */
     .preview-section { flex: 1; position: relative; min-width: 0; }
 
     .toolbar-container {
       background: var(--bg-card);
       border-bottom: 1px solid var(--border-light);
-      padding: 8px 16px;
-      display: flex; align-items: center; gap: 12px;
+      padding: 8px 12px;
+      display: flex; align-items: center; gap: 8px;
       flex-wrap: wrap; z-index: 40;
     }
     
-    /* Toolbar Groups */
     .tool-group {
       display: flex; align-items: center; gap: 4px;
-      padding-right: 12px; border-right: 1px solid var(--border-light);
+      padding-right: 8px; border-right: 1px solid var(--border-light);
     }
-    .tool-group:last-child { border-right: none; padding-right: 0; margin-left: auto; } /* Copy button pushed right */
+    .tool-group:last-child { border-right: none; padding-right: 0; }
 
-    /* Structure Buttons (Tags style) */
+    /* H1/H2 Buttons */
     .btn-struct {
-      height: 32px; padding: 0 10px;
+      height: 30px; padding: 0 8px;
       background: transparent; 
-      border: 1px solid transparent;
+      border: 1px solid var(--border-light);
       color: var(--text-sub); 
-      font-size: 13px; font-weight: 600;
-      border-radius: 6px; 
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      line-height: 1;
-      cursor: pointer; transition: all 0.2s;
+      font-size: 12px; font-weight: 600;
+      border-radius: 4px; 
+      display: flex; align-items: center; justify-content: center; gap: 4px;
+      cursor: pointer; transition: all 0.1s;
     }
-    .btn-struct span.pt-hint { font-size: 9px; opacity: 0.6; margin-top: 2px; font-weight: 400; }
-    .btn-struct:hover { background: var(--bg-canvas); color: var(--text-ink); }
-    .btn-struct:active { transform: scale(0.96); }
-
-    /* Font Size Control */
-    .font-size-wrapper {
-      display: flex; align-items: center; 
-      border: 1px solid var(--border-light); border-radius: 6px;
-      height: 32px; background: var(--bg-card); overflow: hidden;
-    }
-    .btn-size-change {
-      width: 28px; height: 100%; display: flex; align-items: center; justify-content: center;
-      cursor: pointer; color: var(--text-sub); font-size: 14px; transition: 0.2s;
-    }
-    .btn-size-change:hover { background: var(--bg-canvas); color: var(--text-ink); }
-    .size-display {
-      width: 32px; text-align: center; font-size: 13px; font-weight: 600;
-      color: var(--text-ink); border-left: 1px solid var(--border-light); border-right: 1px solid var(--border-light);
-      line-height: 32px; cursor: default; user-select: none;
-    }
+    .btn-struct span.pt-hint { font-size: 9px; opacity: 0.5; font-weight: 400; }
+    .btn-struct:hover { background: var(--bg-canvas); color: var(--text-ink); border-color: var(--text-sub); }
 
     /* Icons */
     .icon-btn { 
-      width: 32px; height: 32px; border-radius: 6px; color: var(--text-sub); 
+      width: 30px; height: 30px; border-radius: 4px; color: var(--text-sub); 
       display: flex; align-items: center; justify-content: center; transition: all 0.2s;
     }
     .icon-btn:hover { background: var(--bg-canvas); color: var(--text-ink); }
 
     /* Colors */
-    .swatch-group { display: flex; gap: 6px; padding: 0 4px; }
+    .swatch-group { display: flex; gap: 4px; padding: 0 4px; }
     .swatch-item { 
-      width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--bg-card); 
-      box-shadow: 0 0 0 1px var(--border-light);
+      width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--border-light); 
       cursor: pointer; transition: transform 0.15s; flex-shrink: 0;
     }
-    .swatch-item:hover { transform: scale(1.15); z-index: 10; }
+    .swatch-item:hover { transform: scale(1.2); }
 
-    /* Action Buttons (The "Finish" Group) */
+    /* Action Buttons */
     .btn-emphasis { 
       background: #FEF2F2; color: var(--color-accent); border: 1px solid #FECACA;
-      height: 32px; padding: 0 12px; border-radius: 6px; font-weight: 700; font-size: 12px;
-      display: flex; align-items: center; gap: 6px; transition: 0.2s; cursor: pointer;
+      height: 32px; padding: 0 10px; border-radius: 6px; font-weight: 700; font-size: 12px;
+      display: flex; align-items: center; gap: 4px; transition: 0.2s; cursor: pointer;
     }
     .btn-emphasis:hover { background: var(--color-accent); color: white; border-color: var(--color-accent); }
 
     .btn-copy {
       background: var(--color-brand); color: white; border: none;
-      height: 32px; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px;
+      height: 32px; padding: 0 12px; border-radius: 6px; font-weight: 600; font-size: 12px;
       display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s;
-      box-shadow: 0 2px 6px rgba(55, 75, 109, 0.25);
+      box-shadow: 0 2px 4px rgba(55, 75, 109, 0.2);
     }
-    .btn-copy:hover { background: var(--color-brand-hover); transform: translateY(-1px); box-shadow: 0 4px 10px rgba(55, 75, 109, 0.35); }
+    .btn-copy:hover { background: var(--color-brand-hover); transform: translateY(-1px); box-shadow: 0 4px 8px rgba(55, 75, 109, 0.3); }
 
     /* Editor Canvas */
     .scrollable-preview-area { 
       flex: 1; overflow-y: auto; overflow-x: hidden;
       display: block; padding: 0; text-align: center;
-      background-color: #F0F0F0; 
-      /* Dot pattern */
-      background-image: radial-gradient(#d1d5db 1px, transparent 1px);
-      background-size: 20px 20px;
+      background-color: #F8FAFC; 
+      background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+      background-size: 24px 24px;
     }
-    html[data-theme="dark"] .scrollable-preview-area { background-color: #0b1120; background-image: radial-gradient(#374151 1px, transparent 1px); }
+    html[data-theme="dark"] .scrollable-preview-area { background-color: #0b1120; background-image: radial-gradient(#334155 1px, transparent 1px); }
 
     .editor-paper { 
-      display: inline-block; width: 100%; max-width: 820px; 
-      min-height: 1056px; height: auto !important;
+      display: inline-block; width: 100%; max-width: 800px; 
+      min-height: 1000px; height: auto !important;
       background: #FFFFFF; 
-      padding: 70px 80px; margin: 30px auto; 
+      padding: 60px 70px; margin: 30px auto; 
       text-align: justify;
       white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word;    
       line-height: 2.0; font-size: 16px; color: #333; 
       box-shadow: var(--shadow-float);
     }
-    
-    html[data-theme="dark"] .editor-paper {
-      background: #1F2937; color: #E2E8F0;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
+    html[data-theme="dark"] .editor-paper { background: #1E293B; color: #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
     html[data-theme="dark"] .editor-paper span[style*="color: rgb(44, 44, 44)"] { color: #E2E8F0 !important; }
 
-    /* --- Responsive Logic (Zoom Proof) --- */
+    /* Conversion Buttons */
+    .conv-btn {
+      font-size: 11px; padding: 2px 8px; border-radius: 4px; 
+      background: var(--bg-canvas); color: var(--text-sub); border: 1px solid var(--border-light);
+      transition: 0.2s;
+    }
+    .conv-btn:hover { border-color: var(--color-brand); color: var(--color-brand); background: white; }
+
+    /* Responsive */
     .mobile-tab-bar { display: none; }
     
     @media (max-width: 1024px) {
@@ -227,9 +207,8 @@
         width: 100%; height: auto; position: absolute; top: 0; bottom: 56px; left: 0; 
         z-index: 25; opacity: 0; pointer-events: none;
       }
-      .toolbar-container { overflow-x: auto; padding: 8px; gap: 8px; }
-      .tool-group { padding-right: 8px; margin-left: 0; border-right: 1px solid var(--border-light); }
-      .btn-struct span.pt-hint { display: none; } /* Mobile hide hints */
+      .toolbar-container { overflow-x: auto; padding: 8px; gap: 6px; }
+      .tool-group { padding-right: 6px; border-right: 1px solid var(--border-light); }
       
       .show-preview .sidebar-input { transform: translateX(-20px); opacity: 0; pointer-events: none; }
       .show-preview .preview-section { opacity: 1; pointer-events: auto; z-index: 35; }
@@ -246,33 +225,24 @@
         font-weight: 500; color: var(--text-sub); font-size: 10px; gap: 4px;
       }
       .tab-btn.active { color: var(--color-brand); background: var(--bg-canvas); }
-      
       .header-title-sub { display: none; } 
     }
-    
-    .btn-primary { 
-      width: 100%; padding: 12px; border-radius: 8px; 
-      background: var(--color-brand); color: white; font-weight: 700;
-      display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .btn-primary:hover { background: var(--color-brand-hover); }
   </style>
 </head>
 <body class="app-container">
 
   <header class="header-area">
-    <div class="flex items-center gap-3">
-      <div class="w-8 h-8 flex items-center justify-center text-white bg-[var(--color-brand)] rounded-lg shadow-sm">
+    <div class="flex items-center gap-3 overflow-hidden">
+      <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center text-white bg-[var(--color-brand)] rounded-lg shadow-sm">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m12 19 7-7 3 3-7 7-3-3Z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5Z"/></svg>
       </div>
-      <div class="flex flex-col justify-center">
-        <h1 class="text-lg font-bold text-[var(--color-brand)] tracking-wider serif-font leading-tight">蛍光ペン PRO</h1>
-        <span class="header-title-sub text-[10px] text-[var(--text-sub)] font-medium tracking-widest uppercase opacity-70">SEO Writer Suite</span>
+      <div class="flex flex-col justify-center min-w-0">
+        <h1 class="text-lg font-bold text-[var(--color-brand)] tracking-wider serif-font leading-tight truncate">蛍光ペン PRO</h1>
+        <span class="header-title-sub text-[10px] text-[var(--text-sub)] font-medium tracking-widest uppercase opacity-70 truncate">SEO Writer Suite</span>
       </div>
     </div>
     
-    <button onclick="toggleTheme()" class="w-8 h-8 rounded-full flex items-center justify-center text-[var(--text-sub)] hover:bg-[var(--bg-canvas)] transition-colors" title="切換夜間模式">
+    <button onclick="toggleTheme()" class="w-8 h-8 rounded-full flex items-center justify-center text-[var(--text-sub)] hover:bg-[var(--bg-canvas)] transition-colors flex-shrink-0" title="切換夜間模式">
       <svg id="moonIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="block"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
       <svg id="sunIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="hidden"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
     </button>
@@ -281,19 +251,25 @@
   <main class="main-workspace" id="mainWorkspace">
     <div class="sidebar-input card-panel">
       <div class="input-group flex-1 border-b border-[var(--border-light)]">
-        <div class="flex justify-between items-center mb-2">
-          <div class="label-header mb-0">原文輸入 (SOURCE)</div>
-          <div class="flex items-center gap-2 cursor-pointer" onclick="document.getElementById('autoPunc').click()">
-             <span class="text-[10px] font-bold text-[var(--text-sub)]">全形標點</span>
-             <input type="checkbox" id="autoPunc" class="accent-[var(--color-brand)] w-4 h-4" checked>
+        <div class="flex justify-between items-start mb-2">
+          <div class="label-header mb-0">原文輸入</div>
+          <div class="flex flex-col items-end gap-2">
+            <label class="flex items-center gap-1 cursor-pointer select-none">
+              <span class="text-[10px] font-bold text-[var(--text-sub)]">全形標點</span>
+              <input type="checkbox" id="autoPunc" class="accent-[var(--color-brand)] w-3.5 h-3.5" checked>
+            </label>
+            <div class="flex gap-1">
+              <button onclick="convertText('S2T')" class="conv-btn" title="簡體轉繁體 (Light)">簡→繁</button>
+              <button onclick="convertText('T2S')" class="conv-btn" title="繁體轉簡體 (Light)">繁→簡</button>
+            </div>
           </div>
         </div>
         <textarea id="sourceText" class="flex-1" placeholder="請貼上文章草稿..."></textarea>
       </div>
       
-      <div class="input-group bg-[var(--bg-canvas)]" style="height: 50%;">
-        <div class="label-header">關鍵字庫 (SEO)</div>
-        <textarea id="kwList" class="h-24 mb-3 text-sm bg-[var(--bg-card)] border border-[var(--border-light)] rounded-lg p-3 outline-none resize-none font-medium transition-all focus:border-[var(--color-brand)]" placeholder="輸入關鍵字..."></textarea>
+      <div class="input-group bg-[var(--bg-canvas)]" style="height: 45%;">
+        <div class="label-header">SEO 關鍵字庫</div>
+        <textarea id="kwList" class="h-24 mb-3 text-sm bg-[var(--bg-card)] border border-[var(--border-light)] rounded-lg p-3 outline-none resize-none font-medium transition-all focus:border-[var(--color-brand)]" placeholder="輸入關鍵字 (每行一個)..."></textarea>
         
         <div id="densityResults" class="flex-1 overflow-y-auto mb-3 min-h-0 pr-1"></div>
         
@@ -302,8 +278,8 @@
         </button>
         
         <div class="flex gap-2">
-           <button onclick="downloadTxt()" class="flex-1 py-1.5 text-xs border border-[var(--border-light)] rounded-md text-[var(--text-sub)] bg-[var(--bg-card)] hover:bg-white transition">下載 TXT</button>
-           <button onclick="clearAll()" class="flex-1 py-1.5 text-xs border border-[var(--border-light)] rounded-md text-red-500 bg-[var(--bg-card)] hover:bg-red-50 transition">清空重置</button>
+           <button onclick="downloadTxt()" class="flex-1 py-1.5 text-xs border border-[var(--border-light)] rounded-md text-[var(--text-sub)] bg-[var(--bg-card)] hover:bg-white transition">下載 .txt</button>
+           <button onclick="clearAll()" class="flex-1 py-1.5 text-xs border border-[var(--border-light)] rounded-md text-red-500 bg-[var(--bg-card)] hover:bg-red-50 transition">重置</button>
         </div>
       </div>
     </div>
@@ -312,50 +288,49 @@
       <div class="toolbar-container">
         
         <div class="tool-group">
-          <button onmousedown="event.preventDefault(); applyBlock('H1')" class="btn-struct" title="大標題 H1">
+          <button onmousedown="event.preventDefault(); applyBlock('H1')" class="btn-struct" title="大標題 (24pt)">
             H1 <span class="pt-hint">24pt</span>
           </button>
-          <button onmousedown="event.preventDefault(); applyBlock('H2')" class="btn-struct" title="副標題 H2">
+          <button onmousedown="event.preventDefault(); applyBlock('H2')" class="btn-struct" title="副標題 (18pt)">
             H2 <span class="pt-hint">18pt</span>
           </button>
-          <button onmousedown="event.preventDefault(); applyBlock('P')" class="btn-struct" title="一般內文">
+          <button onmousedown="event.preventDefault(); applyBlock('P')" class="btn-struct" title="內文 (11pt)">
             內文 <span class="pt-hint">11pt</span>
           </button>
         </div>
         
-        <div class="tool-group">
-          <div class="font-size-wrapper">
-            <button onmousedown="event.preventDefault(); adjustFontSize(-1)" class="btn-size-change">-</button>
-            <div class="size-display" id="fontSizeDisplay">3</div>
-            <button onmousedown="event.preventDefault(); adjustFontSize(1)" class="btn-size-change">+</button>
-          </div>
-          <button onmousedown="event.preventDefault(); cmd('undo')" class="icon-btn" title="復原"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg></button>
-          <button onmousedown="event.preventDefault(); cmd('redo')" class="icon-btn" title="重做"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/></svg></button>
-        </div>
-
         <div class="tool-group">
            <div class="swatch-group">
              <div class="swatch-item bg-[#2C2C2C]" onmousedown="event.preventDefault(); applyColor('#2C2C2C')" title="墨"></div>
              <div class="swatch-item bg-[#B93A32]" onmousedown="event.preventDefault(); applyColor('#B93A32')" title="朱赤"></div>
              <div class="swatch-item bg-[#374B6D]" onmousedown="event.preventDefault(); applyColor('#374B6D')" title="藍鉄"></div>
            </div>
-           <div class="w-px h-5 bg-[var(--border-light)] mx-2"></div>
+           <div class="w-px h-5 bg-[var(--border-light)] mx-1"></div>
            <div class="swatch-group">
-            <div class="swatch-item bg-[#FEECEC]" onmousedown="event.preventDefault(); applyHilite('#FEECEC')"></div>
-            <div class="swatch-item bg-[#FFF9C4]" onmousedown="event.preventDefault(); applyHilite('#FFF9C4')"></div>
-            <div class="swatch-item bg-[#D1EAED]" onmousedown="event.preventDefault(); applyHilite('#D1EAED')"></div>
-             <button onmousedown="event.preventDefault(); applyHilite('transparent')" class="swatch-item bg-white flex items-center justify-center text-gray-400" title="無背景">
+             <div class="swatch-item bg-[#FFF9C4]" onmousedown="event.preventDefault(); applyHilite('#FFF9C4')" title="黃"></div>
+             <div class="swatch-item bg-[#FEECEC]" onmousedown="event.preventDefault(); applyHilite('#FEECEC')" title="紅"></div>
+             <div class="swatch-item bg-[#D1EAED]" onmousedown="event.preventDefault(); applyHilite('#D1EAED')" title="藍"></div>
+             <button onmousedown="event.preventDefault(); applyHilite('transparent')" class="icon-btn" style="width:20px; height:20px;" title="清除背景">
                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
              </button>
            </div>
-           <button onmousedown="event.preventDefault(); cmd('removeFormat')" class="icon-btn ml-1" title="清除格式"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        </div>
+
+        <div class="tool-group">
+           <button onmousedown="event.preventDefault(); adjustFontSize(1)" class="icon-btn" title="放大字體">
+             <span class="text-sm font-bold">A+</span>
+           </button>
+           <button onmousedown="event.preventDefault(); adjustFontSize(-1)" class="icon-btn" title="縮小字體">
+             <span class="text-xs font-bold">A-</span>
+           </button>
+           <button onmousedown="event.preventDefault(); cmd('undo')" class="icon-btn" title="復原"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg></button>
         </div>
         
-        <div class="tool-group">
+        <div class="tool-group ml-auto border-none">
            <button onmousedown="event.preventDefault(); applyRedBold()" class="btn-emphasis" title="紅字+粗體">A+ 重點</button>
-           <button onclick="copyToDocs(this)" class="btn-copy">
+           <button onclick="copyToDocs(this)" class="btn-copy" title="複製到剪貼簿 (微軟正黑)">
              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
-             複製到 Docs
+             複製
            </button>
         </div>
 
@@ -363,7 +338,6 @@
 
       <div class="scrollable-preview-area">
         <div id="editor" contenteditable="true" class="editor-paper serif-font" placeholder="開始寫作..."></div>
-        
         <div class="pb-10 pt-6 text-center">
             <span class="text-[10px] text-gray-400 font-sans tracking-wide">
               &copy; 2025 Kaoru Tsai. All Rights Reserved.
@@ -390,102 +364,95 @@
     const kwListArea = document.getElementById('kwList'); 
     const densityResults = document.getElementById('densityResults');
     const autoPuncToggle = document.getElementById('autoPunc');
-    const fontSizeDisplay = document.getElementById('fontSizeDisplay');
-    const STORAGE_KEY = 'highlight_pro_v75_data';
+    const STORAGE_KEY = 'highlight_pro_v77_data';
     const THEME_KEY = 'highlight_pro_theme';
 
-    function cmd(command, value = null) {
-      editor.focus();
-      document.execCommand(command, false, value);
+    // --- Lightweight Conversion Core (High Frequency Characters) ---
+    // Includes ~200 most common variant pairs for functional demonstration
+    const TS_DICT = {
+      '么':'麼','于':'於','为':'為','干':'乾','后':'後','里':'裡','制':'製','面':'麵','发':'發','郁':'鬱','松':'鬆','才':'才','台':'臺',
+      '万':'萬','与':'與','丑':'醜','专':'專','业':'業','丛':'叢','东':'東','丝':'絲','两':'兩','严':'嚴','丧':'喪','个':'個','丰':'豐',
+      '临':'臨','丽':'麗','举':'舉','乃':'乃','久':'久','义':'義','乐':'樂','乔':'喬','乖':'乖','乘':'乘','乙':'乙','九':'九','乞':'乞',
+      '习':'習','乡':'鄉','书':'書','买':'買','乱':'亂','了':'了','予':'予','争':'爭','事':'事','二':'二','亏':'虧','云':'雲','互':'互',
+      '五':'五','井':'井','亚':'亞','些':'些','亡':'亡','交':'交','亥':'亥','亦':'亦','产':'產','亨':'亨','亩':'畝','享':'享','京':'京',
+      '亲':'親','亿':'億','什':'什','仁':'仁','仅':'僅','仆':'僕','仇':'仇','今':'今','介':'介','仍':'仍','从':'從','仑':'侖','仓':'倉',
+      '仔':'仔','仕':'仕','他':'他','付':'付','仙':'仙','代':'代','令':'令','以':'以','仪':'儀','们':'們','仰':'仰','仲':'仲','件':'件',
+      '价':'價','任':'任','份':'份','仿':'仿','企':'企','伉':'伉','伊':'伊','伍':'伍','伎':'伎','伏':'伏','伐':'伐','休':'休','众':'眾',
+      '优':'優','伙':'夥','会':'會','传':'傳','伤':'傷','伦':'倫','伪':'偽','伫':'佇','伯':'伯','估':'估','伴':'伴','伶':'伶','伸':'伸',
+      '伺':'伺','似':'似','伽':'伽','佃':'佃','但':'但','位':'位','低':'低','住':'住','佐':'佐','佑':'佑','体':'體','何':'何','余':'餘',
+      '佛':'佛','作':'作','你':'你','佣':'傭','佩':'佩','佯':'佯','佰':'佰','佳':'佳','使':'使','来':'來','例':'例','侍':'侍','侏':'侏'
+    };
+    
+    // Reverse Map for T2S
+    const ST_DICT = {};
+    Object.keys(TS_DICT).forEach(key => { ST_DICT[TS_DICT[key]] = key; });
+
+    function convertText(mode) {
+      let text = source.value;
+      if (!text) return;
+      
+      let converted = "";
+      const map = (mode === 'S2T') ? TS_DICT : ST_DICT;
+      
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        converted += map[char] || char;
+      }
+      
+      source.value = converted;
+      syncPreview(); // Update preview
     }
 
+    function cmd(command, value = null) { editor.focus(); document.execCommand(command, false, value); }
     function applyColor(hex) { cmd('foreColor', hex); }
-    function applyHilite(hex) {
-      if (!document.execCommand('hiliteColor', false, hex)) {
-        document.execCommand('backColor', false, hex); 
-      }
-    }
+    function applyHilite(hex) { if (!document.execCommand('hiliteColor', false, hex)) document.execCommand('backColor', false, hex); }
 
     function applyRedBold() {
       editor.focus();
       const selection = window.getSelection();
       if (!selection.rangeCount) return;
-      
       const range = selection.getRangeAt(0);
       const span = document.createElement("span");
-      span.style.fontWeight = "700";
-      span.style.color = "#B93A32";
-      
+      span.style.fontWeight = "700"; span.style.color = "#B93A32";
       if (range.toString().length > 0) {
-        try {
-          range.surroundContents(span);
-        } catch (e) {
-          document.execCommand('styleWithCSS', false, true);
-          document.execCommand('foreColor', false, "#B93A32");
-          document.execCommand('bold', false, null);
-        }
+        try { range.surroundContents(span); } 
+        catch (e) { document.execCommand('styleWithCSS', false, true); document.execCommand('foreColor', false, "#B93A32"); document.execCommand('bold', false, null); }
       }
     }
 
-    function applyBlock(tag) {
-      editor.focus();
-      // Ensure we format the block correctly even if selection is weird
-      document.execCommand('formatBlock', false, tag);
-    }
+    function applyBlock(tag) { editor.focus(); document.execCommand('formatBlock', false, tag); }
 
     function adjustFontSize(delta) {
       editor.focus();
-      let currentSize = document.queryCommandValue("fontSize");
-      if (!currentSize || isNaN(currentSize)) currentSize = 3; 
+      let currentSize = document.queryCommandValue("fontSize") || 3; 
       let newSize = parseInt(currentSize) + delta;
-      if(newSize < 1) newSize = 1;
-      if(newSize > 7) newSize = 7;
+      if(newSize < 1) newSize = 1; if(newSize > 7) newSize = 7;
       document.execCommand("fontSize", false, newSize);
-      updateSizeDisplay(newSize);
     }
-    
-    function updateSizeDisplay(val) {
-      fontSizeDisplay.innerText = val;
-    }
-
-    editor.addEventListener('click', () => {
-      let size = document.queryCommandValue("fontSize");
-      if(size) updateSizeDisplay(size);
-    });
 
     function convertPunctuation(text) {
       if (!autoPuncToggle.checked) return text;
-      return text
-        .replace(/,/g, '，').replace(/\./g, '。')
-        .replace(/\(/g, '（').replace(/\)/g, '）')
-        .replace(/:/g, '：').replace(/;/g, '；')
-        .replace(/!/g, '！').replace(/\?/g, '？');
+      return text.replace(/,/g, '，').replace(/\./g, '。').replace(/\(/g, '（').replace(/\)/g, '）').replace(/:/g, '：').replace(/;/g, '；').replace(/!/g, '！').replace(/\?/g, '？');
     }
 
     function syncPreview() {
       let text = source.value;
       text = convertPunctuation(text);
       if (document.activeElement === source) editor.innerText = text;
-      runDensityAnalysis();
-      saveData(); 
+      runDensityAnalysis(); saveData(); 
     }
 
     function runDensityAnalysis() {
       const keywords = kwListArea.value.split('\n').map(k => k.trim()).filter(k => k !== "");
       const content = editor.innerText || "";
       const totalChars = content.length;
-      
       densityResults.innerHTML = "";
       if (totalChars === 0 && keywords.length > 0) return;
-
       keywords.forEach(kw => {
         const regex = new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
         const count = (content.match(regex) || []).length;
         const density = ((count * kw.length / totalChars) * 100).toFixed(1);
-        
-        let colorClass = "text-[var(--text-sub)]";
-        if (density > 0) colorClass = "text-[var(--color-brand)] font-bold";
-
+        let colorClass = density > 0 ? "text-[var(--color-brand)] font-bold" : "text-[var(--text-sub)]";
         const div = document.createElement('div');
         div.className = "flex justify-between items-center p-1.5 border-b border-[var(--border-light)] text-xs";
         div.innerHTML = `<span class="truncate ${colorClass}">${kw}</span><span class="font-mono text-[var(--text-ink)]">${density}%</span>`;
@@ -510,53 +477,38 @@
       const wrapper = document.createElement('div');
       wrapper.style.fontFamily = "'Microsoft JhengHei', 'Microsoft YaHei', sans-serif";
       wrapper.innerHTML = editor.innerHTML;
-
       const blobHtml = new Blob([wrapper.outerHTML], { type: 'text/html' });
       const blobText = new Blob([editor.innerText], { type: 'text/plain' });
       const data = [new ClipboardItem({ 'text/html': blobHtml, 'text/plain': blobText })];
-      
       try {
         await navigator.clipboard.write(data);
         const originalHtml = btn.innerHTML;
-        btn.innerHTML = `✓ 已複製`;
-        btn.style.backgroundColor = "#059669"; 
-        setTimeout(() => {
-           btn.innerHTML = originalHtml;
-           btn.style.backgroundColor = "";
-        }, 2000);
+        btn.innerHTML = `✓ 已複製`; btn.style.backgroundColor = "#059669"; 
+        setTimeout(() => { btn.innerHTML = originalHtml; btn.style.backgroundColor = ""; }, 2000);
       } catch (err) { alert('複製失敗'); }
     }
 
     function downloadTxt() {
       const blob = new Blob([editor.innerText], { type: "text/plain" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "draft.txt";
-      a.click();
+      const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "draft.txt"; a.click();
     }
     
     function clearAll() {
-      if(confirm('確定清空？')) {
-        source.value = ""; kwListArea.value = ""; editor.innerText = "";
-        densityResults.innerHTML = ""; saveData();
-      }
+      if(confirm('確定清空？')) { source.value = ""; kwListArea.value = ""; editor.innerText = ""; densityResults.innerHTML = ""; saveData(); }
     }
 
     function toggleTheme() {
       const html = document.documentElement;
       const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       html.setAttribute('data-theme', next);
-      document.getElementById('moonIcon').classList.toggle('hidden');
-      document.getElementById('sunIcon').classList.toggle('hidden');
+      document.getElementById('moonIcon').classList.toggle('hidden'); document.getElementById('sunIcon').classList.toggle('hidden');
       localStorage.setItem(THEME_KEY, next);
     }
 
     function switchTab(mode, btn) {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active');
       const ws = document.getElementById('mainWorkspace');
-      if (mode === 'preview') ws.classList.add('show-preview');
-      else ws.classList.remove('show-preview');
+      if (mode === 'preview') ws.classList.add('show-preview'); else ws.classList.remove('show-preview');
     }
 
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -566,12 +518,7 @@
       if(data.source) { source.value = data.source; editor.innerText = data.source; }
       if(data.keywords) { kwListArea.value = data.keywords; runDensityAnalysis(); }
     }
-    
-    function saveData() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        source: source.value, keywords: kwListArea.value
-      }));
-    }
+    function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify({ source: source.value, keywords: kwListArea.value })); }
     
     source.addEventListener('input', () => syncPreview());
     kwListArea.addEventListener('input', () => runDensityAnalysis());
