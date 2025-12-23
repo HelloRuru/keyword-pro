@@ -32,7 +32,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   
   <style>
-    /* --- Design System: Rikyu & Kurumi (V8.9) --- */
+    /* --- Design System: Rikyu & Kurumi (V9.0) --- */
     :root {
       --bg-canvas: #EBE9E4; 
       --bg-card: #FFFEFA;
@@ -74,7 +74,7 @@
       min-height: 500px; 
     }
 
-    /* Toast Notification */
+    /* Toast */
     .toast {
       position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-20px);
       background-color: var(--color-jump-finish); color: white;
@@ -213,7 +213,7 @@
     .btn-struct span.pt-hint { font-family: sans-serif; font-size: 9px; opacity: 0.6; margin-top: 1px; font-weight: 400; color: var(--border-light); }
     .btn-struct:hover { border-color: var(--color-brand); color: var(--color-brand); background: #FDFCF8; }
 
-    /* Font Size Select Wrapper */
+    /* Font Size Wrapper (V8.8 Fix) */
     .font-size-wrapper { 
       position: relative; display: inline-block;
       height: 32px;
@@ -304,7 +304,7 @@
       text-align: justify;
       white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word;    
       line-height: 2.1; 
-      font-size: 12pt; 
+      font-size: 12pt; /* Default */
       color: #333; 
       box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
     }
@@ -321,7 +321,7 @@
       font-family: 'Noto Serif JP', serif;
     }
     
-    /* Interactive Count Toggle (Pill Button) */
+    /* Interactive Count Toggle */
     .count-toggle-btn {
       display: flex; align-items: center; gap: 6px; 
       cursor: pointer; user-select: none;
@@ -332,12 +332,8 @@
     .count-toggle-btn:hover { background: rgba(0,0,0,0.06); border-color: var(--border-light); }
     .count-val { font-family: sans-serif; font-weight: 700; color: var(--text-ink); }
     
-    /* Switch Icon */
-    .icon-switch {
-      width: 12px; height: 12px; opacity: 0.5;
-    }
+    .icon-switch { width: 12px; height: 12px; opacity: 0.5; }
 
-    /* FAQ Details */
     .geo-faq {
       margin-top: 20px; border-top: 1px dashed var(--border-light); padding-top: 10px;
       font-size: 11px; color: var(--text-sub);
@@ -576,7 +572,7 @@
     const saveStatus = document.getElementById('saveStatus');
     const toast = document.getElementById('toast');
     const countModeLabel = document.getElementById('countModeLabel');
-    const STORAGE_KEY = 'highlight_pro_v89_data';
+    const STORAGE_KEY = 'highlight_pro_v90_data';
     const THEME_KEY = 'highlight_pro_theme';
     let countMode = 'all'; 
 
@@ -640,7 +636,8 @@
       showToast('✨ 已標註 A+ 重點');
     }
 
-    function applyBlock(tag) { editor.focus(); document.execCommand('formatBlock', false, tag); updateCounts(); }
+    /* Fixed: Removed editor.focus() to prevent selection loss */
+    function applyBlock(tag) { document.execCommand('formatBlock', false, tag); updateCounts(); }
 
     function applyCleanStyle() {
       if(confirm('確定要移除所有格式（變回純文字）嗎？')) {
@@ -655,17 +652,10 @@
       editor.focus();
       const selection = window.getSelection();
       if (!selection.rangeCount || selection.isCollapsed) return;
-      
       const span = document.createElement("span");
       span.style.fontSize = val + "pt";
-      
       const range = selection.getRangeAt(0);
-      try {
-         range.surroundContents(span);
-      } catch (e) {
-         document.execCommand('styleWithCSS', false, true);
-         document.execCommand('fontSize', false, '3');
-      }
+      try { range.surroundContents(span); } catch (e) { document.execCommand('styleWithCSS', false, true); document.execCommand('fontSize', false, '3'); }
     }
 
     function convertPunctuation(text) {
@@ -688,19 +678,10 @@
 
     function updateCounts() {
       let text = editor.innerText || "";
-      if (countMode === 'no-punc') {
-        text = text.replace(/[^\w\u4e00-\u9fa5]/g, ''); 
-      } else {
-        text = text.replace(/\s/g, ''); 
-      }
+      if (countMode === 'no-punc') { text = text.replace(/[^\w\u4e00-\u9fa5]/g, ''); } else { text = text.replace(/\s/g, ''); }
       totalCount.innerText = text.length;
-      
       let selection = window.getSelection().toString();
-      if (countMode === 'no-punc') {
-        selection = selection.replace(/[^\w\u4e00-\u9fa5]/g, '');
-      } else {
-        selection = selection.replace(/\s/g, '');
-      }
+      if (countMode === 'no-punc') { selection = selection.replace(/[^\w\u4e00-\u9fa5]/g, ''); } else { selection = selection.replace(/\s/g, ''); }
       selectCount.innerText = selection.length;
     }
     
@@ -740,26 +721,30 @@
       if (window.innerWidth < 1024) switchTab('preview', document.querySelectorAll('.tab-btn')[1]);
     }
 
+    /* Fixed: Baking Styles for Google Docs */
     async function copyToDocs(btn) {
-      // 1. Create a clean wrapper for clipboard
+      // 1. Clone the content to modify it safely
+      const clone = editor.cloneNode(true);
+      
+      // 2. Bake styles into H1, H2, P tags
+      const h1s = clone.querySelectorAll('h1');
+      h1s.forEach(el => el.setAttribute('style', 'font-size: 24pt; font-weight: bold; line-height: 1.5; margin-bottom: 12px; color: #333;'));
+      
+      const h2s = clone.querySelectorAll('h2');
+      h2s.forEach(el => el.setAttribute('style', 'font-size: 18pt; font-weight: bold; line-height: 1.5; margin-bottom: 10px; color: #333;'));
+      
+      // Bake base style into the wrapper div for normal text
       const wrapper = document.createElement('div');
-      
-      // 2. INJECT INLINE STYLES FOR GOOGLE DOCS (KEY FIX)
-      // Google Docs strips external CSS/classes, but keeps inline styles on the wrapper.
-      // We force font-size: 12pt and line-height: 2.0 to persist.
       wrapper.style.cssText = "font-family: 'Microsoft JhengHei', 'Microsoft YaHei', sans-serif; font-size: 12pt; line-height: 2.0; color: #333333;";
+      wrapper.innerHTML = clone.innerHTML;
       
-      // 3. Clone inner HTML
-      wrapper.innerHTML = editor.innerHTML;
-      
-      // 4. Copy process
       const blobHtml = new Blob([wrapper.outerHTML], { type: 'text/html' });
       const blobText = new Blob([editor.innerText], { type: 'text/plain' });
       const data = [new ClipboardItem({ 'text/html': blobHtml, 'text/plain': blobText })];
       
       try {
         await navigator.clipboard.write(data);
-        showToast('📋 已複製至剪貼簿 (微軟正黑 12pt)');
+        showToast('📋 已複製至剪貼簿 (WYSIWYG Mode)');
       } catch (err) { alert('複製失敗'); }
     }
 
