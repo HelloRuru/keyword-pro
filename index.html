@@ -10,43 +10,49 @@
   <script src="https://cdn.tailwindcss.com"></script>
   
   <style>
-    /* --- Design System: Wafuu Stationery --- */
+    /* --- Design System: Wafuu Stationery (Soft Paper & Serif) --- */
     :root {
-      --bg-canvas: #F2F4F6; /* 現代感淺灰藍 */
-      --bg-card: #FFFFFF;
+      /* 背景：極淡的米色，模仿高級和紙 */
+      --bg-canvas: #F9F8F2; 
+      --bg-card: #FFFEFA;
+      
       --text-ink: #2C2C2C;
-      --text-sub: #64748B;
-      --border-light: #E2E8F0;
+      --text-sub: #78716C; /* 暖灰色 */
+      
+      /* 邊框：極細緻，帶一點點暖色 */
+      --border-light: rgba(120, 113, 108, 0.15);
       
       --color-brand: #374B6D; /* 藍鉄 */
-      --color-brand-hover: #2A3B55;
-      --color-accent: #B93A32; /* 朱赤 */
+      --color-brand-hover: #2c3e5c;
+      --color-accent: #C44338; /* 稍微沉穩的朱色 */
       
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-      --shadow-float: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
-      --radius-std: 8px;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.03);
+      --shadow-float: 0 15px 35px -5px rgba(60, 50, 40, 0.08);
+      --radius-std: 6px; /* 較為方正的圓角，傳統感 */
     }
 
-    /* Dark Mode */
+    /* Dark Mode (Midnight Paper) */
     html[data-theme="dark"] {
-      --bg-canvas: #0F172A;
-      --bg-card: #1E293B;
-      --text-ink: #F1F5F9;
-      --text-sub: #94A3B8;
-      --border-light: #334155;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.5);
+      --bg-canvas: #1C1917;
+      --bg-card: #292524;
+      --text-ink: #E7E5E4;
+      --text-sub: #A8A29E;
+      --border-light: rgba(255,255,255,0.1);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.4);
     }
     
     html, body { 
       height: 100%; width: 100%; overflow: hidden; 
-      font-family: 'Noto Sans JP', sans-serif;
+      font-family: 'Noto Sans JP', sans-serif; /* 介面預設黑體，易讀 */
       background-color: var(--bg-canvas); 
       color: var(--text-ink); 
       margin: 0; padding: 0;
       transition: background-color 0.3s;
+      /* 添加極微弱的紙張紋理噪點 */
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.02'/%3E%3C/svg%3E");
     }
 
-    .serif-font { font-family: 'Noto Serif JP', serif; letter-spacing: 0.03em; }
+    .serif-font { font-family: 'Noto Serif JP', serif; letter-spacing: 0.04em; }
 
     .app-container { 
       display: flex; flex-direction: column; height: 100vh; width: 100vw;
@@ -55,24 +61,27 @@
 
     /* --- Header --- */
     .header-area { 
-      flex-shrink: 0; height: 60px; z-index: 50; 
-      background: var(--bg-card);
+      flex-shrink: 0; height: 64px; z-index: 50; 
+      background: rgba(255, 254, 250, 0.9); 
+      backdrop-filter: blur(8px);
       display: flex; align-items: center; justify-content: space-between;
       border-bottom: 1px solid var(--border-light);
-      padding: 0 24px;
+      padding: 0 28px;
     }
+    html[data-theme="dark"] .header-area { background: rgba(41, 37, 36, 0.9); }
 
     /* --- Workspace --- */
     .main-workspace { 
       display: flex; flex: 1; overflow: hidden; position: relative; 
-      gap: 20px; padding: 20px; 
-      max-width: 1800px; margin: 0 auto; width: 100%;
+      gap: 24px; padding: 24px; 
+      max-width: 1600px; margin: 0 auto; width: 100%;
     }
 
     .card-panel {
       background: var(--bg-card);
       border-radius: var(--radius-std);
-      box-shadow: var(--shadow-sm);
+      /* 和風感：使用內部光暈與極細邊框代替厚重陰影 */
+      box-shadow: 0 1px 4px rgba(0,0,0,0.02), inset 0 0 0 1px rgba(255,255,255,0.5);
       border: 1px solid var(--border-light);
       overflow: hidden;
       display: flex; flex-direction: column;
@@ -80,64 +89,109 @@
 
     /* --- Sidebar --- */
     .sidebar-input { 
-      flex: 0 0 320px; width: 320px; 
+      flex: 0 0 340px; width: 340px; 
       z-index: 20; transition: transform 0.3s;
     }
     
-    .input-group { padding: 16px; display: flex; flex-direction: column; }
+    .input-group { padding: 20px; display: flex; flex-direction: column; }
     
     textarea { 
       width: 100%; resize: none; border: none; outline: none; background: transparent;
-      font-size: 14px; line-height: 1.7; color: var(--text-sub);
+      font-size: 14px; line-height: 1.8; color: var(--text-sub);
+      font-family: 'Noto Sans JP', sans-serif;
     }
     textarea:focus { color: var(--text-ink); }
     
     .label-header { 
-      font-size: 11px; font-weight: 800; color: var(--color-brand); 
-      letter-spacing: 0.05em; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;
-      text-transform: uppercase;
+      font-family: 'Noto Serif JP', serif;
+      font-size: 12px; font-weight: 700; color: var(--color-brand); 
+      letter-spacing: 0.1em; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;
     }
 
-    /* --- Toolbars --- */
+    /* --- NEW: Japanese Action Card (Auto Mark Area) --- */
+    .jp-action-card {
+      background-color: #FFFEFA;
+      border: 1px solid rgba(200, 190, 180, 0.2);
+      border-radius: 4px;
+      padding: 24px 20px;
+      text-align: center;
+      position: relative;
+      margin-top: auto; /* Push to bottom of container if needed */
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.01);
+    }
+    /* Decorative Line */
+    .jp-action-card::before {
+      content: ''; position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+      width: 30px; height: 1px; background-color: var(--border-light);
+    }
+
+    .btn-jp-hero {
+      font-family: 'Noto Serif JP', serif;
+      background-color: var(--color-brand); color: #FFFEFA;
+      border: none; border-radius: 2px;
+      padding: 10px 24px; width: 100%;
+      font-size: 15px; letter-spacing: 0.05em;
+      cursor: pointer; transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(55, 75, 109, 0.15);
+      margin-bottom: 16px;
+    }
+    .btn-jp-hero:hover { background-color: var(--color-brand-hover); transform: translateY(-1px); }
+    
+    .jp-secondary-actions {
+      display: flex; gap: 12px; justify-content: center;
+      border-top: 1px solid var(--border-light); padding-top: 16px;
+    }
+    
+    .btn-jp-sub {
+      background: none; border: none;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-sub); padding: 2px 6px;
+      font-size: 12px; cursor: pointer; transition: all 0.2s;
+      font-family: 'Noto Serif JP', serif;
+    }
+    .btn-jp-sub:hover { color: var(--color-brand); border-bottom-color: var(--color-brand); }
+    
+    .btn-reset { color: var(--color-accent); border-bottom-color: rgba(196, 67, 56, 0.2); opacity: 0.8; }
+    .btn-reset:hover { opacity: 1; border-bottom-color: var(--color-accent); color: var(--color-accent); }
+
+
+    /* --- Preview & Toolbar --- */
     .preview-section { flex: 1; position: relative; min-width: 0; }
 
     .toolbar-container {
       background: var(--bg-card);
       border-bottom: 1px solid var(--border-light);
-      padding: 8px 12px;
-      display: flex; align-items: center; gap: 8px;
+      padding: 10px 16px;
+      display: flex; align-items: center; gap: 10px;
       flex-wrap: wrap; z-index: 40;
     }
     
     .tool-group {
-      display: flex; align-items: center; gap: 4px;
-      padding-right: 8px; border-right: 1px solid var(--border-light);
+      display: flex; align-items: center; gap: 6px;
+      padding-right: 10px; border-right: 1px solid var(--border-light);
     }
     .tool-group:last-child { border-right: none; padding-right: 0; }
 
-    /* H1/H2 Buttons */
+    /* Buttons Style Update: Serif & Elegant */
     .btn-struct {
-      height: 30px; padding: 0 8px;
-      background: transparent; 
-      border: 1px solid var(--border-light);
+      height: 32px; padding: 0 10px;
+      background: transparent; border: 1px solid transparent;
       color: var(--text-sub); 
-      font-size: 12px; font-weight: 600;
+      font-family: 'Noto Serif JP', serif;
+      font-size: 13px; font-weight: 600;
       border-radius: 4px; 
-      display: flex; align-items: center; justify-content: center; gap: 4px;
-      cursor: pointer; transition: all 0.1s;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      line-height: 1; cursor: pointer; transition: all 0.2s;
     }
-    .btn-struct span.pt-hint { font-size: 9px; opacity: 0.5; font-weight: 400; }
-    .btn-struct:hover { background: var(--bg-canvas); color: var(--text-ink); border-color: var(--text-sub); }
+    .btn-struct span.pt-hint { font-family: sans-serif; font-size: 9px; opacity: 0.5; margin-top: 2px; }
+    .btn-struct:hover { background: var(--bg-canvas); color: var(--text-ink); }
 
-    /* Icons */
     .icon-btn { 
-      width: 30px; height: 30px; border-radius: 4px; color: var(--text-sub); 
+      width: 32px; height: 32px; border-radius: 4px; color: var(--text-sub); 
       display: flex; align-items: center; justify-content: center; transition: all 0.2s;
     }
     .icon-btn:hover { background: var(--bg-canvas); color: var(--text-ink); }
 
-    /* Colors */
-    .swatch-group { display: flex; gap: 4px; padding: 0 4px; }
     .swatch-item { 
       width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--border-light); 
       cursor: pointer; transition: transform 0.15s; flex-shrink: 0;
@@ -147,49 +201,65 @@
     /* Action Buttons */
     .btn-emphasis { 
       background: #FEF2F2; color: var(--color-accent); border: 1px solid #FECACA;
-      height: 32px; padding: 0 10px; border-radius: 6px; font-weight: 700; font-size: 12px;
-      display: flex; align-items: center; gap: 4px; transition: 0.2s; cursor: pointer;
+      height: 34px; padding: 0 14px; border-radius: 4px; 
+      font-family: 'Noto Serif JP', serif; font-weight: 700; font-size: 13px;
+      display: flex; align-items: center; gap: 6px; transition: 0.2s; cursor: pointer;
     }
     .btn-emphasis:hover { background: var(--color-accent); color: white; border-color: var(--color-accent); }
 
     .btn-copy {
       background: var(--color-brand); color: white; border: none;
-      height: 32px; padding: 0 12px; border-radius: 6px; font-weight: 600; font-size: 12px;
+      height: 34px; padding: 0 16px; border-radius: 4px; 
+      font-family: 'Noto Serif JP', serif; font-weight: 600; font-size: 13px;
       display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s;
-      box-shadow: 0 2px 4px rgba(55, 75, 109, 0.2);
+      box-shadow: 0 2px 6px rgba(55, 75, 109, 0.2);
     }
-    .btn-copy:hover { background: var(--color-brand-hover); transform: translateY(-1px); box-shadow: 0 4px 8px rgba(55, 75, 109, 0.3); }
+    .btn-copy:hover { background: var(--color-brand-hover); transform: translateY(-1px); }
 
     /* Editor Canvas */
     .scrollable-preview-area { 
       flex: 1; overflow-y: auto; overflow-x: hidden;
-      display: block; padding: 0; text-align: center;
-      background-color: #F8FAFC; 
-      background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
-      background-size: 24px 24px;
+      display: flex; flex-direction: column; /* Changed for sticky footer */
+      background-color: #EFEFEA; /* Slightly darker than card for contrast */
     }
-    html[data-theme="dark"] .scrollable-preview-area { background-color: #0b1120; background-image: radial-gradient(#334155 1px, transparent 1px); }
+    html[data-theme="dark"] .scrollable-preview-area { background-color: #151515; }
+
+    .editor-wrapper {
+      flex: 1; padding: 0; text-align: center;
+    }
 
     .editor-paper { 
-      display: inline-block; width: 100%; max-width: 800px; 
+      display: inline-block; width: 100%; max-width: 820px; 
       min-height: 1000px; height: auto !important;
       background: #FFFFFF; 
-      padding: 60px 70px; margin: 30px auto; 
+      padding: 70px 80px; margin: 30px auto; 
       text-align: justify;
       white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word;    
-      line-height: 2.0; font-size: 16px; color: #333; 
+      line-height: 2.1; font-size: 16px; color: #333; 
       box-shadow: var(--shadow-float);
     }
-    html[data-theme="dark"] .editor-paper { background: #1E293B; color: #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-    html[data-theme="dark"] .editor-paper span[style*="color: rgb(44, 44, 44)"] { color: #E2E8F0 !important; }
+    html[data-theme="dark"] .editor-paper { background: #292524; color: #E7E5E4; }
+    html[data-theme="dark"] .editor-paper span[style*="color: rgb(44, 44, 44)"] { color: #E7E5E4 !important; }
+
+    /* --- Status Bar (RESTORED) --- */
+    .status-bar {
+      height: 36px; background: var(--bg-card);
+      border-top: 1px solid var(--border-light);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px; flex-shrink: 0;
+      font-size: 12px; color: var(--text-sub);
+      font-family: 'Noto Serif JP', serif;
+    }
+    .count-item { display: flex; align-items: center; gap: 6px; }
+    .count-val { font-family: sans-serif; font-weight: 700; color: var(--text-ink); }
 
     /* Conversion Buttons */
     .conv-btn {
-      font-size: 11px; padding: 2px 8px; border-radius: 4px; 
-      background: var(--bg-canvas); color: var(--text-sub); border: 1px solid var(--border-light);
-      transition: 0.2s;
+      font-size: 10px; padding: 2px 6px; border-radius: 2px; 
+      background: transparent; color: var(--text-sub); border: 1px solid var(--border-light);
+      transition: 0.2s; font-family: 'Noto Serif JP', serif;
     }
-    .conv-btn:hover { border-color: var(--color-brand); color: var(--color-brand); background: white; }
+    .conv-btn:hover { border-color: var(--color-brand); color: var(--color-brand); }
 
     /* Responsive */
     .mobile-tab-bar { display: none; }
@@ -223,9 +293,11 @@
       .tab-btn { 
         flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
         font-weight: 500; color: var(--text-sub); font-size: 10px; gap: 4px;
+        font-family: 'Noto Serif JP', serif;
       }
       .tab-btn.active { color: var(--color-brand); background: var(--bg-canvas); }
       .header-title-sub { display: none; } 
+      .status-bar { display: none; } /* Mobile often hides status bar for space, or can keep it */
     }
   </style>
 </head>
@@ -233,12 +305,12 @@
 
   <header class="header-area">
     <div class="flex items-center gap-3 overflow-hidden">
-      <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center text-white bg-[var(--color-brand)] rounded-lg shadow-sm">
+      <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center text-white bg-[var(--color-brand)] rounded shadow-sm">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m12 19 7-7 3 3-7 7-3-3Z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5Z"/></svg>
       </div>
       <div class="flex flex-col justify-center min-w-0">
-        <h1 class="text-lg font-bold text-[var(--color-brand)] tracking-wider serif-font leading-tight truncate">蛍光ペン PRO</h1>
-        <span class="header-title-sub text-[10px] text-[var(--text-sub)] font-medium tracking-widest uppercase opacity-70 truncate">SEO Writer Suite</span>
+        <h1 class="text-lg font-bold text-[var(--color-brand)] tracking-widest serif-font leading-tight truncate">蛍光ペン PRO</h1>
+        <span class="header-title-sub text-[10px] text-[var(--text-sub)] font-medium tracking-[0.2em] uppercase opacity-70 truncate">SEO Writer Suite</span>
       </div>
     </div>
     
@@ -255,32 +327,35 @@
           <div class="label-header mb-0">原文輸入</div>
           <div class="flex flex-col items-end gap-2">
             <label class="flex items-center gap-1 cursor-pointer select-none">
-              <span class="text-[10px] font-bold text-[var(--text-sub)]">全形標點</span>
+              <span class="text-[10px] font-bold text-[var(--text-sub)]">全形</span>
               <input type="checkbox" id="autoPunc" class="accent-[var(--color-brand)] w-3.5 h-3.5" checked>
             </label>
             <div class="flex gap-1">
-              <button onclick="convertText('S2T')" class="conv-btn" title="簡體轉繁體 (Light)">簡→繁</button>
-              <button onclick="convertText('T2S')" class="conv-btn" title="繁體轉簡體 (Light)">繁→簡</button>
+              <button onclick="convertText('S2T')" class="conv-btn" title="簡體轉繁體">簡→繁</button>
+              <button onclick="convertText('T2S')" class="conv-btn" title="繁體轉簡體">繁→簡</button>
             </div>
           </div>
         </div>
         <textarea id="sourceText" class="flex-1" placeholder="請貼上文章草稿..."></textarea>
       </div>
       
-      <div class="input-group bg-[var(--bg-canvas)]" style="height: 45%;">
+      <div class="input-group bg-[var(--bg-canvas)]" style="height: 48%; padding-bottom: 24px;">
         <div class="label-header">SEO 關鍵字庫</div>
-        <textarea id="kwList" class="h-24 mb-3 text-sm bg-[var(--bg-card)] border border-[var(--border-light)] rounded-lg p-3 outline-none resize-none font-medium transition-all focus:border-[var(--color-brand)]" placeholder="輸入關鍵字 (每行一個)..."></textarea>
+        <textarea id="kwList" class="h-20 mb-3 text-sm bg-[var(--bg-card)] border border-[var(--border-light)] rounded p-3 outline-none resize-none font-medium transition-all focus:border-[var(--color-brand)]" placeholder="輸入關鍵字 (每行一個)..."></textarea>
         
-        <div id="densityResults" class="flex-1 overflow-y-auto mb-3 min-h-0 pr-1"></div>
+        <div id="densityResults" class="flex-1 overflow-y-auto mb-4 min-h-0 pr-1"></div>
         
-        <button onclick="runAutoMark()" class="btn-primary mb-3">
-          一鍵標註 (Auto Mark)
-        </button>
-        
-        <div class="flex gap-2">
-           <button onclick="downloadTxt()" class="flex-1 py-1.5 text-xs border border-[var(--border-light)] rounded-md text-[var(--text-sub)] bg-[var(--bg-card)] hover:bg-white transition">下載 .txt</button>
-           <button onclick="clearAll()" class="flex-1 py-1.5 text-xs border border-[var(--border-light)] rounded-md text-red-500 bg-[var(--bg-card)] hover:bg-red-50 transition">重置</button>
+        <div class="jp-action-card">
+          <button onclick="runAutoMark()" class="btn-jp-hero">
+            一鍵標註 (Auto Mark)
+          </button>
+          
+          <div class="jp-secondary-actions">
+             <button onclick="downloadTxt()" class="btn-jp-sub">下載 .txt</button>
+             <button onclick="clearAll()" class="btn-jp-sub btn-reset">重置</button>
+          </div>
         </div>
+
       </div>
     </div>
 
@@ -337,13 +412,27 @@
       </div>
 
       <div class="scrollable-preview-area">
-        <div id="editor" contenteditable="true" class="editor-paper serif-font" placeholder="開始寫作..."></div>
-        <div class="pb-10 pt-6 text-center">
-            <span class="text-[10px] text-gray-400 font-sans tracking-wide">
-              &copy; 2025 Kaoru Tsai. All Rights Reserved.
-            </span>
+        <div class="editor-wrapper">
+          <div id="editor" contenteditable="true" class="editor-paper serif-font" placeholder="開始寫作..."></div>
         </div>
       </div>
+      
+      <footer class="status-bar">
+        <div class="flex gap-4">
+          <div class="count-item">
+            <span>總字數:</span>
+            <span id="totalCount" class="count-val">0</span>
+          </div>
+          <div class="w-px h-3 bg-[var(--border-light)]"></div>
+          <div class="count-item">
+            <span>選取:</span>
+            <span id="selectCount" class="count-val text-[var(--color-brand)]">0</span>
+          </div>
+        </div>
+        <div class="text-[10px] text-[var(--text-sub)]">
+           &copy; 2025 Kaoru Tsai. All Rights Reserved.
+        </div>
+      </footer>
     </div>
   </main>
 
@@ -364,11 +453,12 @@
     const kwListArea = document.getElementById('kwList'); 
     const densityResults = document.getElementById('densityResults');
     const autoPuncToggle = document.getElementById('autoPunc');
-    const STORAGE_KEY = 'highlight_pro_v77_data';
+    const totalCount = document.getElementById('totalCount');
+    const selectCount = document.getElementById('selectCount');
+    const STORAGE_KEY = 'highlight_pro_v78_data';
     const THEME_KEY = 'highlight_pro_theme';
 
-    // --- Lightweight Conversion Core (High Frequency Characters) ---
-    // Includes ~200 most common variant pairs for functional demonstration
+    // Simplified Conversion Dictionary
     const TS_DICT = {
       '么':'麼','于':'於','为':'為','干':'乾','后':'後','里':'裡','制':'製','面':'麵','发':'發','郁':'鬱','松':'鬆','才':'才','台':'臺',
       '万':'萬','与':'與','丑':'醜','专':'專','业':'業','丛':'叢','东':'東','丝':'絲','两':'兩','严':'嚴','丧':'喪','个':'個','丰':'豐',
@@ -382,30 +472,25 @@
       '伺':'伺','似':'似','伽':'伽','佃':'佃','但':'但','位':'位','低':'低','住':'住','佐':'佐','佑':'佑','体':'體','何':'何','余':'餘',
       '佛':'佛','作':'作','你':'你','佣':'傭','佩':'佩','佯':'佯','佰':'佰','佳':'佳','使':'使','来':'來','例':'例','侍':'侍','侏':'侏'
     };
-    
-    // Reverse Map for T2S
     const ST_DICT = {};
     Object.keys(TS_DICT).forEach(key => { ST_DICT[TS_DICT[key]] = key; });
 
     function convertText(mode) {
       let text = source.value;
       if (!text) return;
-      
       let converted = "";
       const map = (mode === 'S2T') ? TS_DICT : ST_DICT;
-      
       for (let i = 0; i < text.length; i++) {
         const char = text[i];
         converted += map[char] || char;
       }
-      
       source.value = converted;
-      syncPreview(); // Update preview
+      syncPreview(); 
     }
 
-    function cmd(command, value = null) { editor.focus(); document.execCommand(command, false, value); }
+    function cmd(command, value = null) { editor.focus(); document.execCommand(command, false, value); updateCounts(); }
     function applyColor(hex) { cmd('foreColor', hex); }
-    function applyHilite(hex) { if (!document.execCommand('hiliteColor', false, hex)) document.execCommand('backColor', false, hex); }
+    function applyHilite(hex) { if (!document.execCommand('hiliteColor', false, hex)) document.execCommand('backColor', false, hex); updateCounts(); }
 
     function applyRedBold() {
       editor.focus();
@@ -418,9 +503,10 @@
         try { range.surroundContents(span); } 
         catch (e) { document.execCommand('styleWithCSS', false, true); document.execCommand('foreColor', false, "#B93A32"); document.execCommand('bold', false, null); }
       }
+      updateCounts();
     }
 
-    function applyBlock(tag) { editor.focus(); document.execCommand('formatBlock', false, tag); }
+    function applyBlock(tag) { editor.focus(); document.execCommand('formatBlock', false, tag); updateCounts(); }
 
     function adjustFontSize(delta) {
       editor.focus();
@@ -439,8 +525,23 @@
       let text = source.value;
       text = convertPunctuation(text);
       if (document.activeElement === source) editor.innerText = text;
-      runDensityAnalysis(); saveData(); 
+      runDensityAnalysis(); updateCounts(); saveData(); 
     }
+
+    // Google Docs style count: Characters excluding spaces
+    function updateCounts() {
+      const text = editor.innerText || "";
+      const total = text.replace(/\s/g, '').length;
+      totalCount.innerText = total;
+      
+      const selection = window.getSelection().toString();
+      const selected = selection.replace(/\s/g, '').length;
+      selectCount.innerText = selected;
+    }
+    
+    // Listen for selection changes to update count
+    document.addEventListener('selectionchange', updateCounts);
+    editor.addEventListener('keyup', updateCounts);
 
     function runDensityAnalysis() {
       const keywords = kwListArea.value.split('\n').map(k => k.trim()).filter(k => k !== "");
@@ -470,6 +571,7 @@
         html = html.replace(regex, `<span style="color:#B93A32; font-weight:700;">$1</span>`);
       });
       editor.innerHTML = html;
+      updateCounts();
       if (window.innerWidth < 1024) switchTab('preview', document.querySelectorAll('.tab-btn')[1]);
     }
 
@@ -494,7 +596,7 @@
     }
     
     function clearAll() {
-      if(confirm('確定清空？')) { source.value = ""; kwListArea.value = ""; editor.innerText = ""; densityResults.innerHTML = ""; saveData(); }
+      if(confirm('確定清空？')) { source.value = ""; kwListArea.value = ""; editor.innerText = ""; densityResults.innerHTML = ""; updateCounts(); saveData(); }
     }
 
     function toggleTheme() {
@@ -522,6 +624,7 @@
     
     source.addEventListener('input', () => syncPreview());
     kwListArea.addEventListener('input', () => runDensityAnalysis());
+    updateCounts(); // Init count
   </script>
 </body>
 </html>
