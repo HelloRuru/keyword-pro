@@ -7,7 +7,7 @@
 > 專為 SEO 內容創作者打造的數位文房具。
 > 以利休色系的沈穩美學，解決 **Google Docs 貼上跑版**、**字體大小不一** 與 **結構化標註** 的生產力痛點。
 
-<img src="https://img.shields.io/badge/Version-v9.0_WYSIWYG-715C1F?style=flat-square&logo=git&logoColor=white" alt="Version">
+<img src="https://img.shields.io/badge/Version-v9.1_Fix&Bake-715C1F?style=flat-square&logo=git&logoColor=white" alt="Version">
 <img src="https://img.shields.io/badge/Tool-SEO_Keyword_Highlighter-B7282E?style=flat-square&logo=google-docs&logoColor=white" alt="Tool Type">
 <img src="https://img.shields.io/badge/Copyright-©2025_Kaoru_Tsai-192F60?style=flat-square" alt="Copyright">
 
@@ -19,7 +19,7 @@
 
 **蛍光ペン PRO (Highlighter PRO)** 是一款運行於瀏覽器的 **SEO 寫作輔助工具 (SPA)**。它結合了傳統日式文具的侘寂 (Wabi-sabi) 美學與現代硬派 SEO 功能。
 
-本工具專注於解決專業寫手在「撰稿、標註、交付」流程中的斷層。**V9.0 版本導入了「樣式烘焙 (Style Baking)」技術**，在複製當下將 CSS 強制寫入每一個 HTML 標籤，確保貼到 Google Docs 時，大標 (24pt)、副標 (18pt) 與內文 (12pt) 能 **100% 精準還原**，實現真正的所見即所得。
+本工具專注於解決專業寫手在「撰稿、標註、交付」流程中的斷層。**V9.1 版本導入了「樣式烘焙 (Style Baking)」技術**，在複製當下將 CSS 強制寫入每一個 HTML 標籤，確保貼到 Google Docs 時，大標 (24pt)、副標 (18pt) 與內文 (12pt) 能 **100% 精準還原**，實現真正的所見即所得。
 
 ---
 
@@ -29,11 +29,11 @@
 
 | 寫手的痛點 (Pain Points) | 蛍光ペン PRO 的解法 (Solution) |
 | :--- | :--- |
-| **Google Docs 格式不一** | **[V9.0 獨家]** 採用 **Style Baking 技術**，複製時將字體大小與行高「烘焙」進標籤內，徹底解決 Docs 忽略外部樣式的問題。 |
+| **Google Docs 格式不一** | **[V9.1 獨家]** 採用 **Style Baking 技術**，複製時將字體大小與行高「烘焙」進標籤內，徹底解決 Docs 忽略外部樣式的問題。 |
+| **結構按鈕操作失靈** | **[V9.1 修正]** 優化了焦點鎖定 (Focus Lock)，圈選文字後點擊 H1/H2 按鈕不再失焦，操作流暢度大幅提升。 |
 | **關鍵字堆砌風險** | 內建 **即時密度檢測 (Density Monitor)**，以百分比視覺化關鍵字分佈，避免因過度優化遭演算法懲罰。 |
 | **手動標註耗時** | 提供 **一鍵標註 (Auto Mark)** 功能，瞬間將目標關鍵字標示為顯眼的 **[茜色+粗體]**，大幅提升校對效率。 |
 | **標題層級混亂** | 具備 **H1/H2/P 結構化按鈕**，直觀設定 HTML 語意標籤，優化文章 SEO 架構。 |
-| **操作容易誤觸** | 優化了按鈕焦點邏輯 (Focus Logic)，圈選文字後點擊結構按鈕不再失靈，操作更直覺。 |
 
 ---
 
@@ -45,7 +45,7 @@
 
 ### 2. 專業級編輯工具列 (Pro Toolbar)
 * **視覺明確化**：捨棄晦澀圖示，採用清晰的文字標籤按鈕。
-* **精準字級控制**：提供 10pt-36pt 下拉選單，透過 CSS 容器偽裝技術，修復了舊版邊框顯示不全的問題。
+* **精準字級控制**：提供 10pt-36pt 下拉選單，支援跨段落調整。
 * **無損字級技術**：所有標註操作僅改變顏色與權重，**絕對不影響** 原本設定的字體大小。
 
 ### 3. 無縫交付與協作 (Seamless Delivery)
@@ -93,9 +93,9 @@
 
 ## 🛠️ 技術規格 (Specs)
 
-* **Version**: v9.0 (WYSIWYG Edition / 所見即所得版)
+* **Version**: v9.1 (Fix & Bake Edition / 修正與烘焙版)
 * **Architecture**: Vanilla JS (ES6+) + Tailwind CSS
-* **Tech Stack**: Inline Style Injection (複製邏輯), LocalStorage (資料保存)
+* **Tech Stack**: Style Baking (複製邏輯), Focus Lock (操作優化)
 * **Typography**: Noto Serif JP (Editor UI), Microsoft JhengHei (Docs Export)
 
 ---
