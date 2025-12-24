@@ -1,861 +1,499 @@
 <!DOCTYPE html>
-<html lang="zh-TW" data-theme="light">
+<html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  
-  <meta name="description" content="免費 SEO 寫作工具。一鍵自動標註關鍵字、計算密度，完美複製到 Google Docs 不跑版。支援繁簡轉換與微軟正黑體輸出。">
-  <meta name="keywords" content="SEO工具, 關鍵字密度, Google Docs 格式, 繁簡轉換, 寫作軟體, 蛍光ペン PRO">
-  <meta name="author" content="Kaoru Tsai">
-
-  <title>蛍光ペン PRO - SEO文案數位工具</title>
-  
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "蛍光ペン PRO",
-    "applicationCategory": "ProductivityApplication",
-    "operatingSystem": "Browser",
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD" },
-    "description": "SEO 寫手專用的數位螢光筆。解決 Google Docs 貼上跑版問題。",
-    "author": { "@type": "Person", "name": "Kaoru Tsai" }
-  }
-  </script>
-
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a58f86' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 19 7-7 3 3-7 7-3-3Z'/%3E%3Cpath d='m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5Z'/%3E%3Cpath d='m2 2 5 2.25'/%3E%3Cpath d='m11 4 2 1.5'/%3E%3C/svg%3E">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white' style='background-color:%23b3ada0' stroke='%23a58f86' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 19 7-7 3 3-7 7-3-3Z'/%3E%3Cpath d='m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5Z'/%3E%3Cpath d='m2 2 5 2.25'/%3E%3Cpath d='m11 4 2 1.5'/%3E%3C/svg%3E">
-  
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <title>蛍光ペン PRO - Kaoru Tsai 2025 Official</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
   
   <style>
-    /* --- Design System: Rikyu & Kurumi (V9.4) --- */
     :root {
-      --bg-canvas: #EBE9E4; 
-      --bg-card: #FFFEFA;
-      --text-ink: #3E3C38; 
-      --text-sub: #A58F86; 
-      --border-light: #B3ADA0;
-      --color-brand: #715C1F; 
-      --color-jump-action: #B7282E; 
-      --color-jump-finish: #192F60;
-      --shadow-card: 0 4px 12px -2px rgba(165, 143, 134, 0.1);
-      --radius-btn: 4px;
-    }
-
-    html[data-theme="dark"] {
-      --bg-canvas: #1F1D19;
-      --bg-card: #292622;
-      --text-ink: #E8E6E1;
-      --text-sub: #A6A092;
-      --border-light: #5C5850;
-      --color-brand: #C7B370; 
-      --color-jump-action: #FF6B6B;
-      --color-jump-finish: #6B8AFF;
-    }
-    
-    html, body { 
-      height: 100%; width: 100%; overflow: hidden; 
-      font-family: 'Noto Sans JP', sans-serif;
-      background-color: var(--bg-canvas); 
-      color: var(--text-ink); 
-      margin: 0; padding: 0;
-      transition: background-color 0.3s;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
-    }
-
-    .serif-font { font-family: 'Noto Serif JP', serif; letter-spacing: 0.04em; }
-
-    .app-container { 
-      display: flex; flex-direction: column; height: 100vh; width: 100vw;
-      min-height: 500px; 
-    }
-
-    /* Toast */
-    .toast {
-      position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-20px);
-      background-color: var(--color-jump-finish); color: white;
-      padding: 10px 20px; border-radius: 50px;
-      font-size: 13px; font-weight: 500; letter-spacing: 0.05em;
-      opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      display: flex; align-items: center; gap: 8px;
-    }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* Header */
-    .header-area { 
-      flex-shrink: 0; height: 60px; z-index: 50; 
-      background: rgba(255, 254, 250, 0.95); 
-      backdrop-filter: blur(8px);
-      display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 1px solid var(--border-light);
-      padding: 0 24px;
-    }
-    html[data-theme="dark"] .header-area { background: rgba(41, 38, 34, 0.95); }
-
-    /* Workspace */
-    .main-workspace { 
-      display: flex; flex: 1; overflow: hidden; position: relative; 
-      gap: 20px; padding: 20px; 
-      max-width: 1600px; margin: 0 auto; width: 100%;
-    }
-
-    .card-panel {
-      background: var(--bg-card);
-      border-radius: 8px;
-      box-shadow: var(--shadow-card), inset 0 0 0 1px rgba(255,255,255,0.4);
-      border: 1px solid var(--border-light);
-      overflow: hidden;
-      display: flex; flex-direction: column;
-    }
-
-    /* Sidebar */
-    .sidebar-input { 
-      flex: 0 0 340px; width: 340px; 
-      z-index: 20; transition: transform 0.3s;
-    }
-    
-    .input-group { 
-      padding: 16px; 
-      display: flex; flex-direction: column;
-      flex-shrink: 0;
-    }
-    
-    textarea { 
-      width: 100%; resize: none; border: none; outline: none; background: transparent;
-      font-size: 14px; line-height: 1.8; color: var(--text-sub);
-      font-family: 'Noto Sans JP', sans-serif;
-    }
-    textarea:focus { color: var(--text-ink); }
-    textarea::placeholder { color: #968C83; opacity: 1; font-style: normal; }
-    html[data-theme="dark"] textarea::placeholder { color: #6B655D; }
-    
-    .label-header { 
-      font-family: 'Noto Serif JP', serif;
-      font-size: 13px; font-weight: 700; color: var(--color-brand); 
-      letter-spacing: 0.1em; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;
-      min-height: 24px;
-    }
-
-    /* Action Card */
-    .jp-action-card {
-      background-color: #FFFEFA;
-      border: 1px solid var(--border-light);
-      border-radius: 6px; padding: 20px;
-      text-align: center; position: relative; margin-top: auto;
-      box-shadow: inset 0 0 20px rgba(179, 173, 160, 0.1); 
-      flex-shrink: 0; 
-    }
-    
-    .btn-jp-hero {
-      font-family: 'Noto Serif JP', serif;
-      background-color: var(--color-jump-action); color: #FFFFFF;
-      border: none; border-radius: 4px;
-      padding: 12px 24px; width: 100%;
-      font-size: 15px; letter-spacing: 0.05em; font-weight: 700;
-      cursor: pointer; transition: all 0.2s ease;
-      box-shadow: 0 4px 10px rgba(183, 40, 46, 0.25);
-      margin-bottom: 14px;
-    }
-    .btn-jp-hero:hover { filter: brightness(1.1); transform: translateY(-1px); }
-    
-    .jp-secondary-actions {
-      display: flex; gap: 8px; justify-content: center;
-      border-top: 1px dashed var(--border-light); padding-top: 14px;
-    }
-    
-    .btn-jp-sub {
-      background: #FAF9F6; border: 1px solid var(--border-light); border-radius: 4px;
-      color: var(--text-sub); padding: 5px 12px; flex: 1;
-      font-size: 12px; cursor: pointer; transition: all 0.2s;
-      font-family: 'Noto Serif JP', serif;
-    }
-    .btn-jp-sub:hover { color: var(--color-brand); border-color: var(--color-brand); background: #FFFFFF; }
-    
-    .select-reset {
-      background: #FFF5F5; border: 1px solid #F5E6E6; border-radius: 4px;
-      color: #C44338; padding: 5px 8px; font-size: 12px; cursor: pointer;
-      font-family: 'Noto Serif JP', serif; outline: none; flex: 1;
-      text-align: center; appearance: none;
-    }
-    .select-reset:hover { border-color: #C44338; }
-
-    /* Toolbar */
-    .preview-section { flex: 1; position: relative; min-width: 0; }
-
-    .toolbar-container {
-      background: var(--bg-card);
-      border-bottom: 1px solid var(--border-light);
-      padding: 10px 16px;
-      display: flex; align-items: center; gap: 10px;
-      flex-wrap: wrap; z-index: 40;
-    }
-    
-    .tool-sep { width: 1px; height: 24px; background: var(--border-light); margin: 0 4px; }
-    .tool-sep-strong { width: 2px; height: 28px; background: var(--border-light); margin: 0 8px; }
-
-    .group-struct { display: flex; gap: 4px; }
-    .group-edit { display: flex; gap: 4px; align-items: center; }
-    
-    .btn-struct {
-      height: 32px; padding: 0 10px;
-      background: #FFFFFF; border: 1px solid var(--border-light);
-      color: var(--text-sub); 
-      font-family: 'Noto Serif JP', serif; font-size: 14px; font-weight: 700;
-      border-radius: var(--radius-btn); 
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      line-height: 1; cursor: pointer; transition: all 0.2s;
-    }
-    .btn-struct span.pt-hint { font-family: sans-serif; font-size: 9px; opacity: 0.6; margin-top: 1px; font-weight: 400; color: var(--border-light); }
-    .btn-struct:hover { border-color: var(--color-brand); color: var(--color-brand); background: #FDFCF8; }
-
-    /* Font Size Wrapper */
-    .font-size-wrapper { 
-      position: relative; display: inline-block;
-      height: 32px;
-      background: #FFFFFF; 
-      border: 1px solid var(--border-light); 
-      border-radius: var(--radius-btn);
-    }
-    .font-size-wrapper:hover { border-color: var(--color-brand); }
-    
-    .font-size-select {
-      height: 100%; width: 100%;
-      padding: 0 24px 0 10px;
-      background: transparent; border: none;
-      color: var(--text-ink); font-size: 13px; font-family: 'Noto Serif JP', serif; font-weight: 600;
-      cursor: pointer; outline: none; 
-      appearance: none; -webkit-appearance: none; -moz-appearance: none;
-    }
-    
-    .font-size-wrapper::after {
-      content: ''; position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 8px; height: 8px; pointer-events: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a58f86' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-      background-size: contain; background-repeat: no-repeat;
-    }
-
-    .btn-edit {
-      height: 32px; min-width: 32px; padding: 0 8px;
-      background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-btn);
-      color: var(--text-sub); font-size: 14px;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; transition: all 0.2s;
-    }
-    .btn-edit:hover { border-color: var(--color-brand); color: var(--color-brand); background: #FDFCF8; }
-    .btn-edit svg { width: 16px; height: 16px; }
-
-    .btn-emphasis { 
-      background: #FFF5F5; color: var(--color-jump-action); border: 1px solid #FECACA;
-      height: 34px; padding: 0 16px; border-radius: var(--radius-btn); 
-      font-family: 'Noto Serif JP', serif; font-weight: 700; font-size: 13px;
-      display: flex; align-items: center; gap: 6px; transition: 0.2s; cursor: pointer;
-      box-shadow: 0 2px 5px rgba(183, 40, 46, 0.1);
-    }
-    .btn-emphasis:hover { background: var(--color-jump-action); color: white; border-color: var(--color-jump-action); box-shadow: 0 4px 8px rgba(183, 40, 46, 0.25); }
-
-    .btn-copy {
-      background: var(--color-jump-finish); color: white; border: none;
-      height: 34px; padding: 0 20px; border-radius: var(--radius-btn); 
-      font-family: 'Noto Serif JP', serif; font-weight: 600; font-size: 13px;
-      display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s;
-      box-shadow: 0 2px 5px rgba(25, 47, 96, 0.2);
-    }
-    .btn-copy:hover { filter: brightness(1.2); transform: translateY(-1px); box-shadow: 0 4px 10px rgba(25, 47, 96, 0.3); }
-
-    .btn-restore {
-      height: 32px; padding: 0 10px;
-      background: transparent; border: 1px dashed var(--border-light); border-radius: var(--radius-btn);
-      color: var(--text-sub); font-size: 12px; font-weight: 500;
-      display: flex; align-items: center; gap: 4px; cursor: pointer; transition: 0.2s;
-    }
-    .btn-restore:hover { border-color: var(--color-jump-finish); color: var(--color-jump-finish); background: #F0F4FF; }
-
-    .group-color { display: flex; gap: 6px; align-items: center; }
-    .swatch-item { 
-      width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--border-light); 
-      cursor: pointer; transition: transform 0.15s; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-    }
-    .swatch-item:hover { transform: scale(1.2); border-color: var(--text-sub); }
-    .btn-color-reset {
-      width: 24px; height: 24px; border-radius: 50%; border: 1px dashed var(--border-light);
-      background: transparent; color: var(--text-sub); font-size: 10px;
-      display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;
-    }
-    .btn-color-reset:hover { color: var(--color-jump-action); border-color: var(--color-jump-action); background: white; }
-
-    /* Editor Canvas */
-    .scrollable-preview-area { 
-      flex: 1; overflow-y: auto; overflow-x: hidden; display: block; 
-      background-color: #E6E3DB; 
-      text-align: center; padding-top: 30px; padding-bottom: 60px;
-      scrollbar-gutter: stable; 
-    }
-    html[data-theme="dark"] .scrollable-preview-area { background-color: #151515; }
-
-    .editor-paper { 
-      display: inline-block; width: 100%; max-width: 820px; 
-      min-height: 1000px; height: auto !important;
-      background: #FFFFFF; 
-      padding: 70px 80px; margin: 0 auto; 
-      text-align: justify;
-      white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word;    
-      line-height: 2.1; 
-      font-size: 12pt; 
-      color: #333; 
-      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
-    }
-    html[data-theme="dark"] .editor-paper { background: #2B2822; color: #E7E5E4; }
-    
-    /* V9.4 VISUAL FORCE - High Specificity to override default 12pt */
-    .editor-paper h1 { font-size: 24pt !important; font-weight: bold !important; line-height: 1.5 !important; margin-bottom: 12px !important; color: #333; }
-    .editor-paper h2 { font-size: 18pt !important; font-weight: bold !important; line-height: 1.5 !important; margin-bottom: 10px !important; color: #333; }
-    .editor-paper p { font-size: 12pt !important; line-height: 2.0 !important; color: #333; }
-    
-    html[data-theme="dark"] .editor-paper h1,
-    html[data-theme="dark"] .editor-paper h2,
-    html[data-theme="dark"] .editor-paper p { color: #E7E5E4 !important; }
-
-    /* Status Bar */
-    .status-bar {
-      height: 36px; background: var(--bg-card);
-      border-top: 1px solid var(--border-light);
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 20px; flex-shrink: 0;
-      font-size: 12px; color: var(--text-sub);
-      font-family: 'Noto Serif JP', serif;
-    }
-    
-    /* Interactive Count Toggle */
-    .count-toggle-btn {
-      display: flex; align-items: center; gap: 6px; 
-      cursor: pointer; user-select: none;
-      padding: 2px 10px; border-radius: 12px;
-      background: rgba(0,0,0,0.03); transition: all 0.2s;
-      border: 1px solid transparent;
-    }
-    .count-toggle-btn:hover { background: rgba(0,0,0,0.06); border-color: var(--border-light); }
-    .count-val { font-family: sans-serif; font-weight: 700; color: var(--text-ink); }
-    
-    /* FIX: Giant Icon - Locked size */
-    .icon-switch { width: 14px; height: 14px; opacity: 0.6; min-width: 14px; }
-
-    .geo-faq {
-      margin-top: 20px; border-top: 1px dashed var(--border-light); padding-top: 10px;
-      font-size: 11px; color: var(--text-sub);
-      flex-shrink: 0; 
-    }
-    .geo-faq summary { cursor: pointer; margin-bottom: 5px; font-weight: bold; list-style: none; }
-    .geo-faq summary::-webkit-details-marker { display: none; }
-    .geo-faq p { margin-bottom: 5px; line-height: 1.5; }
-
-    .mobile-tab-bar { display: none; }
-    
-    @media (max-width: 1024px) {
-      .app-container { height: 100%; }
-      .main-workspace { padding: 0; gap: 0; display: block; }
-      .card-panel { border-radius: 0; border: none; box-shadow: none; height: 100%; }
+      /* 色票：日系文具風 (維持 V6.0 設定) */
+      --bg-canvas: #F5F4F0;       /* 米色畫布 */
+      --bg-sidebar: #FCFCFA;      /* 側欄 */
+      --color-ink: #333333;       /* 墨 */
+      --color-sub: #7A7A7A;       /* 鉛筆灰 */
+      --color-accent: #A83636;    /* 蘇芳紅 */
+      --color-accent-hover: #8A2525;
       
-      .sidebar-input { 
-        width: 100%; height: auto; position: absolute; top: 0; bottom: 56px; left: 0; 
-        z-index: 30; transform: translateX(0); background: var(--bg-card);
-      }
-      .preview-section { 
-        width: 100%; height: auto; position: absolute; top: 0; bottom: 56px; left: 0; 
-        z-index: 25; opacity: 0; pointer-events: none;
-      }
-      .toolbar-container { overflow-x: auto; padding: 8px; gap: 8px; }
-      .tool-sep { display: none; }
-      .tool-sep-strong { display: inline-block; width: 1px; margin: 0 4px; }
+      /* 狀態指示燈顏色 */
+      --status-saving: #D97706;   /* 儲存中 (橘) */
+      --status-saved: #059669;    /* 已儲存 (綠) */
+
+      /* 陰影系統 */
+      --shadow-card: 0 2px 5px rgba(0,0,0,0.03), 0 1px 2px rgba(0,0,0,0.02);
       
-      .show-preview .sidebar-input { transform: translateX(-20px); opacity: 0; pointer-events: none; }
-      .show-preview .preview-section { opacity: 1; pointer-events: auto; z-index: 35; }
-      .editor-paper { padding: 30px 20px; margin: 0; width: 100%; min-height: 100%; box-shadow: none; }
-      
-      .mobile-tab-bar { 
-        display: flex; height: 56px; background: var(--bg-card); border-top: 1px solid var(--border-light);
-        z-index: 60; width: 100%; flex-shrink: 0; position: absolute; bottom: 0; left: 0;
-        padding-bottom: env(safe-area-inset-bottom);
-      }
-      .tab-btn { 
-        flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
-        font-weight: 500; color: var(--text-sub); font-size: 10px; gap: 4px; font-family: 'Noto Serif JP', serif;
-      }
-      .tab-btn.active { color: var(--color-brand); background: var(--bg-canvas); }
-      .header-title-sub { display: none; } 
-      .status-bar { display: none; } 
+      /* 紋理 */
+      --noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--color-ink);
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      height: 100vh; overflow: hidden;
+    }
+    .bg-noise { position: fixed; inset: 0; background-image: var(--noise); pointer-events: none; z-index: -1; }
+    .font-serif { font-family: 'Shippori Mincho', serif; }
+
+    /* ICON 線條風格 */
+    .icon-line {
+      width: 18px; height: 18px;
+      stroke-width: 1.5px;
+      stroke: currentColor;
+      fill: none;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* 輸入框優化 */
+    .input-field {
+      width: 100%; background: #FFFFFF;
+      border: 1px solid transparent; border-bottom: 1px dashed #CCC;
+      padding: 12px; font-size: 14px; color: var(--color-ink);
+      transition: all 0.3s ease; resize: none; border-radius: 4px;
+    }
+    .input-field:focus {
+      background: #FFFFFF; border-bottom-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(168, 54, 54, 0.05); outline: none;
+    }
+
+    /* 工具列按鈕 (中英對照) */
+    .btn-tile {
+      display: flex; align-items: center; justify-content: center; gap: 4px;
+      padding: 6px 10px; background: #FFFFFF;
+      border: 1px solid #EAEAEA; border-radius: 6px;
+      color: var(--color-sub);
+      font-family: 'Zen Kaku Gothic New', sans-serif; /* 改回黑體以利閱讀中文 */
+      font-size: 12px; font-weight: 500;
+      cursor: pointer; box-shadow: var(--shadow-card);
+      transition: all 0.2s; user-select: none;
+    }
+    .btn-tile:hover {
+      transform: translateY(-2px); border-color: #D1D1D1;
+      color: var(--color-ink); box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+    /* 英文小標籤 */
+    .sub-label { font-size: 9px; opacity: 0.6; font-family: 'Shippori Mincho', serif; margin-left: 2px; text-transform: uppercase; }
+
+    /* 主按鈕 */
+    .btn-primary {
+      width: 100%; background: var(--color-accent); color: white;
+      border: none; padding: 12px; border-radius: 8px;
+      font-family: 'Shippori Mincho', serif; letter-spacing: 0.05em; font-weight: bold;
+      cursor: pointer; box-shadow: 0 4px 10px rgba(168, 54, 54, 0.2);
+      transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-primary:hover { background: var(--color-accent-hover); transform: translateY(-1px); }
+
+    /* 次要按鈕 */
+    .btn-secondary {
+      flex: 1; background: transparent; border: 1px solid #DDD;
+      color: #666; padding: 8px; border-radius: 6px; font-size: 12px;
+      cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .btn-secondary:hover { border-color: #999; color: #333; background: white; }
+
+    /* 分隔線 */
+    .divider { width: 1px; height: 20px; background: #E0E0E0; margin: 0 6px; }
+
+    /* 編輯紙張 */
+    .editor-paper {
+      width: 100%; max-width: 820px; min-height: 100vh;
+      background: #FFFFFF; padding: 80px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.04); outline: none;
+      /* Docs Core */
+      font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif !important;
+      font-size: 12pt !important; line-height: 2.0 !important; color: #333;
+    }
+    @media (max-width: 768px) { .editor-paper { padding: 40px 24px; } }
+
+    /* 色票 */
+    .color-dot {
+      width: 20px; height: 20px; border-radius: 50%; border: 2px solid white;
+      box-shadow: 0 0 0 1px #EEE; cursor: pointer; transition: 0.2s;
+    }
+    .color-dot:hover { transform: scale(1.15); box-shadow: 0 0 0 1px #AAA; }
+
+    /* 法律宣告 Footer */
+    .legal-footer {
+      font-size: 10px; color: #999; text-align: center;
+      padding-top: 20px; border-top: 1px dashed #E0E0E0; margin-top: auto;
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(245, 244, 240, 0.9);
+      backdrop-filter: blur(4px); z-index: 50; display: none;
+      align-items: center; justify-content: center;
+    }
+    .modal-card {
+      background: white; padding: 30px; border-radius: 12px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.1); width: 320px;
+      text-align: center; border: 1px solid #EEE;
     }
   </style>
 </head>
-<body class="app-container">
+<body class="flex flex-col md:flex-row">
+  <div class="bg-noise"></div>
 
-  <div id="toast" class="toast"></div>
-
-  <header class="header-area">
-    <div class="flex items-center gap-3 overflow-hidden">
-      <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center text-white bg-[var(--color-brand)] rounded shadow-sm">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m12 19 7-7 3 3-7 7-3-3Z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5Z"/></svg>
+  <div id="resetModal" class="modal-backdrop" onclick="closeResetModal(event)">
+    <div class="modal-card">
+      <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4 text-[#A83636]">
+        <svg class="icon-line w-6 h-6" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
       </div>
-      <div class="flex flex-col justify-center min-w-0">
-        <h1 class="text-lg font-bold text-[var(--color-brand)] tracking-widest serif-font leading-tight truncate">蛍光ペン PRO</h1>
-        <span class="header-title-sub text-[10px] text-[var(--text-sub)] font-medium tracking-[0.2em] uppercase opacity-70 truncate">SEO Writer Suite</span>
-      </div>
-    </div>
-    
-    <button onclick="toggleTheme()" class="w-8 h-8 rounded-full flex items-center justify-center text-[var(--text-sub)] hover:bg-[var(--bg-canvas)] transition-colors flex-shrink-0" title="切換夜間模式">
-      <svg id="moonIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="block"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-      <svg id="sunIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="hidden"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-    </button>
-  </header>
-
-  <main class="main-workspace" id="mainWorkspace">
-    <div class="sidebar-input card-panel">
-      <div class="input-group" style="flex: 1 1 40%; min-height: 150px; border-bottom: 1px solid var(--border-light);">
-        <div class="flex justify-between items-start mb-2">
-          <div class="label-header mb-0">原文輸入</div>
-          <div class="flex flex-col items-end gap-2">
-            <label class="flex items-center gap-1 cursor-pointer select-none">
-              <span class="text-[10px] font-bold text-[var(--text-sub)]">全形</span>
-              <input type="checkbox" id="autoPunc" class="accent-[var(--color-brand)] w-3.5 h-3.5" checked>
-            </label>
-            <div class="flex gap-1">
-              <button onclick="convertText('S2T')" class="text-[10px] px-2 py-0.5 border border-[var(--border-light)] rounded bg-white text-[var(--text-sub)] hover:text-[var(--color-brand)] hover:border-[var(--color-brand)] transition">簡→繁</button>
-              <button onclick="convertText('T2S')" class="text-[10px] px-2 py-0.5 border border-[var(--border-light)] rounded bg-white text-[var(--text-sub)] hover:text-[var(--color-brand)] hover:border-[var(--color-brand)] transition">繁→簡</button>
-            </div>
-          </div>
-        </div>
-        <textarea id="sourceText" style="flex: 1;" placeholder="請貼上文章草稿..."></textarea>
-      </div>
+      <h3 class="font-serif font-bold text-lg mb-2 text-gray-800">確認清空資料？</h3>
+      <p class="text-xs text-gray-500 mb-6">此動作將會清除所有草稿與自動儲存的紀錄，無法復原。</p>
       
-      <div class="input-group" style="flex: 1 1 50%; min-height: 250px; overflow-y: auto; padding-bottom: 24px;">
-        <div class="label-header">SEO 關鍵字庫</div>
-        <textarea id="kwList" class="h-24 mb-3 text-sm bg-[var(--bg-card)] border border-[var(--border-light)] rounded p-3 outline-none resize-none font-medium transition-all focus:border-[var(--color-brand)]" style="min-height: 80px;" placeholder="輸入關鍵字 (每行一個)..."></textarea>
-        
-        <div id="densityResults" class="flex-shrink-0 mb-4 pr-1"></div>
-        
-        <div class="jp-action-card">
-          <button onclick="runAutoMark()" class="btn-jp-hero">
-            一鍵標註 (Auto Mark)
-          </button>
-          
-          <div class="jp-secondary-actions">
-             <button onclick="downloadTxt()" class="btn-jp-sub">下載 .txt</button>
-             <select onchange="handleClearAction(this)" class="select-reset">
-               <option value="" selected disabled>🗑️ 重置...</option>
-               <option value="source">清空原文</option>
-               <option value="kw">清空關鍵字</option>
-               <option value="all">全部清空</option>
-             </select>
-          </div>
-        </div>
-        
-        <details class="geo-faq">
-          <summary>常見問題 (FAQ)</summary>
-          <p><strong>Q: 為什麼貼到 Google Docs 字體會跑掉？</strong><br>A: 蛍光ペン PRO 使用獨家封裝技術，強制指定微軟正黑體，解決此問題。</p>
-          <p><strong>Q: 資料安全嗎？</strong><br>A: 安全。所有資料僅儲存於您的瀏覽器 (Local Storage)。</p>
-        </details>
+      <button onclick="execReset('source')" class="w-full py-3 mb-2 border rounded-lg text-sm hover:bg-gray-50 transition text-gray-600 flex justify-between px-4">
+        <span>清除原文草稿</span> <span class="text-xs text-gray-400">INPUT ONLY</span>
+      </button>
+      <button onclick="execReset('kw')" class="w-full py-3 mb-2 border rounded-lg text-sm hover:bg-gray-50 transition text-gray-600 flex justify-between px-4">
+        <span>清除關鍵字庫</span> <span class="text-xs text-gray-400">KW ONLY</span>
+      </button>
+      <button onclick="execReset('all')" class="w-full py-3 border border-red-200 bg-red-50 text-[#A83636] rounded-lg text-sm font-bold hover:bg-red-100 transition mt-2 flex justify-between px-4">
+        <span>全部還原</span> <span class="text-xs opacity-70">RESET ALL</span>
+      </button>
+    </div>
+  </div>
 
-      </div>
+  <div id="toast" class="fixed top-8 left-1/2 -translate-x-1/2 bg-white border border-gray-200 text-gray-800 px-6 py-3 rounded-full shadow-lg text-sm font-medium opacity-0 transition-opacity z-50 flex items-center gap-3">
+    <div id="toastIcon"></div>
+    <span id="toastMsg">Action Completed</span>
+  </div>
+
+  <aside class="w-full md:w-[340px] bg-[var(--bg-sidebar)] border-r border-[#EAEAEA] flex flex-col z-20 flex-shrink-0 md:h-full shadow-[4px_0_20px_rgba(0,0,0,0.01)]">
+    <div class="h-16 flex items-center px-6 border-b border-[#F0F0F0] bg-white justify-between">
+       <span class="font-serif font-bold text-xl tracking-widest text-gray-800 flex items-center gap-2">
+         <svg class="icon-line text-[#A83636]" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+         蛍光ペン <span class="text-xs bg-gray-100 px-1.5 py-0.5 rounded text-gray-500 font-sans tracking-normal">PRO</span>
+       </span>
     </div>
 
-    <div class="preview-section card-panel">
-      <div class="toolbar-container">
-        
-        <div class="group-struct">
-          <button onclick="applyBlock('H1')" class="btn-struct" title="大標題 (24pt)">
-            H1 <span class="pt-hint">24pt</span>
-          </button>
-          <button onclick="applyBlock('H2')" class="btn-struct" title="副標題 (18pt)">
-            H2 <span class="pt-hint">18pt</span>
-          </button>
-          <button onclick="applyBlock('P')" class="btn-struct" title="內文 (12pt)">
-            內文 <span class="pt-hint">12pt</span>
-          </button>
-        </div>
-        
-        <div class="tool-sep"></div>
+    <div class="p-6 flex flex-col h-full overflow-y-auto">
+       
+       <div class="flex-1 flex flex-col min-h-[180px] mb-6">
+         <div class="flex items-center gap-2 mb-2">
+           <svg class="icon-line text-[#A83636]" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+           <span class="font-bold text-sm text-gray-600 tracking-wide">原文輸入</span>
+           <span class="text-[10px] text-gray-400 font-serif">DRAFT</span>
+         </div>
+         <textarea id="sourceText" class="input-field h-full" placeholder="請在此貼上文章草稿... (系統將自動儲存)"></textarea>
+       </div>
 
-        <div class="group-edit">
-           <div class="font-size-wrapper">
-             <select id="fontSizeSelect" onchange="changeFontSize(this.value)" class="font-size-select" title="選擇字體大小">
-               <option value="10">10pt</option>
-               <option value="11">11pt</option>
-               <option value="12" selected>12pt</option>
-               <option value="14">14pt</option>
-               <option value="18">18pt</option>
-               <option value="24">24pt</option>
-               <option value="30">30pt</option>
-               <option value="36">36pt</option>
-             </select>
-           </div>
+       <div class="h-[180px] flex flex-col flex-shrink-0 mb-6">
+          <div class="flex items-center gap-2 mb-2">
+            <svg class="icon-line text-[#A83636]" viewBox="0 0 24 24"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
+            <span class="font-bold text-sm text-gray-600 tracking-wide">SEO 關鍵字</span>
+            <span class="text-[10px] text-gray-400 font-serif">KEYWORDS</span>
+          </div>
+          <textarea id="kwList" class="input-field h-full" placeholder="每行一個關鍵字..."></textarea>
+       </div>
 
-           <button onclick="cmd('undo')" class="btn-edit" title="復原"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg></button>
-           <button onclick="cmd('redo')" class="btn-edit" title="重做"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/></svg></button>
-           
-           <div class="w-px h-6 bg-[var(--border-light)] mx-1"></div>
-           
-           <button onclick="applyRedBold()" class="btn-emphasis" title="紅字+粗體">A+ 重點</button>
-           <button onclick="copyToDocs(this)" class="btn-copy" title="複製到剪貼簿 (微軟正黑)">
-             複製
+       <div class="mt-auto">
+         <button onclick="runAutoMark()" class="btn-primary mb-4">
+           <svg class="icon-line" style="stroke: white;" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+           一鍵注入樣式 <span class="text-[10px] opacity-70 font-normal">INJECT</span>
+         </button>
+         
+         <div class="flex gap-3">
+           <button onclick="downloadTxt()" class="btn-secondary">
+             <svg class="icon-line w-3 h-3" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+             下載 .txt
            </button>
-        </div>
+           <button onclick="openResetModal()" class="btn-secondary hover:text-red-600 hover:border-red-200">
+             <svg class="icon-line w-3 h-3" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+             清空重置
+           </button>
+         </div>
 
-        <div class="tool-sep-strong"></div>
+         <div class="legal-footer">
+            <p class="font-serif font-bold text-gray-400">© 2025 Kaoru Tsai.</p>
+            <p class="scale-90 opacity-70">All Rights Reserved.</p>
+         </div>
+       </div>
+    </div>
+  </aside>
 
-        <button onclick="applyCleanStyle()" class="btn-restore" title="移除所有格式">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-          還回預設
+  <main class="flex-1 flex flex-col bg-[#F5F4F0] relative min-w-0">
+    
+    <header class="h-16 flex items-center px-6 flex-shrink-0 z-30 sticky top-0 bg-[#F5F4F0]/95 backdrop-blur border-b border-transparent transition-all" id="mainHeader">
+      
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
+        <button onclick="applyStyle('h1')" class="btn-tile" title="Heading 1">H1 <span class="sub-label">大標</span></button>
+        <button onclick="applyStyle('h2')" class="btn-tile" title="Heading 2">H2 <span class="sub-label">副標</span></button>
+        <button onclick="applyStyle('p')" class="btn-tile" title="Paragraph">內文 <span class="sub-label">TEXT</span></button>
+        
+        <div class="divider"></div>
+        
+        <button onclick="applyStyle('red')" class="btn-tile text-[#A83636] border-[#FAD4D4] bg-[#FFF5F5]" title="Red Marker">
+          <svg class="icon-line w-4 h-4" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+          <span class="font-bold">重點</span>
         </button>
 
-        <div class="ml-auto flex items-center gap-4">
-           <div class="group-color">
-             <div class="swatch-item bg-[#2C2C2C]" onclick="applyColor('#2C2C2C')" title="墨"></div>
-             <div class="swatch-item bg-[#B93A32]" onclick="applyColor('#B93A32')" title="朱赤"></div>
-             <div class="swatch-item bg-[#192F60]" onclick="applyColor('#192F60')" title="紺青"></div>
-             <button onclick="applyColor('inherit')" class="btn-color-reset" title="回復預設色">✕</button>
-           </div>
-           
-           <div class="w-px h-4 bg-[var(--border-light)] opacity-50"></div>
-           
-           <div class="group-color">
-             <div class="swatch-item bg-[#FFF9C4]" onclick="applyHilite('#FFF9C4')" title="黃"></div>
-             <div class="swatch-item bg-[#FEECEC]" onclick="applyHilite('#FEECEC')" title="紅"></div>
-             <div class="swatch-item bg-[#D1EAED]" onclick="applyHilite('#D1EAED')" title="藍"></div>
-             <button onclick="applyHilite('transparent')" class="btn-color-reset" title="清除背景">✕</button>
-           </div>
+        <div class="divider"></div>
+
+        <button onclick="execCmd('undo')" class="btn-tile" title="Undo">
+           <svg class="icon-line w-4 h-4" viewBox="0 0 24 24"><path d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+           <span class="hidden md:inline sub-label text-[10px] ml-1">復原</span>
+        </button>
+        <button onclick="execCmd('redo')" class="btn-tile" title="Redo">
+           <svg class="icon-line w-4 h-4" viewBox="0 0 24 24"><path d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6"></path></svg>
+           <span class="hidden md:inline sub-label text-[10px] ml-1">重做</span>
+        </button>
+
+        <div class="divider"></div>
+
+        <div class="flex items-center gap-2 px-2 flex-shrink-0">
+          <div onclick="applyColor('#333333')" class="color-dot bg-[#333]" title="墨色 (Black)"></div>
+          <div onclick="applyColor('#192F60')" class="color-dot bg-[#192F60]" title="紺青 (Navy)"></div>
+          <div onclick="applyColor('#B93A32')" class="color-dot bg-[#B93A32]" title="蘇芳 (Red)"></div>
+          <div class="w-px h-4 bg-gray-300 mx-1"></div>
+          <div onclick="applyHighlight('#FFF2CC')" class="color-dot bg-[#FFF2CC]" title="黃 (Yellow)"></div>
+          <div onclick="applyHighlight('#FAD4D4')" class="color-dot bg-[#FAD4D4]" title="粉 (Pink)"></div>
+          <div onclick="applyHighlight('#D0E0E3')" class="color-dot bg-[#D0E0E3]" title="藍 (Blue)"></div>
         </div>
 
-      </div>
+        <div class="divider"></div>
 
-      <div class="scrollable-preview-area">
-        <div id="editor" contenteditable="true" class="editor-paper serif-font" placeholder="開始寫作..."></div>
+        <button onclick="copyToDocs()" class="btn-tile text-[#333] font-bold border-gray-300 hover:bg-gray-800 hover:text-white transition-colors">
+          <svg class="icon-line w-4 h-4" viewBox="0 0 24 24"><path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+          複製文案
+        </button>
       </div>
+    </header>
+
+    <div class="flex-1 overflow-y-auto flex flex-col items-center pb-20 scroll-smooth relative" id="scrollCanvas">
       
-      <footer class="status-bar">
-        <div class="flex gap-4">
-          <div class="count-toggle-btn" title="點擊切換計算模式" onclick="toggleCountMode()">
-            <svg class="icon-switch" style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M21 21v-5h-5"/></svg>
-            <span>字數:</span>
-            <span id="totalCount" class="count-val">0</span>
-            <span id="countModeLabel" class="text-[10px] opacity-70 font-medium">(含標點)</span>
-          </div>
-          
-          <div class="w-px h-3 bg-[var(--border-light)]"></div>
-          
-          <div class="count-item">
-            <span>選取:</span>
-            <span id="selectCount" class="count-val text-[var(--color-brand)]">0</span>
-          </div>
-        </div>
-        <div class="flex items-center gap-2 text-[10px] text-[var(--text-sub)]">
-           <span id="saveStatus">☁️ 已儲存</span>
+      <div id="editor" contenteditable="true" class="editor-paper mt-6 mb-6 text-justify rounded-sm" placeholder="請在此開始撰寫文案... (即使關閉瀏覽器，內容也會保留)"></div>
+      
+      <div class="w-full max-w-[820px] flex justify-between items-center text-[11px] text-gray-400 mt-2 px-4">
+         <div class="font-serif tracking-widest flex items-center gap-2">
+           <span id="charCount">0 字</span>
            <span>|</span>
-           <span>&copy; 2025 Kaoru Tsai.</span>
-        </div>
-      </footer>
+           <span id="saveStatus" class="flex items-center gap-1 transition-colors duration-300">
+             <span class="w-2 h-2 rounded-full bg-gray-300"></span> 準備就緒
+           </span>
+         </div>
+         
+         <div class="font-serif tracking-wide opacity-50">
+           © 2025 Kaoru Tsai. All Rights Reserved.
+         </div>
+      </div>
+
     </div>
   </main>
 
-  <div class="mobile-tab-bar">
-    <button class="tab-btn active" onclick="switchTab('input', this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-      <span>編輯</span>
-    </button>
-    <button class="tab-btn" onclick="switchTab('preview', this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-      <span>預覽</span>
-    </button>
-  </div>
-
   <script>
-    const editor = document.getElementById('editor'); 
+    // --- 核心變數 ---
+    const editor = document.getElementById('editor');
     const source = document.getElementById('sourceText');
-    const kwListArea = document.getElementById('kwList'); 
-    const densityResults = document.getElementById('densityResults');
-    const autoPuncToggle = document.getElementById('autoPunc');
-    const totalCount = document.getElementById('totalCount');
-    const selectCount = document.getElementById('selectCount');
-    const saveStatus = document.getElementById('saveStatus');
-    const toast = document.getElementById('toast');
-    const countModeLabel = document.getElementById('countModeLabel');
-    const STORAGE_KEY = 'highlight_pro_v94_data';
-    const THEME_KEY = 'highlight_pro_theme';
-    let countMode = 'all'; 
-    let savedRange = null; // Selection Memory
+    const kwListArea = document.getElementById('kwList');
+    const resetModal = document.getElementById('resetModal');
+    const statusLabel = document.getElementById('saveStatus');
 
-    const TS_DICT = {
-      '么':'麼','于':'於','为':'為','干':'乾','后':'後','里':'裡','制':'製','面':'麵','发':'發','郁':'鬱','松':'鬆','才':'才','台':'臺',
-      '万':'萬','与':'與','丑':'醜','专':'專','业':'業','丛':'叢','东':'東','丝':'絲','两':'兩','严':'嚴','丧':'喪','个':'個','丰':'豐',
-      '临':'臨','丽':'麗','举':'舉','乃':'乃','久':'久','义':'義','乐':'樂','乔':'喬','乖':'乖','乘':'乘','乙':'乙','九':'九','乞':'乞',
-      '习':'習','乡':'鄉','书':'書','买':'買','乱':'亂','了':'了','予':'予','争':'爭','事':'事','二':'二','亏':'虧','云':'雲','互':'互',
-      '五':'五','井':'井','亚':'亞','些':'些','亡':'亡','交':'交','亥':'亥','亦':'亦','产':'產','亨':'亨','亩':'畝','享':'享','京':'京',
-      '亲':'親','亿':'億','什':'什','仁':'仁','仅':'僅','仆':'僕','仇':'仇','今':'今','介':'介','仍':'仍','从':'從','仑':'侖','仓':'倉',
-      '仔':'仔','仕':'仕','他':'他','付':'付','仙':'仙','代':'代','令':'令','以':'以','仪':'儀','们':'們','仰':'仰','仲':'仲','件':'件',
-      '价':'價','任':'任','份':'份','仿':'仿','企':'企','伉':'伉','伊':'伊','伍':'伍','伎':'伎','伏':'伏','伐':'伐','休':'休','众':'眾',
-      '优':'優','伙':'夥','会':'會','传':'傳','伤':'傷','伦':'倫','伪':'偽','伫':'佇','伯':'伯','估':'估','伴':'伴','伶':'伶','伸':'伸',
-      '伺':'伺','似':'似','伽':'伽','佃':'佃','但':'但','位':'位','低':'低','住':'住','佐':'佐','佑':'佑','体':'體','何':'何','余':'餘',
-      '佛':'佛','作':'作','你':'你','佣':'傭','佩':'佩','佯':'佯','佰':'佰','佳':'佳','使':'使','来':'來','例':'例','侍':'侍','侏':'侏'
-    };
-    const ST_DICT = {};
-    Object.keys(TS_DICT).forEach(key => { ST_DICT[TS_DICT[key]] = key; });
+    // Docs 相容樣式 (暴力寫死)
+    const FONT_FAMILY = "font-family: 'Microsoft JhengHei', '微軟正黑體', sans-serif;";
+    const BASE_STYLE = `${FONT_FAMILY} font-size: 12pt; line-height: 2.0; color: #333;`;
 
-    function showToast(msg) {
-      toast.innerText = msg;
-      toast.classList.add('show');
-      setTimeout(() => { toast.classList.remove('show'); }, 2000);
-    }
-
-    // --- CORE FIX: SELECTION MEMORY ---
-    function saveSelection() {
-      const sel = window.getSelection();
-      if (sel.getRangeAt && sel.rangeCount) {
-        savedRange = sel.getRangeAt(0);
-      }
-    }
-
-    function restoreSelection() {
-      if (savedRange) {
-        const sel = window.getSelection();
-        sel.removeAllRanges();
-        sel.addRange(savedRange);
-      }
-    }
-
-    function convertText(mode) {
-      let text = source.value;
-      if (!text) return;
-      let converted = "";
-      const map = (mode === 'S2T') ? TS_DICT : ST_DICT;
-      for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        converted += map[char] || char;
-      }
-      source.value = converted;
-      syncPreview();
-      showToast(mode === 'S2T' ? '✅ 已轉換為繁體' : '✅ 已轉換為簡體');
-    }
-
-    function cmd(command, value = null) { 
-      restoreSelection(); 
-      document.execCommand(command, false, value); 
-      updateCounts(); 
-    }
+    // ----------------------------------------------------
+    // 💾 1. 草稿記憶系統 (LocalStorage Engine)
+    // ----------------------------------------------------
     
-    function applyColor(hex) { 
-      restoreSelection();
-      if (hex === 'inherit') { document.execCommand('removeFormat', false, null); } 
-      else { document.execCommand('foreColor', false, hex); }
-      updateCounts();
-    }
-    
-    function applyHilite(hex) { 
-      restoreSelection();
-      if (!document.execCommand('hiliteColor', false, hex)) document.execCommand('backColor', false, hex); 
-      updateCounts(); 
-    }
-
-    function applyRedBold() {
-      restoreSelection();
-      const selection = window.getSelection();
-      if (!selection.rangeCount) return;
-      
-      const span = document.createElement("span");
-      span.style.fontWeight = "700"; span.style.color = "#B93A32";
-      
-      const range = selection.getRangeAt(0);
-      try { 
-        range.surroundContents(span); 
-      } catch (e) { 
-        document.execCommand('styleWithCSS', false, true); 
-        document.execCommand('foreColor', false, "#B93A32"); 
-        document.execCommand('bold', false, null); 
+    // 初始化：載入舊資料
+    window.addEventListener('DOMContentLoaded', () => {
+      if(localStorage.getItem('fluo_draft_source')) source.value = localStorage.getItem('fluo_draft_source');
+      if(localStorage.getItem('fluo_draft_kw')) kwListArea.value = localStorage.getItem('fluo_draft_kw');
+      if(localStorage.getItem('fluo_draft_content')) {
+         editor.innerHTML = localStorage.getItem('fluo_draft_content');
+      } else {
+         // 若無內容，給預設空行防止格式跑掉
+         if(!editor.innerText.trim()) editor.innerHTML = `<span style="${BASE_STYLE}"><br></span>`;
       }
       updateCounts();
-      showToast('✨ 已標註 A+ 重點');
-    }
-
-    function applyBlock(tag) { 
-      restoreSelection();
-      document.execCommand('formatBlock', false, tag); 
-      updateCounts(); 
-    }
-
-    function applyCleanStyle() {
-      if(confirm('確定要移除所有格式（變回純文字）嗎？')) {
-         const cleanText = editor.innerText;
-         editor.innerHTML = cleanText; 
-         updateCounts();
-         showToast('🧹 格式已清除');
-      }
-    }
-
-    function changeFontSize(val) {
-      restoreSelection(); 
-      const selection = window.getSelection();
-      if (!selection.rangeCount || selection.isCollapsed) return;
-      
-      const span = document.createElement("span");
-      span.style.fontSize = val + "pt";
-      
-      const range = selection.getRangeAt(0);
-      try {
-         range.surroundContents(span);
-      } catch (e) {
-         document.execCommand('styleWithCSS', false, true);
-         document.execCommand('fontSize', false, '3'); 
-      }
-      updateCounts();
-    }
-
-    function convertPunctuation(text) {
-      if (!autoPuncToggle.checked) return text;
-      return text.replace(/,/g, '，').replace(/\./g, '。').replace(/\(/g, '（').replace(/\)/g, '）').replace(/:/g, '：').replace(/;/g, '；').replace(/!/g, '！').replace(/\?/g, '？');
-    }
-
-    function syncPreview() {
-      let text = source.value;
-      text = convertPunctuation(text);
-      if (document.activeElement === source) editor.innerText = text;
-      runDensityAnalysis(); updateCounts(); saveData(); 
-    }
-
-    function toggleCountMode() {
-      countMode = countMode === 'all' ? 'no-punc' : 'all';
-      countModeLabel.innerText = countMode === 'all' ? '(含標點)' : '(不含標點)';
-      updateCounts();
-    }
-
-    function updateCounts() {
-      let text = editor.innerText || "";
-      if (countMode === 'no-punc') { text = text.replace(/[^\w\u4e00-\u9fa5]/g, ''); } else { text = text.replace(/\s/g, ''); }
-      totalCount.innerText = text.length;
-      let selection = window.getSelection().toString();
-      if (countMode === 'no-punc') { selection = selection.replace(/[^\w\u4e00-\u9fa5]/g, ''); } else { selection = selection.replace(/\s/g, ''); }
-      selectCount.innerText = selection.length;
-    }
-    
-    editor.addEventListener('keyup', () => { updateCounts(); saveSelection(); });
-    editor.addEventListener('mouseup', () => { updateCounts(); saveSelection(); });
-    editor.addEventListener('touchend', () => { updateCounts(); saveSelection(); });
-    document.addEventListener('selectionchange', () => {
-      const sel = window.getSelection();
-      if(sel.rangeCount && editor.contains(sel.anchorNode)) {
-        saveSelection();
-        updateCounts();
-      }
     });
 
-    function runDensityAnalysis() {
-      const keywords = kwListArea.value.split('\n').map(k => k.trim()).filter(k => k !== "");
-      const content = editor.innerText || "";
-      const totalChars = content.length;
-      densityResults.innerHTML = "";
-      if (totalChars === 0 && keywords.length > 0) return;
-      keywords.forEach(kw => {
-        const regex = new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-        const count = (content.match(regex) || []).length;
-        const density = ((count * kw.length / totalChars) * 100).toFixed(1);
-        let colorClass = density > 0 ? "text-[var(--color-brand)] font-bold" : "text-[var(--text-sub)]";
-        const div = document.createElement('div');
-        div.className = "flex justify-between items-center p-1.5 border-b border-[var(--border-light)] text-xs";
-        div.innerHTML = `<span class="truncate ${colorClass}">${kw}</span><span class="font-mono text-[var(--text-ink)]">${density}%</span>`;
-        densityResults.appendChild(div);
+    // 儲存邏輯 (Debounce 防抖動，避免每打一個字就寫硬碟)
+    let saveTimeout;
+    function triggerSave() {
+      updateStatus('saving');
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => {
+        localStorage.setItem('fluo_draft_source', source.value);
+        localStorage.setItem('fluo_draft_kw', kwListArea.value);
+        localStorage.setItem('fluo_draft_content', editor.innerHTML);
+        updateStatus('saved');
+      }, 800); // 0.8秒後執行儲存
+    }
+
+    // 監聽輸入事件
+    source.addEventListener('input', triggerSave);
+    kwListArea.addEventListener('input', triggerSave);
+    editor.addEventListener('input', () => {
+      triggerSave();
+      updateCounts();
+    });
+
+    // 狀態顯示更新
+    function updateStatus(state) {
+      if(state === 'saving') {
+        statusLabel.innerHTML = `<span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span> 儲存中...`;
+        statusLabel.style.color = '#D97706';
+      } else if (state === 'saved') {
+        statusLabel.innerHTML = `<span class="w-2 h-2 rounded-full bg-green-600"></span> 已儲存`;
+        statusLabel.style.color = '#059669';
+      }
+    }
+
+    // ----------------------------------------------------
+    // 🗑️ 2. 重置與模態框 (Reset Logic)
+    // ----------------------------------------------------
+    function openResetModal() { resetModal.style.display = 'flex'; }
+    function closeResetModal(e) { if (e.target === resetModal) resetModal.style.display = 'none'; }
+    
+    function execReset(mode) {
+      if (mode === 'source') { 
+        source.value = ""; 
+        localStorage.removeItem('fluo_draft_source');
+        showToast("success", "原文草稿已清除"); 
+      }
+      else if (mode === 'kw') { 
+        kwListArea.value = ""; 
+        localStorage.removeItem('fluo_draft_kw');
+        showToast("success", "關鍵字已清除"); 
+      }
+      else if (mode === 'all') { 
+        // 再次確認機制已在 UI 文字呈現，這裡直接執行
+        source.value = ""; 
+        kwListArea.value = ""; 
+        editor.innerHTML = "";
+        localStorage.clear(); // 清空所有 localStorage
+        showToast("success", "系統已完全重置");
+        updateStatus('saved'); // 重置狀態
+      }
+      resetModal.style.display = 'none';
+      updateCounts();
+    }
+
+    // ----------------------------------------------------
+    // 📋 3. 複製與提示 (Copy & Toast)
+    // ----------------------------------------------------
+    async function copyToDocs() {
+      const wrapper = document.createElement('div');
+      wrapper.style.cssText = `${BASE_STYLE} background-color: white;`;
+      wrapper.innerHTML = editor.innerHTML;
+      
+      // 深度清潔：確保所有子元素都有字體
+      wrapper.querySelectorAll('*').forEach(el => { 
+        if(!el.style.fontFamily) el.style.fontFamily = "'Microsoft JhengHei', '微軟正黑體', sans-serif"; 
       });
+
+      const blobHtml = new Blob([wrapper.outerHTML], {type: 'text/html'});
+      const blobText = new Blob([editor.innerText], {type: 'text/plain'});
+      const data = [new ClipboardItem({'text/html': blobHtml, 'text/plain': blobText})];
+
+      try { 
+        await navigator.clipboard.write(data); 
+        showToast("success", "複製成功！可直接貼上"); 
+      } catch (e) { 
+        showToast("error", "複製失敗，請手動複製"); 
+      }
+    }
+
+    function showToast(type, msg) {
+      const t = document.getElementById('toast');
+      const icon = document.getElementById('toastIcon');
+      const txt = document.getElementById('toastMsg');
+      
+      if (type === 'success') {
+         icon.innerHTML = `<svg class="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>`;
+      } else {
+         icon.innerHTML = `<svg class="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>`;
+      }
+      
+      txt.innerText = msg;
+      t.style.opacity = '1'; t.style.top = '30px';
+      setTimeout(() => { t.style.opacity = '0'; t.style.top = '24px'; }, 2500);
+    }
+
+    // ----------------------------------------------------
+    // 🎨 4. 編輯器功能 (Editor Core)
+    // ----------------------------------------------------
+    function execCmd(cmd) { document.execCommand(cmd, false, null); updateCounts(); triggerSave(); }
+
+    function applyStyle(type) {
+      const sel = window.getSelection();
+      if (!sel.rangeCount) return;
+      let css = "";
+      switch(type) {
+        case 'h1': css = `${FONT_FAMILY} font-size: 24pt; font-weight: bold; line-height: 1.5; color: #111; display: block; margin: 24px 0 12px 0;`; break;
+        case 'h2': css = `${FONT_FAMILY} font-size: 18pt; font-weight: bold; line-height: 1.5; color: #222; display: block; margin: 20px 0 10px 0;`; break;
+        case 'p': css = BASE_STYLE + " display: block; margin-bottom: 12px; font-weight: normal;"; break;
+        case 'red': wrapSelection(`${FONT_FAMILY} color: #B93A32; font-weight: bold;`); return;
+      }
+      if(['h1','h2','p'].includes(type)) wrapSelection(css);
+      updateCounts();
+      triggerSave();
+    }
+
+    function applyColor(hex) { wrapSelection(`${FONT_FAMILY} color: ${hex};`); }
+    function applyHighlight(hex) { wrapSelection(`${FONT_FAMILY} background-color: ${hex};`); }
+
+    function wrapSelection(styleString) {
+      const sel = window.getSelection();
+      if (sel.rangeCount === 0 || sel.isCollapsed) { showToast("error", "請先選取文字範圍"); return; }
+      const range = sel.getRangeAt(0);
+      const span = document.createElement('span');
+      span.style.cssText = styleString;
+      try { range.surroundContents(span); } 
+      catch(e) { document.execCommand('styleWithCSS', false, true); }
+      updateCounts();
+      triggerSave();
     }
 
     function runAutoMark() {
-      const keywords = kwListArea.value.split('\n').map(k => k.trim()).filter(k => k !== "");
-      if (keywords.length === 0) { alert("請先輸入關鍵字"); return; }
-      let html = editor.innerText.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-      keywords.forEach(kw => {
-        const cleanKw = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); 
-        const regex = new RegExp(`(${cleanKw})`, 'gi');
-        html = html.replace(regex, `<span style="color:#B93A32; font-weight:700;">$1</span>`);
+      const kws = kwListArea.value.split('\n').filter(k => k.trim());
+      let text = source.value;
+      if(!text) { showToast("error", "請先輸入原文草稿"); return; }
+      
+      text = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      kws.forEach(kw => {
+        const regex = new RegExp(`(${kw})`, 'gi');
+        text = text.replace(regex, `<span style="${FONT_FAMILY} color: #B93A32; font-weight: bold;">$1</span>`);
       });
-      editor.innerHTML = html;
+      text = text.replace(/\n/g, '<br>');
+      editor.innerHTML = `<span style="${BASE_STYLE}">${text}</span>`;
+      
+      showToast("success", "樣式注入完成");
       updateCounts();
-      showToast('✨ 已自動標註');
-      if (window.innerWidth < 1024) switchTab('preview', document.querySelectorAll('.tab-btn')[1]);
-    }
-
-    async function copyToDocs(btn) {
-      const clone = editor.cloneNode(true);
-      
-      const h1s = clone.querySelectorAll('h1');
-      h1s.forEach(el => el.setAttribute('style', 'font-size: 24pt !important; font-weight: bold; line-height: 1.5; margin-bottom: 12px; color: #333;'));
-      
-      const h2s = clone.querySelectorAll('h2');
-      h2s.forEach(el => el.setAttribute('style', 'font-size: 18pt !important; font-weight: bold; line-height: 1.5; margin-bottom: 10px; color: #333;'));
-      
-      const wrapper = document.createElement('div');
-      wrapper.style.cssText = "font-family: 'Microsoft JhengHei', 'Microsoft YaHei', sans-serif; font-size: 12pt; line-height: 2.0; color: #333333;";
-      wrapper.innerHTML = clone.innerHTML;
-      
-      const blobHtml = new Blob([wrapper.outerHTML], { type: 'text/html' });
-      const blobText = new Blob([editor.innerText], { type: 'text/plain' });
-      const data = [new ClipboardItem({ 'text/html': blobHtml, 'text/plain': blobText })];
-      
-      try {
-        await navigator.clipboard.write(data);
-        showToast('📋 已複製 (含樣式鎖定)');
-      } catch (err) { alert('複製失敗'); }
+      triggerSave();
     }
 
     function downloadTxt() {
-      const blob = new Blob([editor.innerText], { type: "text/plain" });
-      const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "draft.txt"; a.click();
-    }
-    
-    function handleClearAction(select) {
-      if (!select.value) return;
-      if(confirm('確定要執行此清空操作嗎？無法復原。')) {
-        if(select.value === 'source') { source.value = ""; editor.innerText = ""; }
-        else if(select.value === 'kw') { kwListArea.value = ""; densityResults.innerHTML = ""; }
-        else if(select.value === 'all') { source.value = ""; kwListArea.value = ""; editor.innerText = ""; densityResults.innerHTML = ""; }
-        updateCounts(); saveData();
-        showToast('🗑️ 資料已清空');
-      }
-      select.value = ""; 
+      const blob = new Blob([editor.innerText], {type: "text/plain"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `draft_${new Date().toISOString().slice(0,10)}.txt`;
+      a.click();
     }
 
-    function toggleTheme() {
-      const html = document.documentElement;
-      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      html.setAttribute('data-theme', next);
-      document.getElementById('moonIcon').classList.toggle('hidden'); document.getElementById('sunIcon').classList.toggle('hidden');
-      localStorage.setItem(THEME_KEY, next);
+    function updateCounts() {
+      const txt = editor.innerText || "";
+      document.getElementById('charCount').innerText = `${txt.length} 字 (含標點)`;
     }
 
-    function switchTab(mode, btn) {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active');
-      const ws = document.getElementById('mainWorkspace');
-      if (mode === 'preview') ws.classList.add('show-preview'); else ws.classList.remove('show-preview');
-    }
-
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (localStorage.getItem(THEME_KEY) === 'dark') toggleTheme();
-    if (saved) {
-      const data = JSON.parse(saved);
-      if(data.source) { source.value = data.source; editor.innerText = data.source; }
-      if(data.keywords) { kwListArea.value = data.keywords; runDensityAnalysis(); }
-    }
-    
-    let saveTimeout;
-    function saveData() { 
-      saveStatus.innerText = "💾 儲存中...";
-      clearTimeout(saveTimeout);
-      saveTimeout = setTimeout(() => {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({ source: source.value, keywords: kwListArea.value }));
-        saveStatus.innerText = "☁️ 已儲存";
-      }, 800);
-    }
-    
-    source.addEventListener('input', () => syncPreview());
-    kwListArea.addEventListener('input', () => runDensityAnalysis());
-    updateCounts(); 
+    // Header Scroll Effect
+    const header = document.getElementById('mainHeader');
+    document.getElementById('scrollCanvas').addEventListener('scroll', function() {
+       if (this.scrollTop > 10) { 
+         header.style.borderBottomColor = '#E0E0E0'; 
+         header.style.backgroundColor = 'rgba(245, 244, 240, 0.98)'; 
+       } else { 
+         header.style.borderBottomColor = 'transparent'; 
+         header.style.backgroundColor = 'rgba(245, 244, 240, 0.9)'; 
+       }
+    });
   </script>
 </body>
 </html>
