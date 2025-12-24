@@ -4,417 +4,538 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>蛍光ペン PRO - SEO文案數位工具</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✒️</text></svg>">
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <style>
-  /* --- 核心變數 --- */
+  /* --- 🟢 色票系統 (Japan Traditional Colors) --- */
   :root {
-    --bg-canvas: #F5F4F0;
+    /* 背景：生成色 (Kinari-iro) - 仿舊紙張感 */
+    --bg-canvas: #FBFBF6;
     --bg-sidebar: #FCFCFA;
-    --color-ink: #333333;
-    --color-sub: #7A7A7A;
-    --color-accent: #A83636;
-    --color-accent-hover: #8A2525;
-    --status-saved: #059669;
-    --noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+    
+    /* 1. 墨色 (Sumi) - 內文主色 */
+    --color-ink: #303133; 
+    
+    /* 2. 深緋 (Kokiake) - 重點色/Logo */
+    --color-accent: #C9171E; 
+    
+    /* 3. 藍鉄 (Aitetsu) - 標題色 */
+    --color-sub: #393F4C;
+    
+    /* 4. 刈安色 (Kariyasu) - 螢光筆黃 */
+    --hl-yellow: #F0DC70;
+    
+    /* 5. 一斤染 (Ikkonzome) - 螢光筆粉 */
+    --hl-pink: #F5B199;
+
+    /* 雜點紋理 */
+    --noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
   }
 
-  /* 全局佈局鎖定 */
+  /* --- 基礎設定 --- */
   body {
     background-color: var(--bg-canvas);
     color: var(--color-ink);
     font-family: 'Zen Kaku Gothic New', sans-serif;
     height: 100vh; overflow: hidden; display: flex; flex-direction: column;
   }
-
+  
   .bg-noise { position: fixed; inset: 0; background-image: var(--noise); pointer-events: none; z-index: -1; }
   .font-serif { font-family: 'Shippori Mincho', serif; }
   .icon-line { width: 18px; height: 18px; stroke-width: 1.5px; stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 
-  /* 輸入框 */
+  /* --- 左側：輸入區 (極簡風格) --- */
+  .input-group-label {
+    font-family: 'Shippori Mincho', serif; font-weight: 700; color: var(--color-sub);
+    font-size: 0.85rem; letter-spacing: 0.1em; margin-bottom: 0.5rem;
+    display: flex; align-items: center; gap: 6px;
+  }
   .input-field {
     width: 100%; background: #FFFFFF;
-    border: 1px solid transparent; border-bottom: 1px dashed #CCC;
-    padding: 12px; font-size: 14px; color: var(--color-ink);
-    transition: all 0.3s ease; resize: none; border-radius: 4px; outline: none;
+    border: 1px solid #E6E6E6; border-radius: 4px;
+    padding: 16px; font-size: 15px; color: var(--color-ink); line-height: 1.8;
+    transition: all 0.3s ease; resize: none; outline: none;
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
   }
-  .input-field:focus { background: #FFFFFF; border-bottom-color: var(--color-accent); box-shadow: 0 0 0 3px rgba(168, 54, 54, 0.05); }
+  .input-field:focus { border-color: var(--color-sub); background: #FFFEFA; box-shadow: inset 0 2px 4px rgba(0,0,0,0.01); }
 
-  /* 按鈕 */
-  .btn-tile {
-    display: flex; align-items: center; justify-content: center; gap: 4px;
-    padding: 6px 10px; background: #FFFFFF; border: 1px solid #EAEAEA; border-radius: 6px;
-    color: var(--color-sub); font-size: 12px; font-weight: 500; cursor: pointer;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.03); transition: all 0.2s; user-select: none; flex-shrink: 0;
+  /* --- 右側：預覽區 (雜誌風格) --- */
+  .editor-paper {
+    width: 100%; max-width: 800px; min-height: 80vh;
+    background: #FFFFFF; padding: 60px 80px; 
+    /* 柔和的擴散陰影，營造紙張浮起感 */
+    box-shadow: 0 5px 30px rgba(0,0,0,0.04);
+    outline: none;
+    /* 🟢 核心排版參數 */
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-size: 11.5pt; line-height: 2.2; color: var(--color-ink);
+    letter-spacing: 0.04em; text-align: justify;
   }
-  .btn-tile:active { transform: translateY(1px); background: #F9F9F9; }
+  /* 標題強制使用襯線體 */
+  .editor-paper h2, .editor-paper h3 { font-family: 'Shippori Mincho', serif; letter-spacing: 0.05em; color: var(--color-sub); }
+  .editor-paper h2 { font-size: 1.6em; margin-top: 1.5em; margin-bottom: 0.8em; border-bottom: 2px solid #F0F0F0; padding-bottom: 10px; }
+  .editor-paper h3 { font-size: 1.3em; margin-top: 1.2em; margin-bottom: 0.5em; position: relative; padding-left: 12px; border-left: 4px solid var(--color-accent); }
+  .editor-paper p { margin-bottom: 1.5em; }
+
+  /* --- 工具列 --- */
+  .toolbar-wrapper {
+    position: sticky; top: 0; z-index: 40;
+    background: rgba(251, 251, 246, 0.95); backdrop-filter: blur(5px);
+    border-bottom: 1px solid #EBEBEB;
+    display: flex; justify-content: center; padding: 8px 16px;
+  }
+  .toolbar {
+    display: flex; align-items: center; gap: 8px; flex-wrap: nowrap;
+    overflow-x: auto; padding: 4px; border-radius: 8px;
+    background: white; border: 1px solid #E0E0E0; box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+  }
+  .btn-tool {
+    display: flex; align-items: center; justify-content: center;
+    min-width: 32px; height: 32px; padding: 0 10px;
+    background: white; border: 1px solid transparent; border-radius: 4px;
+    font-size: 13px; font-family: 'Shippori Mincho', serif; color: #555;
+    cursor: pointer; transition: all 0.2s; white-space: nowrap; flex-shrink: 0;
+  }
+  .btn-tool:hover { background: #F7F7F7; border-color: #EEE; }
+  .btn-tool.active { background: #F0F0F0; font-weight: bold; }
   
+  /* 色票按鈕 */
+  .color-dot { 
+    width: 22px; height: 22px; border-radius: 50%; 
+    border: 2px solid white; box-shadow: 0 0 0 1px #DDD; 
+    cursor: pointer; transition: transform 0.2s; position: relative;
+  }
+  .color-dot:hover { transform: scale(1.15); z-index: 10; }
+  .color-dot::after { /* Tooltip */
+    content: attr(title); position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%);
+    background: #333; color: white; font-size: 10px; padding: 4px 6px; border-radius: 4px;
+    white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  }
+  .color-dot:hover::after { opacity: 1; }
+
+  /* --- 按鈕系統 --- */
   .btn-primary {
     width: 100%; background: var(--color-accent); color: white; border: none; padding: 12px;
-    border-radius: 8px; font-family: 'Shippori Mincho', serif; letter-spacing: 0.05em; font-weight: bold;
-    cursor: pointer; box-shadow: 0 4px 10px rgba(168, 54, 54, 0.2); transition: 0.2s;
+    border-radius: 4px; font-family: 'Shippori Mincho', serif; letter-spacing: 0.1em; font-weight: 600;
+    cursor: pointer; box-shadow: 0 4px 12px rgba(201, 23, 30, 0.2); transition: 0.2s;
     display: flex; align-items: center; justify-content: center; gap: 8px;
   }
-  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:hover { filter: brightness(1.1); }
+  .btn-primary:active { transform: translateY(1px); }
 
-  .btn-secondary {
-    flex: 1; background: transparent; border: 1px solid #DDD; color: #666;
-    padding: 8px; border-radius: 6px; font-size: 12px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; gap: 6px;
+  .btn-outline {
+    flex: 1; background: white; border: 1px solid #DDD; color: #666;
+    padding: 8px; border-radius: 4px; font-size: 13px; cursor: pointer; transition: 0.2s;
+    font-family: 'Zen Kaku Gothic New', sans-serif;
   }
+  .btn-outline:hover { border-color: var(--color-sub); color: var(--color-sub); }
 
-  /* Mobile Tab Bar */
-  .mobile-tab-bar {
-    display: flex; padding: 8px 16px; background: #F5F4F0;
-    border-bottom: 1px solid #E0E0E0; gap: 10px; flex-shrink: 0;
+  /* --- RWD / Mobile --- */
+  .mobile-nav {
+    display: none; position: fixed; bottom: 0; left: 0; right: 0; height: 60px;
+    background: white; border-top: 1px solid #E0E0E0; z-index: 50;
+    padding-bottom: env(safe-area-inset-bottom);
   }
-  .tab-btn {
-    flex: 1; padding: 10px; border-radius: 8px; text-align: center;
-    font-size: 13px; font-weight: bold; color: #999; cursor: pointer;
-    transition: all 0.2s; background: rgba(255,255,255,0.5); border: 1px solid transparent;
-    display: flex; align-items: center; justify-content: center; gap: 6px;
+  .nav-item {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-size: 10px; color: #999; gap: 4px; cursor: pointer;
   }
-  .tab-btn.active {
-    background: #FFFFFF; color: var(--color-accent);
-    border-color: #E0E0E0; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  }
-
-  /* 顯示/隱藏控制 */
-  .d-none { display: none !important; }
+  .nav-item.active { color: var(--color-accent); font-weight: bold; }
   
-  /* Desktop Override */
-  @media (min-width: 768px) {
-    .mobile-tab-bar { display: none !important; }
+  /* 斷點控制 */
+  @media (max-width: 768px) {
+    .mobile-nav { display: flex; }
+    #sectionInput, #sectionPreview { width: 100% !important; height: calc(100vh - 60px - 60px); } /* Header + Nav */
+    .editor-paper { padding: 30px 20px; font-size: 11pt; }
+    .toolbar-wrapper { padding: 8px 10px; overflow-x: auto; justify-content: flex-start; }
+    .d-none-mobile { display: none !important; }
+  }
+  @media (min-width: 769px) {
     #sectionInput { display: flex !important; }
     #sectionPreview { display: flex !important; }
   }
 
-  /* Editor */
-  .editor-paper {
-    width: 100%; max-width: 820px; min-height: 80vh;
-    background: #FFFFFF; padding: 80px; box-shadow: 0 10px 40px rgba(0,0,0,0.04);
-    outline: none;
-    font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif !important;
-    font-size: 12pt !important; line-height: 2.0 !important; color: #333;
+  /* 狀態標籤 */
+  .status-pill {
+    font-size: 11px; padding: 4px 10px; border-radius: 20px; border: 1px solid;
+    display: flex; align-items: center; gap: 5px; font-weight: 500;
   }
-  @media (max-width: 768px) { .editor-paper { padding: 40px 24px; min-height: 65vh; } }
+  .status-sync { background: #EDF7F6; color: #356859; border-color: #B2D8D2; }
+  .status-manual { background: #FFF8E1; color: #8D6E63; border-color: #FFE082; }
 
-  .no-scrollbar::-webkit-scrollbar { display: none; }
-  .color-dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 0 1px #EEE; cursor: pointer; flex-shrink: 0; }
-
-  /* Modal */
-  .modal-backdrop {
-    position: fixed; inset: 0; background: rgba(245, 244, 240, 0.9); backdrop-filter: blur(4px);
-    z-index: 100; display: none; align-items: center; justify-content: center;
+  .toast {
+    position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+    background: #333; color: white; padding: 10px 20px; border-radius: 50px;
+    font-size: 13px; opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 8px;
   }
-  .modal-card {
-    background: white; padding: 24px; border-radius: 12px; width: 90%; max-width: 320px;
-    text-align: center; border: 1px solid #EEE; box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-  }
-  
-  /* Status Indicator */
-  .sync-indicator {
-    font-size: 10px; padding: 2px 6px; border-radius: 4px; border: 1px solid;
-    display: flex; align-items: center; gap: 4px;
-  }
-  .sync-active { color: #059669; border-color: #A7F3D0; background: #ECFDF5; }
-  .sync-paused { color: #B45309; border-color: #FDE68A; background: #FFFBEB; }
 </style>
 </head>
 <body>
   <div class="bg-noise"></div>
 
-  <header class="h-14 flex items-center px-4 md:px-6 border-b border-[#E0E0E0] bg-white flex-shrink-0 justify-between z-50 relative shadow-sm">
-     <span class="font-serif font-bold text-lg tracking-widest text-gray-800 flex items-center gap-2">
-       <svg class="icon-line text-[#A83636]" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-       蛍光ペン <span class="text-xs bg-gray-100 px-1.5 py-0.5 rounded text-gray-500 font-sans tracking-normal">PRO</span>
-     </span>
-     <span class="text-[10px] text-gray-400 font-serif hidden md:block">© 2025 Kaoru Tsai</span>
+  <header class="h-16 flex items-center px-6 border-b border-[#EAEAEA] bg-[#FCFCFA]/95 flex-shrink-0 justify-between z-50">
+     <div class="flex items-center gap-3">
+       <div class="w-8 h-8 rounded bg-[var(--color-accent)] text-white flex items-center justify-center">
+         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+       </div>
+       <div>
+         <h1 class="font-serif font-bold text-lg text-[var(--color-ink)] tracking-widest leading-none">蛍光ペン <span class="text-xs font-sans font-normal text-gray-400 ml-1">PRO</span></h1>
+       </div>
+     </div>
+     <div class="hidden md:flex text-xs text-gray-400 font-serif tracking-wider">SEO COPYWRITING TOOL</div>
   </header>
-
-  <div class="mobile-tab-bar md:hidden">
-    <div id="tabInput" class="tab-btn active" onclick="switchTab('input')">
-      <svg class="icon-line" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-      原文輸入
-    </div>
-    <div id="tabPreview" class="tab-btn" onclick="switchTab('preview')">
-      <svg class="icon-line" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-      預覽交付
-    </div>
-  </div>
 
   <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
     
-    <aside id="sectionInput" class="w-full md:w-[340px] bg-[var(--bg-sidebar)] border-r border-[#EAEAEA] flex flex-col z-20 flex-shrink-0 h-full overflow-hidden">
-      <div class="p-5 flex flex-col h-full overflow-y-auto">
-         <div class="flex-col flex min-h-[160px] flex-shrink-0 mb-4">
-           <div class="flex items-center gap-2 mb-2">
-             <span class="font-bold text-sm text-gray-600 tracking-wide">原文輸入</span>
-             <span class="text-[10px] text-gray-400 font-serif">DRAFT</span>
+    <aside id="sectionInput" class="w-full md:w-[400px] bg-[var(--bg-sidebar)] border-r border-[#EAEAEA] flex flex-col z-20 flex-shrink-0 h-full overflow-hidden">
+      <div class="p-6 flex flex-col h-full overflow-y-auto custom-scroll">
+         <div class="flex-col flex min-h-[200px] flex-shrink-0 mb-6">
+           <div class="input-group-label">
+             <span class="w-1 h-4 bg-[var(--color-sub)] rounded-sm"></span> 原文輸入 (DRAFT)
            </div>
-           <textarea id="sourceText" class="input-field flex-1 min-h-[150px]" placeholder="在此輸入，右側會即時顯示..."></textarea>
+           <textarea id="sourceText" class="input-field flex-1 min-h-[220px]" placeholder="請在此貼上或輸入文章...&#10;支援自動段落與即時同步。"></textarea>
          </div>
-         <div class="flex-col flex flex-shrink-0 mb-4">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="font-bold text-sm text-gray-600 tracking-wide">SEO 關鍵字</span>
+         
+         <div class="flex-col flex flex-shrink-0 mb-6">
+            <div class="input-group-label">
+              <span class="w-1 h-4 bg-[var(--color-accent)] rounded-sm"></span> SEO 關鍵字 (KEYWORDS)
             </div>
-            <textarea id="kwList" class="input-field h-24" placeholder="每行一個..."></textarea>
+            <textarea id="kwList" class="input-field h-24" placeholder="每行一個關鍵字&#10;系統將自動標示紅色重點..."></textarea>
          </div>
-         <div class="mt-auto pt-2 pb-6 md:pb-0">
+
+         <div class="mt-auto pt-4 pb-20 md:pb-0">
            <button onclick="forceSync()" class="btn-primary mb-3">
-             <svg class="icon-line" style="stroke: white;" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-             一鍵注入樣式 (Force Sync)
+             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+             一鍵注入樣式 (Sync Styles)
            </button>
            <div class="flex gap-3">
-             <button onclick="downloadTxt()" class="btn-secondary">下載 .txt</button>
-             <button onclick="openResetModal()" class="btn-secondary hover:text-red-600">清空重置</button>
+             <button onclick="downloadTxt()" class="btn-outline">下載 TXT</button>
+             <button onclick="clearAll()" class="btn-outline hover:text-red-600 hover:border-red-200">清空</button>
            </div>
          </div>
       </div>
     </aside>
 
-    <main id="sectionPreview" class="flex-1 flex-col bg-[#F5F4F0] relative min-w-0 h-full d-none md:flex">
-      <div class="h-14 flex items-center px-4 flex-shrink-0 z-30 bg-[#F5F4F0]/95 backdrop-blur border-b border-[#E0E0E0] overflow-x-auto no-scrollbar">
-        <div class="flex items-center gap-2 pr-4 min-w-max">
-          <button onclick="applyStyle('h1')" class="btn-tile">H1</button>
-          <button onclick="applyStyle('h2')" class="btn-tile">H2</button>
-          <button onclick="applyStyle('p')" class="btn-tile">內文</button>
-          <div class="w-px h-5 bg-gray-300 mx-1"></div>
-          <button onclick="applyStyle('red')" class="btn-tile text-[#A83636] bg-[#FFF5F5]">重點</button>
-          <div class="w-px h-5 bg-gray-300 mx-1"></div>
-          <button onclick="execCmd('undo')" class="btn-tile"><svg class="icon-line w-4 h-4" viewBox="0 0 24 24"><path d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg></button>
-          <button onclick="execCmd('redo')" class="btn-tile"><svg class="icon-line w-4 h-4" viewBox="0 0 24 24"><path d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6"></path></svg></button>
-          <div class="w-px h-5 bg-gray-300 mx-1"></div>
-          <div class="flex gap-2">
-            <div onclick="applyColor('#333333')" class="color-dot bg-[#333]"></div>
-            <div onclick="applyColor('#192F60')" class="color-dot bg-[#192F60]"></div>
-            <div onclick="applyColor('#B93A32')" class="color-dot bg-[#B93A32]"></div>
-            <div onclick="applyHighlight('#FFF2CC')" class="color-dot bg-[#FFF2CC]"></div>
-          </div>
-          <div class="w-px h-5 bg-gray-300 mx-1"></div>
-          <button onclick="copyToDocs()" class="btn-tile text-black font-bold border-gray-400">複製</button>
+    <main id="sectionPreview" class="flex-1 flex flex-col bg-[#F7F6F2] relative min-w-0 h-full d-none-mobile">
+      
+      <div class="toolbar-wrapper">
+        <div class="toolbar">
+          <button onclick="execCmd('formatBlock', 'h2')" class="btn-tool" title="大標題">H2</button>
+          <button onclick="execCmd('formatBlock', 'h3')" class="btn-tool" title="中標題">H3</button>
+          <button onclick="execCmd('formatBlock', 'p')" class="btn-tool" title="內文">內文</button>
+          <div class="w-px h-5 bg-gray-200 mx-1"></div>
+          
+          <div onclick="applyColor('#303133')" class="color-dot bg-[#303133]" title="墨色 (內文)"></div>
+          <div onclick="applyColor('#393F4C')" class="color-dot bg-[#393F4C]" title="藍鉄 (標題)"></div>
+          <div onclick="applyColor('#C9171E')" class="color-dot bg-[#C9171E]" title="深緋 (重點)"></div>
+          
+          <div class="w-px h-5 bg-gray-200 mx-1"></div>
+          
+          <div onclick="applyHighlight('#F0DC70')" class="color-dot bg-[#F0DC70]" title="刈安 (黃螢光)"></div>
+          <div onclick="applyHighlight('#F5B199')" class="color-dot bg-[#F5B199]" title="一斤染 (粉螢光)"></div>
+
+          <div class="w-px h-5 bg-gray-200 mx-1"></div>
+          
+          <button onclick="document.execCommand('undo')" class="btn-tool" title="復原"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg></button>
+          <button onclick="copyForGoogleDocs()" class="btn-tool text-[var(--color-accent)] font-bold border-l border-gray-100 pl-3">
+            <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+            複製
+          </button>
         </div>
       </div>
 
-      <div class="flex-1 overflow-y-auto flex flex-col items-center pb-20 scroll-smooth relative p-4 md:p-0">
-        <div id="editor" contenteditable="true" class="editor-paper mt-2 md:mt-6 mb-6 text-justify rounded-sm shadow-sm" placeholder="預覽區..."></div>
-        <div class="w-full max-w-[820px] flex justify-between items-center text-[11px] text-gray-400 px-2 pb-8">
-           <div class="font-serif flex items-center gap-2">
-             <span id="charCount">0 字</span>
-             <span>|</span>
-             <span id="saveStatus" class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-gray-300"></span> 待機</span>
-             <span>|</span>
-             <span id="syncStatus" class="sync-indicator sync-active">🔗 同步中</span>
+      <div class="flex-1 overflow-y-auto flex flex-col items-center pb-32 pt-6 scroll-smooth px-4 md:px-0">
+        <div id="editor" contenteditable="true" class="editor-paper" placeholder="預覽內容..."></div>
+        
+        <div class="w-full max-w-[800px] flex justify-between items-center text-xs text-gray-400 px-4 mt-4 select-none">
+           <div id="charCount">0 字</div>
+           <div id="syncStatus" class="status-pill status-sync">
+              <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+              自動同步中
            </div>
         </div>
       </div>
     </main>
   </div>
 
-  <div id="resetModal" class="modal-backdrop" onclick="closeResetModal(event)">
-    <div class="modal-card">
-      <h3 class="font-bold text-lg mb-4 text-gray-800">清空資料確認</h3>
-      <button onclick="execReset('source')" class="w-full py-3 mb-2 border rounded-lg text-sm text-gray-600">清除原文</button>
-      <button onclick="execReset('kw')" class="w-full py-3 mb-2 border rounded-lg text-sm text-gray-600">清除關鍵字</button>
-      <button onclick="execReset('all')" class="w-full py-3 border border-red-200 bg-red-50 text-[#A83636] font-bold mt-2">全部還原</button>
+  <nav class="mobile-nav">
+    <div id="navInput" class="nav-item active" onclick="switchMobileTab('input')">
+      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+      <span>編輯</span>
     </div>
-  </div>
+    <div id="navPreview" class="nav-item" onclick="switchMobileTab('preview')">
+      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 5 8.268 7.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+      <span>預覽</span>
+    </div>
+  </nav>
 
-  <div id="toast" class="fixed top-16 left-1/2 -translate-x-1/2 bg-white border border-gray-200 px-6 py-2 rounded-full shadow-xl text-sm opacity-0 transition-opacity z-[99] pointer-events-none flex items-center gap-2">
-    <span id="toastIcon"></span> <span id="toastMsg"></span>
+  <div id="toast">
+    <span id="toastIcon">📋</span> <span id="toastMsg">已複製</span>
   </div>
 
   <script>
     // --- 核心變數 ---
-    const editor = document.getElementById('editor');
     const source = document.getElementById('sourceText');
-    const kwListArea = document.getElementById('kwList');
-    const resetModal = document.getElementById('resetModal');
-    const syncLabel = document.getElementById('syncStatus');
-    const FONT_FAMILY = "font-family: 'Microsoft JhengHei', '微軟正黑體', sans-serif;";
-    const BASE_STYLE = `${FONT_FAMILY} font-size: 12pt; line-height: 2.0; color: #333;`;
-    
-    // 🟢 智慧同步變數
-    let isAutoSync = true; // 預設開啟同步
+    const kwList = document.getElementById('kwList');
+    const editor = document.getElementById('editor');
+    const syncStatusLabel = document.getElementById('syncStatus');
+    const charCount = document.getElementById('charCount');
 
-    // --- Tab Switch Logic ---
-    const tabInput = document.getElementById('tabInput');
-    const tabPreview = document.getElementById('tabPreview');
-    const sectionInput = document.getElementById('sectionInput');
-    const sectionPreview = document.getElementById('sectionPreview');
+    // 狀態機
+    let isAutoSync = true;
+    let syncTimer;
 
-    function switchTab(tab) {
-      if (window.innerWidth >= 768) return;
-      if(tab === 'input') {
-        sectionInput.classList.remove('d-none');
-        sectionPreview.classList.add('d-none');
-        tabInput.classList.add('active');
-        tabPreview.classList.remove('active');
-      } else {
-        sectionInput.classList.add('d-none');
-        sectionPreview.classList.remove('d-none');
-        tabInput.classList.remove('active');
-        tabPreview.classList.add('active');
-      }
-    }
-
-    // --- Init & Load ---
+    // --- 初始化 ---
     window.addEventListener('DOMContentLoaded', () => {
-      if(localStorage.getItem('fluo_draft_source')) source.value = localStorage.getItem('fluo_draft_source');
-      if(localStorage.getItem('fluo_draft_kw')) kwListArea.value = localStorage.getItem('fluo_draft_kw');
-      if(localStorage.getItem('fluo_draft_content')) {
-         editor.innerHTML = localStorage.getItem('fluo_draft_content');
-         // 如果有舊存檔，可能是手動編輯過，暫時不自動覆蓋，除非用戶打字
+      if(localStorage.getItem('fp_src')) source.value = localStorage.getItem('fp_src');
+      if(localStorage.getItem('fp_kw')) kwList.value = localStorage.getItem('fp_kw');
+      
+      // 如果有緩存的 HTML，優先載入（避免重置手動格式）
+      if(localStorage.getItem('fp_html')) {
+        editor.innerHTML = localStorage.getItem('fp_html');
+        // 檢查是否與 Source 不同，不同則暫停同步
+        if(editor.innerText.trim() !== source.value.trim()) pauseSync();
       } else {
-         if(!editor.innerText.trim()) editor.innerHTML = `<span style="${BASE_STYLE}"><br></span>`;
+        runSync(true);
       }
-      updateCounts();
+      updateCount();
     });
 
-    // --- 🟢 Smart Sync Logic (即時同步引擎) ---
-    // 當左側輸入時
-    source.addEventListener('input', () => {
-      if (isAutoSync) {
-        debouncedAutoMark(); // 執行同步
-      }
-      triggerSave();
-    });
-
-    // 當右側編輯時 -> 解除同步，保護用戶的手動排版
-    editor.addEventListener('input', () => {
-      if (isAutoSync) {
-        isAutoSync = false;
-        updateSyncStatus();
-      }
-      triggerSave();
-      updateCounts();
-    });
-
-    // 關鍵字變動也觸發同步
-    kwListArea.addEventListener('input', () => {
-      if (isAutoSync) debouncedAutoMark();
-      triggerSave();
-    });
-
-    // Debounce 防抖動 (避免打字太快一直閃爍)
-    let debounceTimer;
-    function debouncedAutoMark() {
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => {
-        runAutoMark(true); // true = silent mode (不跳 Toast)
-      }, 300);
-    }
-
-    // 核心渲染函數
-    function runAutoMark(silent = false) {
-      const kws = kwListArea.value.split('\n').filter(k => k.trim());
-      let text = source.value;
-      if(!text && !silent) { showToast('error', '請輸入內容'); return; }
+    // --- 同步邏輯 (Sync Engine) ---
+    function runSync(silent = false) {
+      if (!isAutoSync) return;
       
-      // HTML Escape
-      text = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      const text = source.value;
+      const kws = kwList.value.split('\n').filter(k => k.trim());
       
-      // Highlight
+      if(!text) {
+        if(!silent) editor.innerHTML = '<span style="color:#ccc">等待輸入...</span>';
+        return;
+      }
+
+      // 1. 轉義 HTML
+      let html = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      
+      // 2. 關鍵字標紅 (使用 span 內聯樣式，確保 copy 相容)
       kws.forEach(kw => {
-        text = text.replace(new RegExp(`(${kw})`, 'gi'), `<span style="${FONT_FAMILY} color: #B93A32; font-weight: bold;">$1</span>`);
+        const regex = new RegExp(`(${kw})`, 'gi');
+        // color: #C9171E (深緋)
+        html = html.replace(regex, `<span style="color: #C9171E; font-weight: bold;">$1</span>`);
       });
-      
-      // Format
-      text = text.replace(/\n/g, '<br>');
-      editor.innerHTML = `<span style="${BASE_STYLE}">${text}</span>`;
-      
-      if(!silent) showToast('success', '樣式已注入');
-      triggerSave(); updateCounts();
+
+      // 3. 換行轉 P 標籤 (確保結構)
+      // 簡單處理：雙換行變 P，單換行變 BR
+      const paragraphs = html.split(/\n\s*\n/);
+      const finalHtml = paragraphs.map(p => {
+        if(!p.trim()) return '';
+        return `<p style="margin-bottom: 1.5em;">${p.replace(/\n/g, '<br>')}</p>`;
+      }).join('');
+
+      editor.innerHTML = finalHtml;
+      saveData();
+      updateCount();
+      if(!silent) showToast('success', '同步完成');
     }
 
-    // 強制重置同步 (按鈕觸發)
+    // --- 監聽器 ---
+    source.addEventListener('input', () => {
+      if(isAutoSync) {
+        clearTimeout(syncTimer);
+        syncTimer = setTimeout(() => runSync(true), 300);
+      }
+      saveData();
+    });
+
+    kwList.addEventListener('input', () => {
+      if(isAutoSync) {
+        clearTimeout(syncTimer);
+        syncTimer = setTimeout(() => runSync(true), 300);
+      }
+      saveData();
+    });
+
+    // 編輯器一旦手動修改，立即鎖定同步
+    editor.addEventListener('input', () => {
+      pauseSync();
+      saveData();
+      updateCount();
+    });
+
+    // --- 功能函式 ---
     function forceSync() {
       isAutoSync = true;
-      updateSyncStatus();
-      runAutoMark(false);
-      // 手機版跳轉
-      if(window.innerWidth < 768) switchTab('preview');
+      updateSyncUI();
+      runSync();
+      // 手機版自動切換到預覽
+      if(window.innerWidth < 768) switchMobileTab('preview');
     }
 
-    function updateSyncStatus() {
-      if (isAutoSync) {
-        syncLabel.innerHTML = '🔗 同步中';
-        syncLabel.className = 'sync-indicator sync-active';
+    function pauseSync() {
+      if(isAutoSync) {
+        isAutoSync = false;
+        updateSyncUI();
+      }
+    }
+
+    function updateSyncUI() {
+      if(isAutoSync) {
+        syncStatusLabel.className = 'status-pill status-sync';
+        syncStatusLabel.innerHTML = `<svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg> 自動同步中`;
       } else {
-        syncLabel.innerHTML = '🔓 手動編輯模式';
-        syncLabel.className = 'sync-indicator sync-paused';
+        syncStatusLabel.className = 'status-pill status-manual';
+        syncStatusLabel.innerHTML = `🔒 手動編輯模式`;
       }
     }
 
-    // --- Auto Save ---
-    let saveTimeout;
-    function triggerSave() {
-      document.getElementById('saveStatus').innerHTML = '<span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span> 儲存中';
-      clearTimeout(saveTimeout);
-      saveTimeout = setTimeout(() => {
-        localStorage.setItem('fluo_draft_source', source.value);
-        localStorage.setItem('fluo_draft_kw', kwListArea.value);
-        localStorage.setItem('fluo_draft_content', editor.innerHTML);
-        document.getElementById('saveStatus').innerHTML = '<span class="w-2 h-2 rounded-full bg-green-600"></span> 已儲存';
-      }, 800);
-    }
-
-    // --- Helpers ---
-    function applyStyle(type) {
-      // 只要用了工具列，就視為手動編輯
-      isAutoSync = false; updateSyncStatus();
+    // --- 編輯器指令 (ExecCommand - 最穩定的方案) ---
+    function execCmd(cmd, val = null) {
+      pauseSync(); // 任何格式操作都視為手動介入
+      document.execCommand(cmd, false, val);
       
-      let css = "";
-      switch(type) {
-        case 'h1': css = `${FONT_FAMILY} font-size: 24pt; font-weight: bold; line-height: 1.5; color: #111; display: block; margin: 24px 0 12px 0;`; break;
-        case 'h2': css = `${FONT_FAMILY} font-size: 18pt; font-weight: bold; line-height: 1.5; color: #222; display: block; margin: 20px 0 10px 0;`; break;
-        case 'p': css = BASE_STYLE + " display: block; margin-bottom: 12px; font-weight: normal;"; break;
-        case 'red': wrapSelection(`${FONT_FAMILY} color: #B93A32; font-weight: bold;`); return;
+      // 修補：如果是 formatBlock，通常瀏覽器不會加上 class，我們這裡補上 inline styles
+      if(cmd === 'formatBlock') {
+        const sel = window.getSelection();
+        if(sel.rangeCount > 0) {
+          const node = sel.anchorNode.parentNode;
+          // 針對 H2, H3 補上樣式 (為了 Copy 到 Google Docs)
+          if(node.tagName === 'H2') {
+             node.style.cssText = "font-family: 'Shippori Mincho', serif; font-size: 1.6em; color: #393F4C; border-bottom: 2px solid #EEE; padding-bottom: 5px; margin-top: 24px;";
+          } else if (node.tagName === 'H3') {
+             node.style.cssText = "font-family: 'Shippori Mincho', serif; font-size: 1.3em; color: #393F4C; border-left: 4px solid #C9171E; padding-left: 10px; margin-top: 20px;";
+          }
+        }
       }
-      wrapSelection(css); triggerSave();
-    }
-    function applyColor(hex) { isAutoSync=false; updateSyncStatus(); wrapSelection(`${FONT_FAMILY} color: ${hex};`); triggerSave(); }
-    function applyHighlight(hex) { isAutoSync=false; updateSyncStatus(); wrapSelection(`${FONT_FAMILY} background-color: ${hex};`); triggerSave(); }
-    
-    function wrapSelection(styleString) {
-      const sel = window.getSelection();
-      if (!sel.rangeCount || sel.isCollapsed) { showToast('error', '請先選取文字'); return; }
-      const span = document.createElement('span'); span.style.cssText = styleString;
-      try { sel.getRangeAt(0).surroundContents(span); } catch(e) { document.execCommand('styleWithCSS', false, true); }
+      saveData();
     }
 
-    function execCmd(cmd) { isAutoSync=false; updateSyncStatus(); document.execCommand(cmd, false, null); triggerSave(); }
+    function applyColor(hex) {
+      pauseSync();
+      document.execCommand('foreColor', false, hex);
+    }
 
-    async function copyToDocs() {
+    function applyHighlight(hex) {
+      pauseSync();
+      // 嘗試使用 hiliteColor (背景色)
+      if (!document.execCommand('hiliteColor', false, hex)) {
+        document.execCommand('backColor', false, hex);
+      }
+    }
+
+    // --- Google Docs 複製優化 (Critical) ---
+    async function copyForGoogleDocs() {
+      // 1. 建立一個乾淨的容器
       const wrapper = document.createElement('div');
-      wrapper.style.cssText = `${BASE_STYLE} background-color: white;`;
-      wrapper.innerHTML = editor.innerHTML;
-      wrapper.querySelectorAll('*').forEach(el => { if(!el.style.fontFamily) el.style.fontFamily = "'Microsoft JhengHei', '微軟正黑體', sans-serif"; });
+      
+      // 2. 複製編輯器內容
+      // 為了確保字體在 Docs 顯示正常，我們需要在這裡強制注入全局樣式
+      // 注意：Google Docs 喜歡 Inline Styles
+      const content = editor.cloneNode(true);
+      
+      // 遍歷所有節點，確保字體設定正確
+      const walker = document.createTreeWalker(content, NodeFilter.SHOW_ELEMENT);
+      while(walker.nextNode()) {
+        const node = walker.currentNode;
+        // 如果沒有指定字體，補上通用字體
+        if (!node.style.fontFamily) {
+           // 優先使用無襯線，標題使用襯線
+           if(['H1','H2','H3'].includes(node.tagName)) {
+             node.style.fontFamily = "'Shippori Mincho', 'Times New Roman', serif";
+           } else {
+             node.style.fontFamily = "'Zen Kaku Gothic New', 'Arial', sans-serif";
+             node.style.lineHeight = "2.0";
+           }
+        }
+      }
+      
+      wrapper.innerHTML = content.innerHTML;
+      wrapper.style.cssText = "background: white; color: #303133;";
+
       try {
-        await navigator.clipboard.write([new ClipboardItem({'text/html': new Blob([wrapper.outerHTML], {type: 'text/html'}), 'text/plain': new Blob([editor.innerText], {type: 'text/plain'})})]);
-        showToast('success', '已複製！');
-      } catch(e) { showToast('error', '複製失敗'); }
+        const htmlBlob = new Blob([wrapper.outerHTML], { type: 'text/html' });
+        const textBlob = new Blob([editor.innerText], { type: 'text/plain' });
+        
+        await navigator.clipboard.write([
+          new ClipboardItem({ 
+            'text/html': htmlBlob,
+            'text/plain': textBlob 
+          })
+        ]);
+        showToast('success', '已複製！可直接貼上 Google Docs');
+      } catch (err) {
+        console.error(err);
+        showToast('error', '複製失敗，請手動全選複製');
+      }
     }
 
+    // --- RWD 切換 ---
+    function switchMobileTab(tab) {
+      const sectionInput = document.getElementById('sectionInput');
+      const sectionPreview = document.getElementById('sectionPreview');
+      const navInput = document.getElementById('navInput');
+      const navPreview = document.getElementById('navPreview');
+
+      if(tab === 'input') {
+        sectionInput.classList.remove('d-none-mobile');
+        sectionPreview.classList.add('d-none-mobile');
+        navInput.classList.add('active');
+        navPreview.classList.remove('active');
+      } else {
+        sectionInput.classList.add('d-none-mobile');
+        sectionPreview.classList.remove('d-none-mobile');
+        navInput.classList.remove('active');
+        navPreview.classList.add('active');
+        // 如果預覽是空的，自動跑一次同步
+        if(!editor.innerText.trim()) runSync(true);
+      }
+    }
+
+    // --- 輔助 ---
     function downloadTxt() {
-      const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([editor.innerText], {type: "text/plain"}));
-      a.download = `draft_${new Date().toISOString().slice(0,10)}.txt`; a.click();
+      const a = document.createElement("a");
+      const blob = new Blob([source.value], {type: "text/plain;charset=utf-8"});
+      a.href = URL.createObjectURL(blob);
+      a.download = `draft-${new Date().toISOString().slice(0,10)}.txt`;
+      a.click();
     }
-    function openResetModal() { resetModal.style.display = 'flex'; }
-    function closeResetModal(e) { if(e.target === resetModal) resetModal.style.display = 'none'; }
-    function execReset(mode) {
-      if(mode==='source') { source.value=""; localStorage.removeItem('fluo_draft_source'); }
-      else if(mode==='kw') { kwListArea.value=""; localStorage.removeItem('fluo_draft_kw'); }
-      else { localStorage.clear(); source.value=""; kwListArea.value=""; editor.innerHTML=""; isAutoSync=true; updateSyncStatus(); }
-      showToast('success', '已重置'); resetModal.style.display='none'; triggerSave();
+
+    function clearAll() {
+      if(confirm('確定要清空所有內容嗎？')) {
+        source.value = '';
+        kwList.value = '';
+        editor.innerHTML = '';
+        localStorage.clear();
+        isAutoSync = true;
+        updateSyncUI();
+        updateCount();
+      }
     }
-    function updateCounts() { document.getElementById('charCount').innerText = `${(editor.innerText||"").length} 字`; }
+
+    function saveData() {
+      localStorage.setItem('fp_src', source.value);
+      localStorage.setItem('fp_kw', kwList.value);
+      localStorage.setItem('fp_html', editor.innerHTML);
+    }
+
+    function updateCount() {
+      charCount.innerText = `${editor.innerText.replace(/\n/g,'').length} 字`;
+    }
+
     function showToast(type, msg) {
       const t = document.getElementById('toast');
-      document.getElementById('toastIcon').innerHTML = type==='success' ? '🟢' : '🔴';
+      const icon = document.getElementById('toastIcon');
+      icon.innerText = type === 'success' ? '✒️' : '⚠️';
       document.getElementById('toastMsg').innerText = msg;
-      t.style.opacity = '1'; setTimeout(() => t.style.opacity = '0', 2000);
+      
+      t.style.opacity = '1';
+      t.style.top = '90px'; // slide down
+      setTimeout(() => {
+        t.style.opacity = '0';
+        t.style.top = '80px';
+      }, 2500);
     }
   </script>
 </body>
