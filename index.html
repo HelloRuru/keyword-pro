@@ -1,3 +1,4 @@
+# [SYSTEM_START]
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -8,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
-  /* --- 核心變數設定 --- */
+  /* --- 核心變數 --- */
   :root {
     --bg-canvas: #F5F4F0;
     --bg-sidebar: #FCFCFA;
@@ -25,17 +26,14 @@
     background-color: var(--bg-canvas);
     color: var(--color-ink);
     font-family: 'Zen Kaku Gothic New', sans-serif;
-    height: 100vh; /* 強制全螢幕高度 */
-    overflow: hidden; /* 禁止滑動 */
-    display: flex;
-    flex-direction: column;
+    height: 100vh; overflow: hidden; display: flex; flex-direction: column;
   }
 
   .bg-noise { position: fixed; inset: 0; background-image: var(--noise); pointer-events: none; z-index: -1; }
   .font-serif { font-family: 'Shippori Mincho', serif; }
   .icon-line { width: 18px; height: 18px; stroke-width: 1.5px; stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 
-  /* 輸入框樣式 */
+  /* 輸入框 */
   .input-field {
     width: 100%; background: #FFFFFF;
     border: 1px solid transparent; border-bottom: 1px dashed #CCC;
@@ -44,7 +42,7 @@
   }
   .input-field:focus { background: #FFFFFF; border-bottom-color: var(--color-accent); box-shadow: 0 0 0 3px rgba(168, 54, 54, 0.05); }
 
-  /* 按鈕樣式 */
+  /* 按鈕 */
   .btn-tile {
     display: flex; align-items: center; justify-content: center; gap: 4px;
     padding: 6px 10px; background: #FFFFFF; border: 1px solid #EAEAEA; border-radius: 6px;
@@ -67,7 +65,7 @@
     display: flex; align-items: center; justify-content: center; gap: 6px;
   }
 
-  /* 🟢 Mobile Tab Bar (手機版切換標籤) */
+  /* Mobile Tab Bar */
   .mobile-tab-bar {
     display: flex; padding: 8px 16px; background: #F5F4F0;
     border-bottom: 1px solid #E0E0E0; gap: 10px; flex-shrink: 0;
@@ -83,18 +81,17 @@
     border-color: #E0E0E0; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
   }
 
-  /* 隱藏邏輯 (絕對隱藏) */
+  /* 顯示/隱藏控制 */
   .d-none { display: none !important; }
   
-  /* 電腦版強制覆蓋 (Reset Layout) */
+  /* Desktop Override */
   @media (min-width: 768px) {
-    .mobile-tab-bar { display: none !important; } /* 電腦版不顯示 Tab */
-    .desktop-flex { display: flex !important; }   /* 電腦版強制顯示兩欄 */
-    #sectionInput { width: 340px !important; display: flex !important; }
-    #sectionPreview { flex: 1 !important; display: flex !important; }
+    .mobile-tab-bar { display: none !important; }
+    #sectionInput { display: flex !important; }
+    #sectionPreview { display: flex !important; }
   }
 
-  /* 編輯紙張 */
+  /* Editor */
   .editor-paper {
     width: 100%; max-width: 820px; min-height: 80vh;
     background: #FFFFFF; padding: 80px; box-shadow: 0 10px 40px rgba(0,0,0,0.04);
@@ -116,6 +113,14 @@
     background: white; padding: 24px; border-radius: 12px; width: 90%; max-width: 320px;
     text-align: center; border: 1px solid #EEE; box-shadow: 0 20px 50px rgba(0,0,0,0.15);
   }
+  
+  /* Status Indicator */
+  .sync-indicator {
+    font-size: 10px; padding: 2px 6px; border-radius: 4px; border: 1px solid;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .sync-active { color: #059669; border-color: #A7F3D0; background: #ECFDF5; }
+  .sync-paused { color: #B45309; border-color: #FDE68A; background: #FFFBEB; }
 </style>
 </head>
 <body>
@@ -141,15 +146,15 @@
   </div>
 
   <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
-
-    <aside id="sectionInput" class="w-full bg-[var(--bg-sidebar)] border-r border-[#EAEAEA] flex flex-col z-20 flex-shrink-0 h-full overflow-hidden">
+    
+    <aside id="sectionInput" class="w-full md:w-[340px] bg-[var(--bg-sidebar)] border-r border-[#EAEAEA] flex flex-col z-20 flex-shrink-0 h-full overflow-hidden">
       <div class="p-5 flex flex-col h-full overflow-y-auto">
          <div class="flex-col flex min-h-[160px] flex-shrink-0 mb-4">
            <div class="flex items-center gap-2 mb-2">
              <span class="font-bold text-sm text-gray-600 tracking-wide">原文輸入</span>
              <span class="text-[10px] text-gray-400 font-serif">DRAFT</span>
            </div>
-           <textarea id="sourceText" class="input-field flex-1 min-h-[150px]" placeholder="請在此貼上草稿..."></textarea>
+           <textarea id="sourceText" class="input-field flex-1 min-h-[150px]" placeholder="在此輸入，右側會即時顯示..."></textarea>
          </div>
          <div class="flex-col flex flex-shrink-0 mb-4">
             <div class="flex items-center gap-2 mb-2">
@@ -158,21 +163,19 @@
             <textarea id="kwList" class="input-field h-24" placeholder="每行一個..."></textarea>
          </div>
          <div class="mt-auto pt-2 pb-6 md:pb-0">
-           <button onclick="runAutoMark()" class="btn-primary mb-3">
+           <button onclick="forceSync()" class="btn-primary mb-3">
              <svg class="icon-line" style="stroke: white;" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-             注入樣式 (Inject)
+             一鍵注入樣式 (Force Sync)
            </button>
            <div class="flex gap-3">
              <button onclick="downloadTxt()" class="btn-secondary">下載 .txt</button>
              <button onclick="openResetModal()" class="btn-secondary hover:text-red-600">清空重置</button>
            </div>
-           <div class="text-[10px] text-gray-300 text-center mt-4 md:hidden">© 2025 Kaoru Tsai.</div>
          </div>
       </div>
     </aside>
 
     <main id="sectionPreview" class="flex-1 flex-col bg-[#F5F4F0] relative min-w-0 h-full d-none md:flex">
-      
       <div class="h-14 flex items-center px-4 flex-shrink-0 z-30 bg-[#F5F4F0]/95 backdrop-blur border-b border-[#E0E0E0] overflow-x-auto no-scrollbar">
         <div class="flex items-center gap-2 pr-4 min-w-max">
           <button onclick="applyStyle('h1')" class="btn-tile">H1</button>
@@ -202,17 +205,18 @@
              <span id="charCount">0 字</span>
              <span>|</span>
              <span id="saveStatus" class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-gray-300"></span> 待機</span>
+             <span>|</span>
+             <span id="syncStatus" class="sync-indicator sync-active">🔗 同步中</span>
            </div>
         </div>
       </div>
     </main>
-
   </div>
 
   <div id="resetModal" class="modal-backdrop" onclick="closeResetModal(event)">
     <div class="modal-card">
       <h3 class="font-bold text-lg mb-4 text-gray-800">清空資料確認</h3>
-      <button onclick="execReset('source')" class="w-full py-3 mb-2 border rounded-lg text-sm text-gray-600">清除原文草稿</button>
+      <button onclick="execReset('source')" class="w-full py-3 mb-2 border rounded-lg text-sm text-gray-600">清除原文</button>
       <button onclick="execReset('kw')" class="w-full py-3 mb-2 border rounded-lg text-sm text-gray-600">清除關鍵字</button>
       <button onclick="execReset('all')" class="w-full py-3 border border-red-200 bg-red-50 text-[#A83636] font-bold mt-2">全部還原</button>
     </div>
@@ -223,15 +227,26 @@
   </div>
 
   <script>
-    // --- 核心修復：手機版 Tab 切換邏輯 ---
+    // --- 核心變數 ---
+    const editor = document.getElementById('editor');
+    const source = document.getElementById('sourceText');
+    const kwListArea = document.getElementById('kwList');
+    const resetModal = document.getElementById('resetModal');
+    const syncLabel = document.getElementById('syncStatus');
+    const FONT_FAMILY = "font-family: 'Microsoft JhengHei', '微軟正黑體', sans-serif;";
+    const BASE_STYLE = `${FONT_FAMILY} font-size: 12pt; line-height: 2.0; color: #333;`;
+    
+    // 🟢 智慧同步變數
+    let isAutoSync = true; // 預設開啟同步
+
+    // --- Tab Switch Logic ---
     const tabInput = document.getElementById('tabInput');
     const tabPreview = document.getElementById('tabPreview');
     const sectionInput = document.getElementById('sectionInput');
     const sectionPreview = document.getElementById('sectionPreview');
 
     function switchTab(tab) {
-      if (window.innerWidth >= 768) return; // 電腦版略過
-
+      if (window.innerWidth >= 768) return;
       if(tab === 'input') {
         sectionInput.classList.remove('d-none');
         sectionPreview.classList.add('d-none');
@@ -245,64 +260,112 @@
       }
     }
 
-    // --- 既有邏輯 ---
-    const editor = document.getElementById('editor');
-    const source = document.getElementById('sourceText');
-    const kwListArea = document.getElementById('kwList');
-    const resetModal = document.getElementById('resetModal');
-    const statusLabel = document.getElementById('saveStatus');
-    const FONT_FAMILY = "font-family: 'Microsoft JhengHei', '微軟正黑體', sans-serif;";
-    const BASE_STYLE = `${FONT_FAMILY} font-size: 12pt; line-height: 2.0; color: #333;`;
-
-    // Init & Auto-Save
+    // --- Init & Load ---
     window.addEventListener('DOMContentLoaded', () => {
       if(localStorage.getItem('fluo_draft_source')) source.value = localStorage.getItem('fluo_draft_source');
       if(localStorage.getItem('fluo_draft_kw')) kwListArea.value = localStorage.getItem('fluo_draft_kw');
-      if(localStorage.getItem('fluo_draft_content')) editor.innerHTML = localStorage.getItem('fluo_draft_content');
-      else if(!editor.innerText.trim()) editor.innerHTML = `<span style="${BASE_STYLE}"><br></span>`;
+      if(localStorage.getItem('fluo_draft_content')) {
+         editor.innerHTML = localStorage.getItem('fluo_draft_content');
+         // 如果有舊存檔，可能是手動編輯過，暫時不自動覆蓋，除非用戶打字
+      } else {
+         if(!editor.innerText.trim()) editor.innerHTML = `<span style="${BASE_STYLE}"><br></span>`;
+      }
       updateCounts();
     });
 
+    // --- 🟢 Smart Sync Logic (即時同步引擎) ---
+    // 當左側輸入時
+    source.addEventListener('input', () => {
+      if (isAutoSync) {
+        debouncedAutoMark(); // 執行同步
+      }
+      triggerSave();
+    });
+
+    // 當右側編輯時 -> 解除同步，保護用戶的手動排版
+    editor.addEventListener('input', () => {
+      if (isAutoSync) {
+        isAutoSync = false;
+        updateSyncStatus();
+      }
+      triggerSave();
+      updateCounts();
+    });
+
+    // 關鍵字變動也觸發同步
+    kwListArea.addEventListener('input', () => {
+      if (isAutoSync) debouncedAutoMark();
+      triggerSave();
+    });
+
+    // Debounce 防抖動 (避免打字太快一直閃爍)
+    let debounceTimer;
+    function debouncedAutoMark() {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        runAutoMark(true); // true = silent mode (不跳 Toast)
+      }, 300);
+    }
+
+    // 核心渲染函數
+    function runAutoMark(silent = false) {
+      const kws = kwListArea.value.split('\n').filter(k => k.trim());
+      let text = source.value;
+      if(!text && !silent) { showToast('error', '請輸入內容'); return; }
+      
+      // HTML Escape
+      text = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      
+      // Highlight
+      kws.forEach(kw => {
+        text = text.replace(new RegExp(`(${kw})`, 'gi'), `<span style="${FONT_FAMILY} color: #B93A32; font-weight: bold;">$1</span>`);
+      });
+      
+      // Format
+      text = text.replace(/\n/g, '<br>');
+      editor.innerHTML = `<span style="${BASE_STYLE}">${text}</span>`;
+      
+      if(!silent) showToast('success', '樣式已注入');
+      triggerSave(); updateCounts();
+    }
+
+    // 強制重置同步 (按鈕觸發)
+    function forceSync() {
+      isAutoSync = true;
+      updateSyncStatus();
+      runAutoMark(false);
+      // 手機版跳轉
+      if(window.innerWidth < 768) switchTab('preview');
+    }
+
+    function updateSyncStatus() {
+      if (isAutoSync) {
+        syncLabel.innerHTML = '🔗 同步中';
+        syncLabel.className = 'sync-indicator sync-active';
+      } else {
+        syncLabel.innerHTML = '🔓 手動編輯模式';
+        syncLabel.className = 'sync-indicator sync-paused';
+      }
+    }
+
+    // --- Auto Save ---
     let saveTimeout;
     function triggerSave() {
-      updateStatus('saving'); clearTimeout(saveTimeout);
+      document.getElementById('saveStatus').innerHTML = '<span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span> 儲存中';
+      clearTimeout(saveTimeout);
       saveTimeout = setTimeout(() => {
         localStorage.setItem('fluo_draft_source', source.value);
         localStorage.setItem('fluo_draft_kw', kwListArea.value);
         localStorage.setItem('fluo_draft_content', editor.innerHTML);
-        updateStatus('saved');
+        document.getElementById('saveStatus').innerHTML = '<span class="w-2 h-2 rounded-full bg-green-600"></span> 已儲存';
       }, 800);
     }
-    source.addEventListener('input', triggerSave);
-    kwListArea.addEventListener('input', triggerSave);
-    editor.addEventListener('input', () => { triggerSave(); updateCounts(); });
 
-    function updateStatus(state) {
-      statusLabel.innerHTML = state === 'saving' 
-        ? `<span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span> 儲存中` 
-        : `<span class="w-2 h-2 rounded-full bg-green-600"></span> 已儲存`;
-    }
-
-    // Actions
-    function runAutoMark() {
-      const kws = kwListArea.value.split('\n').filter(k => k.trim());
-      let text = source.value;
-      if(!text) { showToast('error', '請輸入內容'); return; }
-      text = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-      kws.forEach(kw => {
-        text = text.replace(new RegExp(`(${kw})`, 'gi'), `<span style="${FONT_FAMILY} color: #B93A32; font-weight: bold;">$1</span>`);
-      });
-      text = text.replace(/\n/g, '<br>');
-      editor.innerHTML = `<span style="${BASE_STYLE}">${text}</span>`;
-      showToast('success', '注入完成！請查看預覽');
-      triggerSave(); updateCounts();
-      
-      // 手機版自動切換到預覽
-      if(window.innerWidth < 768) switchTab('preview');
-    }
-
-    // Helpers
+    // --- Helpers ---
     function applyStyle(type) {
+      // 只要用了工具列，就視為手動編輯
+      isAutoSync = false; updateSyncStatus();
+      
       let css = "";
       switch(type) {
         case 'h1': css = `${FONT_FAMILY} font-size: 24pt; font-weight: bold; line-height: 1.5; color: #111; display: block; margin: 24px 0 12px 0;`; break;
@@ -312,8 +375,8 @@
       }
       wrapSelection(css); triggerSave();
     }
-    function applyColor(hex) { wrapSelection(`${FONT_FAMILY} color: ${hex};`); triggerSave(); }
-    function applyHighlight(hex) { wrapSelection(`${FONT_FAMILY} background-color: ${hex};`); triggerSave(); }
+    function applyColor(hex) { isAutoSync=false; updateSyncStatus(); wrapSelection(`${FONT_FAMILY} color: ${hex};`); triggerSave(); }
+    function applyHighlight(hex) { isAutoSync=false; updateSyncStatus(); wrapSelection(`${FONT_FAMILY} background-color: ${hex};`); triggerSave(); }
     
     function wrapSelection(styleString) {
       const sel = window.getSelection();
@@ -322,7 +385,7 @@
       try { sel.getRangeAt(0).surroundContents(span); } catch(e) { document.execCommand('styleWithCSS', false, true); }
     }
 
-    function execCmd(cmd) { document.execCommand(cmd, false, null); triggerSave(); }
+    function execCmd(cmd) { isAutoSync=false; updateSyncStatus(); document.execCommand(cmd, false, null); triggerSave(); }
 
     async function copyToDocs() {
       const wrapper = document.createElement('div');
@@ -344,7 +407,7 @@
     function execReset(mode) {
       if(mode==='source') { source.value=""; localStorage.removeItem('fluo_draft_source'); }
       else if(mode==='kw') { kwListArea.value=""; localStorage.removeItem('fluo_draft_kw'); }
-      else { localStorage.clear(); source.value=""; kwListArea.value=""; editor.innerHTML=""; }
+      else { localStorage.clear(); source.value=""; kwListArea.value=""; editor.innerHTML=""; isAutoSync=true; updateSyncStatus(); }
       showToast('success', '已重置'); resetModal.style.display='none'; triggerSave();
     }
     function updateCounts() { document.getElementById('charCount').innerText = `${(editor.innerText||"").length} 字`; }
@@ -357,3 +420,4 @@
   </script>
 </body>
 </html>
+# [SYSTEM_END]
