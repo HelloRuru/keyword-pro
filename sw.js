@@ -1,5 +1,5 @@
-// sw.js - v6.7 (Mobile UX Fix)
-const CACHE_NAME = 'fluo-v6.7'; 
+// sw.js - v6.8 (Font Size Engine Upgrade)
+const CACHE_NAME = 'fluo-v6.8'; 
 const ASSETS = [
   './',
   './index.html',
