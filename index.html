@@ -18,17 +18,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <script>
-  // 智慧右鍵
+  // 智慧右鍵防護
   document.addEventListener('contextmenu', e => {
     const isEditable = e.target.closest('textarea, input, [contenteditable="true"]');
     if (isEditable) return; 
     e.preventDefault();     
   });
-  // 禁止 Ctrl+S
+  // 禁止 Ctrl+S，允許 F12
   document.addEventListener('keydown', e => {
     if((e.ctrlKey && ['s','S','u','U'].includes(e.key))){ e.preventDefault(); }
   });
-  // PWA Register
+  // PWA 註冊
   if ('serviceWorker' in navigator) {
      window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(e => console.log('SW Fail')); });
   }
@@ -44,9 +44,10 @@
     --c-sub: #666666;      
     --c-accent: #2B4B65;   
     --c-highlight: #BF1E33;
-    --font-serif: 'Shippori Mincho', serif; /* 日系襯線體 (按鈕/標題) */
-    --font-sans: 'Zen Kaku Gothic New', sans-serif; /* 介面用 */
-    --font-editor: 'Noto Sans TC', sans-serif; /* 編輯區 */
+    /* 字體設定：日系優先 */
+    --font-serif: 'Shippori Mincho', serif; 
+    --font-sans: 'Zen Kaku Gothic New', sans-serif;
+    --font-editor: 'Zen Kaku Gothic New', 'Noto Sans TC', sans-serif;
   }
   [data-theme="dark"] {
     --bg-canvas: #1A1A1A; --bg-sidebar: #242424; --border-color: #444;
@@ -62,7 +63,7 @@
   .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
   .custom-scroll::-webkit-scrollbar-thumb { background: #CCC; border-radius: 2px; }
 
-  /* 左側側邊欄 */
+  /* 側邊欄 */
   .sidebar { background: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 20; box-shadow: 2px 0 15px rgba(0,0,0,0.03); }
   
   .input-area { width: 100%; background: var(--bg-canvas); border: 1px solid var(--border-color); border-radius: 4px; padding: 12px; font-size: 14px; font-family: var(--font-sans); resize: none; outline: none; transition: 0.2s; line-height: 1.6; }
@@ -75,10 +76,10 @@
   .kw-tag.good { border-color: #C6F6D5; background: #F0FFF4; color: #276749; }
   .kw-tag.missing { border-color: #FECACA; background: #FFF5F5; color: #C9171E; }
 
-  /* 右側預覽區 */
+  /* 預覽區 */
   .preview-container { flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden; z-index: 10; }
   
-  /* 長條形工具列 */
+  /* 工具列 */
   .toolbar { 
     background: var(--bg-sidebar); border-bottom: 1px solid var(--border-color); 
     padding: 8px 16px; display: flex; align-items: center; gap: 12px; 
@@ -160,7 +161,7 @@
           <svg class="w-8 h-8 text-[var(--c-accent)]" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="20"><path d="M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z" stroke='currentColor' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 180V320' stroke='currentColor' stroke-width='24' stroke-linecap='round'/><circle cx='256' cy='370' r='24' fill='%23BF1E33'/></svg>
           <div>
             <h1 class="text-lg font-bold font-serif">蛍光ペン <span class="text-xs text-[var(--c-highlight)] font-sans">PRO</span></h1>
-            <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v6.3</p>
+            <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v6.4</p>
           </div>
         </div>
         <button onclick="App.UI.toggleTheme()" class="text-[var(--c-sub)] hover:text-[var(--c-accent)]" title="切換深色模式">
@@ -212,9 +213,9 @@
         <button onmousedown="event.preventDefault()" onclick="document.execCommand('redo')" class="tool-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l6 3.7"/></svg></button>
         <div class="tool-sep"></div>
         
-        <button onmousedown="event.preventDefault()" onclick="document.execCommand('bold')" class="tool-btn font-serif font-bold text-lg" title="粗體 (Bold)">B</button>
-        <button onmousedown="event.preventDefault()" onclick="document.execCommand('italic')" class="tool-btn font-serif italic text-lg" title="斜體 (Italic)">I</button>
-        <button onmousedown="event.preventDefault()" onclick="document.execCommand('underline')" class="tool-btn font-serif underline text-lg" title="底線 (Underline)">U</button>
+        <button onmousedown="event.preventDefault()" onclick="document.execCommand('bold')" class="tool-btn font-serif font-bold text-lg" title="粗體">B</button>
+        <button onmousedown="event.preventDefault()" onclick="document.execCommand('italic')" class="tool-btn font-serif italic text-lg" title="斜體">I</button>
+        <button onmousedown="event.preventDefault()" onclick="document.execCommand('underline')" class="tool-btn font-serif underline text-lg" title="底線">U</button>
         <div class="tool-sep"></div>
 
         <button onmousedown="event.preventDefault()" onclick="App.Format.cmd('formatBlock','h2')" class="tool-btn font-bold text-lg font-serif">H2</button>
@@ -271,88 +272,99 @@
   </nav>
 
   <script>
-    const Config = { titles: (kw) => [] }; // Simplified
-
-    const Storage = {
-        save: (key, val) => {
-            localStorage.setItem(key, val);
-            App.UI.showSaved();
-        },
-        get: (key) => localStorage.getItem(key),
-        // 🟢 徹底修復：清除邏輯與確認視窗
-        clear: (type) => { 
-            let msg = '';
-            if(type === 'source') msg = '確定清空【原文輸入】？';
-            else if(type === 'kw') msg = '確定清空【關鍵字】？';
-            else if(type === 'all') msg = '⚠️ 警告：確定要【全部重置】嗎？這將無法復原。';
-            
-            if(!confirm(msg)) return;
-
-            if(type === 'source' || type === 'all') { Dom.source.value = ''; Storage.save('fluo_src', ''); }
-            if(type === 'kw' || type === 'all') { Dom.kw.value = ''; Storage.save('fluo_kw', ''); }
-            if(type === 'all') { Dom.editor.innerHTML = ''; Storage.save('fluo_temp', ''); }
-            
-            App.Core.forceSync();
-        },
-        // 🟢 徹底修復：備份下載 (UTF-8 BOM)
-        downloadBackup: () => { 
-            const htmlContent = `
-                <!DOCTYPE html><html><head><meta charset="UTF-8"><title>Backup - 蛍光ペン PRO</title></head>
-                <body style="font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px;">
-                ${Dom.editor.innerHTML}
-                </body></html>`;
-            
-            const blob = new Blob([htmlContent], {type: "text/html;charset=utf-8"});
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `fluo_backup_${new Date().toISOString().slice(0,10)}.html`;
-            document.body.appendChild(a); // FireFox 需要加入 body 才能點擊
-            a.click();
-            document.body.removeChild(a);
-        }
-    };
-
-    let Dom = {};
-
     const App = {
         state: { isAutoSync: true, includePunctuation: true },
-        Init: () => {
-            Dom = { source: document.getElementById('sourceText'), kw: document.getElementById('kwList'), editor: document.getElementById('editor'), density: document.getElementById('densityPanel'), countTotal: document.getElementById('countTotal'), countSel: document.getElementById('countSel'), puncDot: document.getElementById('puncDot'), saveStatus: document.getElementById('saveStatus') };
+        
+        Storage: {
+            save: (key, val) => {
+                localStorage.setItem(key, val);
+                App.UI.showSaved();
+            },
+            get: (key) => localStorage.getItem(key),
+            
+            clear: (type) => { 
+                let msg = '';
+                if(type === 'source') msg = '確定清空【原文輸入】？';
+                else if(type === 'kw') msg = '確定清空【關鍵字】？';
+                else if(type === 'all') msg = '⚠️ 警告：確定要【全部重置】嗎？這將無法復原。';
+                
+                if(!confirm(msg)) return;
 
-            if(Storage.get('fluo_src')) Dom.source.value = Storage.get('fluo_src');
-            if(Storage.get('fluo_kw')) Dom.kw.value = Storage.get('fluo_kw');
+                if(type === 'source' || type === 'all') { document.getElementById('sourceText').value = ''; App.Storage.save('fluo_src', ''); }
+                if(type === 'kw' || type === 'all') { document.getElementById('kwList').value = ''; App.Storage.save('fluo_kw', ''); }
+                if(type === 'all') { document.getElementById('editor').innerHTML = ''; App.Storage.save('fluo_temp', ''); }
+                
+                App.Core.forceSync();
+            },
+            
+            downloadBackup: () => { 
+                const content = document.getElementById('editor').innerHTML;
+                const htmlContent = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Backup</title></head><body style="font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px;">${content}</body></html>`;
+                
+                const blob = new Blob([htmlContent], {type: "text/html;charset=utf-8"});
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `fluo_backup_${new Date().toISOString().slice(0,10)}.html`;
+                document.body.appendChild(a); 
+                a.click();
+                document.body.removeChild(a);
+            }
+        },
+
+        Init: () => {
+            // Bindings
+            App.Dom = { 
+                source: document.getElementById('sourceText'), 
+                kw: document.getElementById('kwList'), 
+                editor: document.getElementById('editor'), 
+                density: document.getElementById('densityPanel'), 
+                countTotal: document.getElementById('countTotal'), 
+                countSel: document.getElementById('countSel'), 
+                puncDot: document.getElementById('puncDot'), 
+                saveStatus: document.getElementById('saveStatus') 
+            };
+
+            // Load Theme Preference
+            if(localStorage.getItem('fluo_theme') === 'dark') {
+               document.body.setAttribute('data-theme', 'dark');
+            }
+
+            // Load Data
+            if(App.Storage.get('fluo_src')) App.Dom.source.value = App.Storage.get('fluo_src');
+            if(App.Storage.get('fluo_kw')) App.Dom.kw.value = App.Storage.get('fluo_kw');
             App.Core.runSync();
 
-            Dom.source.addEventListener('input', () => { App.state.isAutoSync=true; App.Core.runSync(); });
-            Dom.kw.addEventListener('input', () => { App.Core.runSync(); });
-            // 輸入即存檔
-            Dom.editor.addEventListener('input', () => { 
+            // Event Listeners
+            App.Dom.source.addEventListener('input', () => { App.state.isAutoSync=true; App.Core.runSync(); });
+            App.Dom.kw.addEventListener('input', () => { App.Core.runSync(); });
+            App.Dom.editor.addEventListener('input', () => { 
                 App.state.isAutoSync=false; 
                 App.UI.updateStats(); 
-                Storage.save('fluo_temp', Dom.editor.innerHTML); 
+                App.Storage.save('fluo_temp', App.Dom.editor.innerHTML); 
             });
             document.addEventListener('selectionchange', App.UI.updateStats);
         },
+
         Core: {
             runSync: () => {
                 if(!App.state.isAutoSync) return;
-                const raw = Dom.source.value;
-                const kws = Dom.kw.value.split('\n').filter(k => k.trim());
+                const raw = App.Dom.source.value;
+                const kws = App.Dom.kw.value.split('\n').filter(k => k.trim());
                 let safeText = raw.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
                 kws.forEach(k => { if(k) safeText = safeText.replace(new RegExp(k, 'gi'), `<b style="color:var(--c-highlight)">${k}</b>`); });
                 
                 const html = safeText.split('\n').map(line => line.trim() ? `<p>${line}</p>` : '<p><br></p>').join('');
-                Dom.editor.innerHTML = html || '<p class="text-gray-300">請在左側輸入文字...</p>';
+                App.Dom.editor.innerHTML = html || '<p class="text-gray-300">請在左側輸入文字...</p>';
                 
                 App.Core.analyzeDensity();
-                Storage.save('fluo_src', raw);
-                Storage.save('fluo_kw', Dom.kw.value);
+                App.Storage.save('fluo_src', raw);
+                App.Storage.save('fluo_kw', App.Dom.kw.value);
                 App.UI.updateStats();
             },
             analyzeDensity: () => {
-                const text = Dom.source.value;
-                const kws = Dom.kw.value.split('\n').filter(k => k.trim());
-                if(kws.length === 0) { Dom.density.innerHTML = '<span class="text-xs text-gray-400 w-full text-center py-2">無關鍵字</span>'; return; }
+                const text = App.Dom.source.value;
+                const kws = App.Dom.kw.value.split('\n').filter(k => k.trim());
+                if(kws.length === 0) { App.Dom.density.innerHTML = '<span class="text-xs text-gray-400 w-full text-center py-2">無關鍵字</span>'; return; }
                 let html = '';
                 kws.forEach(kw => {
                     const count = (text.match(new RegExp(kw, 'gi')) || []).length;
@@ -360,13 +372,13 @@
                     let cls = count === 0 ? 'missing' : (density > 0.5 && density < 5 ? 'good' : '');
                     html += `<div class="kw-tag ${cls}">${kw} <span class="count">${count}</span> <span style="opacity:0.6">(${density}%)</span></div>`;
                 });
-                Dom.density.innerHTML = html;
+                App.Dom.density.innerHTML = html;
             },
-            restore: () => { if(confirm('將預覽區內容還原到輸入框？(會覆蓋左側)')) { Dom.source.value = Dom.editor.innerText; App.state.isAutoSync=true; App.Core.runSync(); }},
+            restore: () => { if(confirm('將預覽區內容還原到輸入框？(會覆蓋左側)')) { App.Dom.source.value = App.Dom.editor.innerText; App.state.isAutoSync=true; App.Core.runSync(); }},
             copyToDocs: async () => {
                 const wrapper = document.createElement('div');
                 wrapper.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 12pt; line-height: 1.0; color: #333; background: white;";
-                const clone = Dom.editor.cloneNode(true);
+                const clone = App.Dom.editor.cloneNode(true);
                 const applyStyle = (node) => {
                     if (node.nodeType === 1) {
                         node.style.lineHeight = "1.0"; node.style.marginBottom = "12pt"; 
@@ -378,12 +390,13 @@
                 applyStyle(clone);
                 wrapper.innerHTML = clone.innerHTML;
                 try {
-                    await navigator.clipboard.write([new ClipboardItem({'text/html': new Blob([wrapper.outerHTML],{type:'text/html'}), 'text/plain': new Blob([Dom.editor.innerText],{type:'text/plain'})})]);
+                    await navigator.clipboard.write([new ClipboardItem({'text/html': new Blob([wrapper.outerHTML],{type:'text/html'}), 'text/plain': new Blob([App.Dom.editor.innerText],{type:'text/plain'})})]);
                     alert('✨ 已複製！(Noto Sans TC / 12pt / 單行行距)');
                 } catch(e) { alert('複製失敗，請手動全選複製。'); }
             },
             forceSync: () => { App.state.isAutoSync=true; App.Core.runSync(); }
         },
+
         Format: {
             cmd: (c, v) => { document.execCommand(c, false, v); App.state.isAutoSync=false; App.UI.updateStats(); },
             size: (pt) => {
@@ -400,13 +413,14 @@
             removeHighlight: () => { document.execCommand('backColor', false, 'transparent'); App.state.isAutoSync=false; },
             remove: () => { App.Format.cmd('removeFormat'); App.Format.cmd('backColor', 'transparent'); }
         },
+
         UI: {
             updateStats: () => {
-                const text = Dom.editor.innerText || '';
+                const text = App.Dom.editor.innerText || '';
                 const clean = App.state.includePunctuation ? text : text.replace(/[^\w\u4e00-\u9fa5]/g, '');
-                Dom.countTotal.innerText = clean.replace(/[\n\r]/g, '').length;
+                App.Dom.countTotal.innerText = clean.replace(/[\n\r]/g, '').length;
                 const sel = window.getSelection().toString();
-                Dom.countSel.innerText = App.state.includePunctuation ? sel.length : sel.replace(/[^\w\u4e00-\u9fa5]/g, '').length;
+                App.Dom.countSel.innerText = App.state.includePunctuation ? sel.length : sel.replace(/[^\w\u4e00-\u9fa5]/g, '').length;
                 
                 const floatMenu = document.getElementById('mobileFloatMenu');
                 if(window.innerWidth < 768 && sel.length > 0) {
@@ -419,12 +433,12 @@
                 }
             },
             showSaved: () => {
-                Dom.saveStatus.style.opacity = '1';
-                setTimeout(() => { Dom.saveStatus.style.opacity = '0'; }, 1500);
+                App.Dom.saveStatus.style.opacity = '1';
+                setTimeout(() => { App.Dom.saveStatus.style.opacity = '0'; }, 1500);
             },
             togglePunctuation: () => {
                 App.state.includePunctuation = !App.state.includePunctuation;
-                Dom.puncDot.className = App.state.includePunctuation ? "w-2 h-2 rounded-full bg-green-500" : "w-2 h-2 rounded-full bg-gray-300";
+                App.Dom.puncDot.className = App.state.includePunctuation ? "w-2 h-2 rounded-full bg-green-500" : "w-2 h-2 rounded-full bg-gray-300";
                 App.UI.updateStats();
             },
             switchMobileTab: (tab) => {
@@ -438,11 +452,12 @@
             toggleTheme: () => {
                const isDark = document.body.getAttribute('data-theme') === 'dark';
                document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+               localStorage.setItem('fluo_theme', isDark ? 'light' : 'dark');
             }
         }
     };
     
-    // 確保 App 掛載到 window (解決全域呼叫問題)
+    // 確保 App 為全域變數，解決按鈕找不到 App.Storage 的問題
     window.App = App;
     document.addEventListener('DOMContentLoaded', App.Init);
   </script>
