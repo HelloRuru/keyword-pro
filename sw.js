@@ -1,5 +1,5 @@
-// sw.js - v8.1 (Performance Boost)
-const CACHE_NAME = 'fluo-v8.1'; 
+// sw.js - v8.2 (SEO Tags Restoration)
+const CACHE_NAME = 'fluo-v8.2'; 
 const ASSETS = [
   './',
   './index.html',
