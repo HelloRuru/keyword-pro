@@ -135,7 +135,7 @@
               <svg class="w-8 h-8 text-[var(--c-accent)] hidden md:block" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="20"><path d="M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z" stroke='currentColor' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 180V320' stroke='currentColor' stroke-width='24' stroke-linecap='round'/><circle cx='256' cy='370' r='24' fill='var(--c-highlight)' stroke="none"/></svg>
               <div class="hidden md:block">
                 <h1 class="text-lg font-bold font-serif">蛍光ペン <span class="text-xs text-[var(--c-highlight)] font-sans">PRO</span></h1>
-                <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v7.8</p>
+                <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v8.0</p>
               </div>
             </div>
             <button onclick="App.UI.toggleTheme()" class="text-[var(--c-sub)] hover:text-[var(--c-accent)] hidden md:block" title="切換深色模式">
@@ -187,7 +187,20 @@
         <div class="tool-sep"></div>
         <div class="flex items-center gap-1 flex-shrink-0">
             <button onmousedown="event.preventDefault()" onclick="App.Format.stepSize(-1)" class="tool-btn font-serif text-sm px-1">A-</button>
-            <select id="fontSizeSelect" onchange="App.Format.setSize(this.value)" class="h-8 border border-[var(--border-color)] rounded text-xs bg-[var(--bg-sidebar)] px-1 outline-none font-sans w-12 text-center text-[var(--c-ink)]"><option value="10pt">10</option><option value="11pt">11</option><option value="12pt" selected>12</option><option value="13pt">13</option><option value="14pt">14</option><option value="15pt">15</option><option value="16pt">16</option><option value="18pt">18</option><option value="20pt">20</option><option value="24pt">24</option><option value="30pt">30</option><option value="36pt">36</option><option value="48pt">48</option></select>
+            <select id="fontSizeSelect" onchange="App.Format.setSize(this.value)" class="h-8 border border-[var(--border-color)] rounded text-xs bg-[var(--bg-sidebar)] px-1 outline-none font-sans w-12 text-center text-[var(--c-ink)]">
+              <option value="10pt">10</option>
+              <option value="11pt">11</option>
+              <option value="12pt" selected>12</option>
+              <option value="14pt">14</option>
+              <option value="16pt">16</option>
+              <option value="18pt">18</option>
+              <option value="20pt">20</option>
+              <option value="24pt">24</option>
+              <option value="28pt">28</option>
+              <option value="36pt">36</option>
+              <option value="48pt">48</option>
+              <option value="72pt">72</option>
+            </select>
             <button onmousedown="event.preventDefault()" onclick="App.Format.stepSize(1)" class="tool-btn font-serif text-lg px-1">A+</button>
         </div>
         <div class="tool-sep"></div>
@@ -237,7 +250,8 @@
   <script>
     const Config = {
         colors: { '#333333': '#333333', '#2B4B65': '#2B4B65', '#BF1E33': '#BF1E33', '#2F5D50': '#2F5D50', '#6A4C9C': '#6A4C9C', 'var(--c-ink)': '#333333', 'var(--c-accent)': '#2B4B65', 'var(--c-highlight)': '#BF1E33' },
-        fontScale: [10, 11, 12, 13, 14, 15, 16, 18, 20, 24, 30, 36, 48]
+        // 🟢 v8.0 更新：標準文件字級定義
+        fontScale: [10, 11, 12, 14, 16, 18, 20, 24, 28, 36, 48, 72]
     };
 
     const App = {
@@ -291,21 +305,11 @@
                 kws.forEach(kw => { const count = (text.match(new RegExp(kw, 'gi'))||[]).length; const d = (text.length>0)?((count*kw.length/text.length)*100).toFixed(1):0; let cls=count===0?'missing':(d>0.5&&d<5?'good':''); html += `<div class="kw-tag ${cls}">${kw} <span class="count">${count}</span> <span style="opacity:0.6">(${d}%)</span></div>`; });
                 App.Dom.density.innerHTML = html;
             },
-            // 🟢 改良版 forceSync
             forceSync: () => {
                 const editorEmpty = !App.Dom.editor.innerText.trim();
                 const sourceHasText = App.Dom.source.value.trim().length > 0;
-                
-                if (editorEmpty && sourceHasText) {
-                    App.state.isAutoSync = true;
-                    App.Core.runSync();
-                    alert('✨ 已從原文同步並標註！');
-                } else {
-                    App.Core.smartHighlight();
-                    const kws = App.Dom.kw.value.trim();
-                    if(!kws) alert('⚠️ 請先輸入關鍵字');
-                    else alert('✨ 標註檢查完成！');
-                }
+                if (editorEmpty && sourceHasText) { App.state.isAutoSync = true; App.Core.runSync(); alert('✨ 已從原文同步並標註！'); } 
+                else { App.Core.smartHighlight(); const kws = App.Dom.kw.value.trim(); if(!kws) alert('⚠️ 請先輸入關鍵字'); else alert('✨ 標註檢查完成！'); }
             },
             smartHighlight: () => {
                 const editor = App.Dom.editor; const kws = App.Dom.kw.value.split('\n').filter(k => k.trim());
@@ -325,13 +329,7 @@
                 };
                 walk(editor); App.Core.analyzeDensity(); App.UI.updateStats(); App.Storage.save('fluo_temp', editor.innerHTML);
             },
-            // 🟢 核心修正：還原邏輯 (從左 -> 右)
-            restore: () => { 
-                if(confirm('確定要還原預覽區？這會捨棄您在右側的手動編輯，並重新從左側原文同步。')) { 
-                    App.state.isAutoSync=true; 
-                    App.Core.runSync(); 
-                }
-            },
+            restore: () => { if(confirm('確定要還原預覽區？')) { App.state.isAutoSync=true; App.Core.runSync(); }},
             bakeStyles: (rootNode) => {
                 const bake = (node) => {
                     if (node.nodeType === 1) { 
@@ -372,7 +370,36 @@
         Format: {
             cmd: (c, v) => { document.execCommand(c, false, v); App.state.isAutoSync=false; App.UI.updateStats(); },
             setSize: (pt) => { const sel = window.getSelection(); if (sel.isCollapsed) return alert('請先選字'); document.execCommand('fontSize', false, '7'); App.Dom.editor.querySelectorAll('font[size="7"]').forEach(el => { el.removeAttribute('size'); el.style.fontSize = pt; }); App.state.isAutoSync=false; },
-            stepSize: (step) => { const sel = window.getSelection(); if (sel.isCollapsed) return alert('請先選字'); let cur = 12; if(sel.anchorNode.parentElement.tagName === 'SPAN' && sel.anchorNode.parentElement.style.fontSize) cur = parseInt(sel.anchorNode.parentElement.style.fontSize); let idx = Config.fontScale.findIndex(s => s >= cur); if (idx === -1) idx = 2; let nIdx = Math.max(0, Math.min(Config.fontScale.length - 1, idx + step)); const nSize = Config.fontScale[nIdx] + 'pt'; App.Format.setSize(nSize); App.Dom.fontSelect.value = nSize; },
+            // 🟢 v8.0 更新：stepSize 智慧歸位邏輯
+            stepSize: (step) => { 
+                const sel = window.getSelection(); 
+                if (sel.isCollapsed) return alert('請先選字'); 
+                
+                let currentPt = 12;
+                if(sel.anchorNode.parentElement.tagName === 'SPAN' && sel.anchorNode.parentElement.style.fontSize) {
+                    currentPt = parseInt(sel.anchorNode.parentElement.style.fontSize);
+                } else {
+                    const computed = window.getComputedStyle(sel.anchorNode.parentElement).fontSize;
+                    // 將 px 轉為 pt (1px = 0.75pt)
+                    if(computed) currentPt = Math.round(parseFloat(computed) * 0.75);
+                }
+
+                // 智慧尋找下一階 (Smart Snap)
+                // 如果是 A+ (step=1)，找第一個比現在大的
+                // 如果是 A- (step=-1)，找最後一個比現在小的
+                let newSize = 12;
+                if (step > 0) {
+                    const next = Config.fontScale.find(s => s > currentPt);
+                    newSize = next ? next : Config.fontScale[Config.fontScale.length - 1];
+                } else {
+                    const prev = [...Config.fontScale].reverse().find(s => s < currentPt);
+                    newSize = prev ? prev : Config.fontScale[0];
+                }
+
+                const sizeStr = newSize + 'pt';
+                App.Format.setSize(sizeStr);
+                App.Dom.fontSelect.value = sizeStr;
+            },
             color: (c) => App.Format.cmd('foreColor', c), highlight: (c) => { document.execCommand('hiliteColor', false, c) || document.execCommand('backColor', false, c); App.state.isAutoSync=false; },
             removeColor: () => { document.execCommand('foreColor', false, '#333333'); App.state.isAutoSync=false; },
             removeHighlight: () => { document.execCommand('backColor', false, 'transparent'); App.state.isAutoSync=false; },
