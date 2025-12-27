@@ -1,5 +1,5 @@
-// sw.js - v7.8 (Restore Function Logic Fix)
-const CACHE_NAME = 'fluo-v7.8'; 
+// sw.js - v8.0 (Standard Typography Scale)
+const CACHE_NAME = 'fluo-v8.0'; 
 const ASSETS = [
   './',
   './index.html',
