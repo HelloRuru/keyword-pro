@@ -8,7 +8,6 @@
 <meta name="description" content="專為內容創作者設計的日系數位文房具。具備 PWA 離線寫作、SEO 關鍵字密度檢測、Google Docs 格式無縫貼上功能。">
 <meta name="robots" content="index, follow">
 <meta property="og:title" content="蛍光ペン PRO">
-<meta property="og:description" content="讓寫作回歸優雅的數位文具。">
 
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#F9F8F4">
@@ -16,16 +15,16 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='none'><path d='M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z' stroke='%232B4B65' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 180V320' stroke='%232B4B65' stroke-width='24' stroke-linecap='round'/><circle cx='256' cy='370' r='24' fill='%23BF1E33'/></svg>">
 
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Shippori+Mincho:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <script>
-  // 智慧右鍵：編輯區可用，UI區鎖定
+  // 智慧右鍵
   document.addEventListener('contextmenu', e => {
     const isEditable = e.target.closest('textarea, input, [contenteditable="true"]');
     if (isEditable) return; 
     e.preventDefault();     
   });
-  // 禁止 Ctrl+S (另存)，但允許 F12 (除錯)
+  // 禁止 Ctrl+S
   document.addEventListener('keydown', e => {
     if((e.ctrlKey && ['s','S','u','U'].includes(e.key))){ e.preventDefault(); }
   });
@@ -38,16 +37,16 @@
 <style>
   /* --- 日系色票系統 --- */
   :root {
-    --bg-canvas: #F9F8F4; /* 生成色 */
-    --bg-sidebar: #FFFFFF; /* 胡粉 */
+    --bg-canvas: #F9F8F4; 
+    --bg-sidebar: #FFFFFF; 
     --border-color: #E0E0E0;
-    --c-ink: #333333;      /* 墨色 */
-    --c-sub: #666666;      /* 鈍色 */
-    --c-accent: #2B4B65;   /* 藍鉄 */
-    --c-highlight: #BF1E33;/* 茜色 */
-    --font-serif: 'Shippori Mincho', serif;
-    --font-sans: 'Zen Kaku Gothic New', sans-serif;
-    --font-editor: 'Noto Sans TC', sans-serif;
+    --c-ink: #333333;      
+    --c-sub: #666666;      
+    --c-accent: #2B4B65;   
+    --c-highlight: #BF1E33;
+    --font-serif: 'Shippori Mincho', serif; /* 日系襯線體 (按鈕/標題) */
+    --font-sans: 'Zen Kaku Gothic New', sans-serif; /* 介面用 */
+    --font-editor: 'Noto Sans TC', sans-serif; /* 編輯區 */
   }
   [data-theme="dark"] {
     --bg-canvas: #1A1A1A; --bg-sidebar: #242424; --border-color: #444;
@@ -57,13 +56,7 @@
   body { background: var(--bg-canvas); color: var(--c-ink); font-family: var(--font-sans); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
   
   /* 稿紙背景 */
-  .bg-grid { 
-    position: fixed; inset: 0; 
-    background-image: linear-gradient(#E5E5E5 1px, transparent 1px), linear-gradient(90deg, #E5E5E5 1px, transparent 1px); 
-    background-size: 24px 24px; 
-    opacity: 0.5; 
-    pointer-events: none; z-index: 0; 
-  }
+  .bg-grid { position: fixed; inset: 0; background-image: linear-gradient(#E5E5E5 1px, transparent 1px), linear-gradient(90deg, #E5E5E5 1px, transparent 1px); background-size: 24px 24px; opacity: 0.5; pointer-events: none; z-index: 0; }
   [data-theme="dark"] .bg-grid { opacity: 0.08; background-image: linear-gradient(#555 1px, transparent 1px), linear-gradient(90deg, #555 1px, transparent 1px); }
 
   .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -102,7 +95,7 @@
   
   .color-dot { width: 18px; height: 18px; border-radius: 50%; cursor: pointer; border: 2px solid var(--bg-sidebar); box-shadow: 0 0 0 1px var(--border-color); flex-shrink: 0; transition: transform 0.1s; display: flex; align-items: center; justify-content: center; }
   .color-dot:active { transform: scale(0.9); }
-  .color-none { border: 1px solid #CCC; background: transparent; } /* 無色按鈕樣式 */
+  .color-none { border: 1px solid #CCC; background: transparent; }
   .color-none svg { width: 10px; height: 10px; color: #999; }
 
   /* 編輯紙張 */
@@ -162,19 +155,24 @@
 
   <div class="flex-1 flex overflow-hidden relative">
     <aside id="tabInput" class="sidebar w-full md:w-[320px] lg:w-[360px] custom-scroll overflow-y-auto p-5 hidden md:flex flex-col h-full">
-      <div class="flex items-center gap-3 mb-6">
-        <svg class="w-8 h-8 text-[var(--c-accent)]" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="20"><path d="M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z" stroke='currentColor' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 180V320' stroke='currentColor' stroke-width='24' stroke-linecap='round'/><circle cx='256' cy='370' r='24' fill='%23BF1E33'/></svg>
-        <div>
-          <h1 class="text-lg font-bold font-serif">蛍光ペン <span class="text-xs text-[var(--c-highlight)] font-sans">PRO</span></h1>
-          <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v6.2</p>
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+          <svg class="w-8 h-8 text-[var(--c-accent)]" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="20"><path d="M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z" stroke='currentColor' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 180V320' stroke='currentColor' stroke-width='24' stroke-linecap='round'/><circle cx='256' cy='370' r='24' fill='%23BF1E33'/></svg>
+          <div>
+            <h1 class="text-lg font-bold font-serif">蛍光ペン <span class="text-xs text-[var(--c-highlight)] font-sans">PRO</span></h1>
+            <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v6.3</p>
+          </div>
         </div>
+        <button onclick="App.UI.toggleTheme()" class="text-[var(--c-sub)] hover:text-[var(--c-accent)]" title="切換深色模式">
+           <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
       </div>
 
       <div class="flex-1 flex flex-col gap-4">
         <div>
           <div class="flex justify-between items-baseline mb-2">
             <h3 class="font-serif font-bold text-sm border-l-4 border-[var(--c-accent)] pl-2">原文輸入</h3>
-            <button onclick="App.Core.restore()" class="text-[10px] text-blue-500 hover:underline">還原</button>
+            <button onclick="App.Core.restore()" class="text-[10px] text-blue-500 hover:underline font-serif">還原</button>
           </div>
           <textarea id="sourceText" class="input-area h-48" placeholder="在此貼上文章..."></textarea>
         </div>
@@ -193,18 +191,18 @@
           ⟳ 一鍵標註 (Sync & Check)
         </button>
         
-        <button onclick="App.Core.copyToDocs()" class="w-full py-2 border border-[var(--c-accent)] text-[var(--c-accent)] rounded hover:bg-blue-50 transition text-sm flex justify-center items-center gap-2">
+        <button onclick="App.Core.copyToDocs()" class="w-full py-2 border border-[var(--c-accent)] text-[var(--c-accent)] rounded hover:bg-blue-50 transition text-sm flex justify-center items-center gap-2 font-serif">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
           複製到 Docs (格式鎖定)
         </button>
         
         <div class="grid grid-cols-2 gap-2 pt-2 border-t border-[var(--border-color)]">
-           <button onclick="App.Storage.clear('source')" class="py-1 text-xs text-gray-500 border border-gray-200 rounded hover:text-red-500">清空原文</button>
-           <button onclick="App.Storage.clear('kw')" class="py-1 text-xs text-gray-500 border border-gray-200 rounded hover:text-red-500">清空關鍵字</button>
-           <button onclick="App.Storage.clear('all')" class="py-1 text-xs text-white bg-gray-400 rounded hover:bg-red-500">全部重置</button>
-           <button onclick="App.Storage.downloadBackup()" class="py-1 text-xs text-[var(--c-accent)] border border-[var(--c-accent)] rounded hover:bg-blue-50">下載備份</button>
+           <button onclick="App.Storage.clear('source')" class="py-1 text-xs text-gray-500 border border-gray-200 rounded hover:text-red-500 font-serif">清空原文</button>
+           <button onclick="App.Storage.clear('kw')" class="py-1 text-xs text-gray-500 border border-gray-200 rounded hover:text-red-500 font-serif">清空關鍵字</button>
+           <button onclick="App.Storage.clear('all')" class="py-1 text-xs text-white bg-gray-400 rounded hover:bg-red-500 font-serif">全部重置</button>
+           <button onclick="App.Storage.downloadBackup()" class="py-1 text-xs text-[var(--c-accent)] border border-[var(--c-accent)] rounded hover:bg-blue-50 font-serif">下載備份</button>
         </div>
-        <p class="text-[9px] text-center text-gray-300 mt-2">Production by Kaoru Tsai © 2025</p>
+        <p class="text-[9px] text-center text-gray-300 mt-2 font-serif">Production by Kaoru Tsai © 2025</p>
       </div>
     </aside>
 
@@ -213,9 +211,15 @@
         <button onmousedown="event.preventDefault()" onclick="document.execCommand('undo')" class="tool-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg></button>
         <button onmousedown="event.preventDefault()" onclick="document.execCommand('redo')" class="tool-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l6 3.7"/></svg></button>
         <div class="tool-sep"></div>
-        <button onmousedown="event.preventDefault()" onclick="App.Format.cmd('formatBlock','h2')" class="tool-btn font-bold text-lg">H2</button>
-        <button onmousedown="event.preventDefault()" onclick="App.Format.cmd('formatBlock','h3')" class="tool-btn font-bold text-base">H3</button>
-        <button onmousedown="event.preventDefault()" onclick="App.Format.cmd('formatBlock','p')" class="tool-btn">P</button>
+        
+        <button onmousedown="event.preventDefault()" onclick="document.execCommand('bold')" class="tool-btn font-serif font-bold text-lg" title="粗體 (Bold)">B</button>
+        <button onmousedown="event.preventDefault()" onclick="document.execCommand('italic')" class="tool-btn font-serif italic text-lg" title="斜體 (Italic)">I</button>
+        <button onmousedown="event.preventDefault()" onclick="document.execCommand('underline')" class="tool-btn font-serif underline text-lg" title="底線 (Underline)">U</button>
+        <div class="tool-sep"></div>
+
+        <button onmousedown="event.preventDefault()" onclick="App.Format.cmd('formatBlock','h2')" class="tool-btn font-bold text-lg font-serif">H2</button>
+        <button onmousedown="event.preventDefault()" onclick="App.Format.cmd('formatBlock','h3')" class="tool-btn font-bold text-base font-serif">H3</button>
+        <button onmousedown="event.preventDefault()" onclick="App.Format.cmd('formatBlock','p')" class="tool-btn font-serif">P</button>
         <div class="tool-sep"></div>
         <select onchange="App.Format.size(this.value)" class="h-8 border border-[var(--border-color)] rounded text-xs bg-[var(--bg-sidebar)] px-1 outline-none font-sans">
           <option value="10pt">10</option><option value="11pt">11</option><option value="12pt" selected>12</option><option value="14pt">14</option><option value="18pt">18</option>
@@ -267,9 +271,7 @@
   </nav>
 
   <script>
-    const Config = {
-        titles: (kw) => [`${kw}懶人包：2025最新攻略`, `為什麼${kw}這麼受歡迎？`, `${kw}完全解析：新手必看`]
-    };
+    const Config = { titles: (kw) => [] }; // Simplified
 
     const Storage = {
         save: (key, val) => {
@@ -277,27 +279,36 @@
             App.UI.showSaved();
         },
         get: (key) => localStorage.getItem(key),
+        // 🟢 徹底修復：清除邏輯與確認視窗
         clear: (type) => { 
-            let msg = '確定要清除？';
-            if(type === 'source') msg = '確定清空左側原文？';
-            if(type === 'kw') msg = '確定清空關鍵字？';
-            if(type === 'all') msg = '⚠️ 確定全部重置？(無法復原)';
+            let msg = '';
+            if(type === 'source') msg = '確定清空【原文輸入】？';
+            else if(type === 'kw') msg = '確定清空【關鍵字】？';
+            else if(type === 'all') msg = '⚠️ 警告：確定要【全部重置】嗎？這將無法復原。';
+            
             if(!confirm(msg)) return;
 
             if(type === 'source' || type === 'all') { Dom.source.value = ''; Storage.save('fluo_src', ''); }
             if(type === 'kw' || type === 'all') { Dom.kw.value = ''; Storage.save('fluo_kw', ''); }
-            if(type === 'all') { Dom.editor.innerHTML = ''; }
+            if(type === 'all') { Dom.editor.innerHTML = ''; Storage.save('fluo_temp', ''); }
+            
             App.Core.forceSync();
         },
+        // 🟢 徹底修復：備份下載 (UTF-8 BOM)
         downloadBackup: () => { 
-            const blob = new Blob([`
-                <html><head><meta charset="UTF-8"><title>Backup</title></head>
-                <body>${Dom.editor.innerHTML}</body></html>
-            `], {type: "text/html;charset=utf-8"});
+            const htmlContent = `
+                <!DOCTYPE html><html><head><meta charset="UTF-8"><title>Backup - 蛍光ペン PRO</title></head>
+                <body style="font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px;">
+                ${Dom.editor.innerHTML}
+                </body></html>`;
+            
+            const blob = new Blob([htmlContent], {type: "text/html;charset=utf-8"});
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = `fluo_backup_${new Date().toISOString().slice(0,10)}.html`;
+            document.body.appendChild(a); // FireFox 需要加入 body 才能點擊
             a.click();
+            document.body.removeChild(a);
         }
     };
 
@@ -314,7 +325,12 @@
 
             Dom.source.addEventListener('input', () => { App.state.isAutoSync=true; App.Core.runSync(); });
             Dom.kw.addEventListener('input', () => { App.Core.runSync(); });
-            Dom.editor.addEventListener('input', () => { App.state.isAutoSync=false; App.UI.updateStats(); Storage.save('fluo_temp', Dom.editor.innerHTML); });
+            // 輸入即存檔
+            Dom.editor.addEventListener('input', () => { 
+                App.state.isAutoSync=false; 
+                App.UI.updateStats(); 
+                Storage.save('fluo_temp', Dom.editor.innerHTML); 
+            });
             document.addEventListener('selectionchange', App.UI.updateStats);
         },
         Core: {
@@ -347,15 +363,13 @@
                 Dom.density.innerHTML = html;
             },
             restore: () => { if(confirm('將預覽區內容還原到輸入框？(會覆蓋左側)')) { Dom.source.value = Dom.editor.innerText; App.state.isAutoSync=true; App.Core.runSync(); }},
-            
             copyToDocs: async () => {
                 const wrapper = document.createElement('div');
                 wrapper.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 12pt; line-height: 1.0; color: #333; background: white;";
                 const clone = Dom.editor.cloneNode(true);
                 const applyStyle = (node) => {
                     if (node.nodeType === 1) {
-                        node.style.lineHeight = "1.0"; 
-                        node.style.marginBottom = "12pt"; 
+                        node.style.lineHeight = "1.0"; node.style.marginBottom = "12pt"; 
                         if(node.tagName === 'H2') { node.style.fontSize="18pt"; node.style.fontWeight="bold"; node.style.color="#2B4B65"; node.style.lineHeight="1.2"; node.style.borderBottom="1px solid #DDD"; }
                         if(node.tagName === 'H3') { node.style.fontSize="14pt"; node.style.fontWeight="bold"; node.style.color="#333"; node.style.lineHeight="1.2"; node.style.borderLeft="4px solid #BF1E33"; node.style.paddingLeft="8px"; }
                     }
@@ -382,7 +396,6 @@
             },
             color: (c) => App.Format.cmd('foreColor', c),
             highlight: (c) => { document.execCommand('hiliteColor', false, c) || document.execCommand('backColor', false, c); App.state.isAutoSync=false; },
-            // 🟢 新增：重置顏色功能
             removeColor: () => { document.execCommand('foreColor', false, '#333333'); App.state.isAutoSync=false; },
             removeHighlight: () => { document.execCommand('backColor', false, 'transparent'); App.state.isAutoSync=false; },
             remove: () => { App.Format.cmd('removeFormat'); App.Format.cmd('backColor', 'transparent'); }
@@ -428,8 +441,10 @@
             }
         }
     };
-    document.addEventListener('DOMContentLoaded', App.Init);
+    
+    // 確保 App 掛載到 window (解決全域呼叫問題)
     window.App = App;
+    document.addEventListener('DOMContentLoaded', App.Init);
   </script>
 </body>
 </html>
