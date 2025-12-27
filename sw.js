@@ -1,5 +1,5 @@
-// sw.js - v7.7 (Mobile Layout & Button Feedback Fix)
-const CACHE_NAME = 'fluo-v7.7'; 
+// sw.js - v7.8 (Restore Function Logic Fix)
+const CACHE_NAME = 'fluo-v7.8'; 
 const ASSETS = [
   './',
   './index.html',
