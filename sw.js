@@ -1,5 +1,5 @@
-// sw.js - v8.2 (SEO Tags Restoration)
-const CACHE_NAME = 'fluo-v8.2'; 
+// sw.js - v8.4 (Highlight Algorithm Fix)
+const CACHE_NAME = 'fluo-v8.4'; 
 const ASSETS = [
   './',
   './index.html',
