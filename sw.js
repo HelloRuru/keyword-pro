@@ -1,4 +1,4 @@
-// sw.js - v6.3 (Fix Buttons & Add Styles)
+// sw.js - v6.3 (Fix Deploy Error)
 const CACHE_NAME = 'fluo-v6.3'; 
 const ASSETS = [
   './',
