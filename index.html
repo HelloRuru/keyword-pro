@@ -5,11 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>蛍光ペン PRO | SEO文案數位工具</title>
-<meta name="description" content="專為內容創作者設計的日系數位文房具。具備 PWA 離線寫作、SEO 關鍵字密度檢測、Google Docs 格式無縫貼上功能。">
-<meta name="keywords" content="SEO工具, 文案寫作, 字數統計, Google Docs 排版, 數位文具, PWA">
-<meta name="author" content="Kaoru Tsai">
+<meta name="description" content="日系極簡 SEO 文案工具。">
+<meta name="robots" content="index, follow">
 <meta property="og:title" content="蛍光ペン PRO">
-<meta property="og:description" content="讓寫作回歸優雅的數位文具。">
 
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#F9F8F4">
@@ -17,7 +15,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='none'><path d='M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z' stroke='%232B4B65' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 180V320' stroke='%232B4B65' stroke-width='24' stroke-linecap='round'/><circle cx='256' cy='370' r='24' fill='%23BF1E33'/></svg>">
 
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Shippori+Mincho:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <script>
   // 智慧右鍵：編輯區可用，UI區鎖定
@@ -26,65 +24,51 @@
     if (isEditable) return; 
     e.preventDefault();     
   });
-  // 禁止 Ctrl+S (另存)，但允許 F12 (除錯)
+  // 禁止 Ctrl+S (另存)，允許 F12
   document.addEventListener('keydown', e => {
     if((e.ctrlKey && ['s','S','u','U'].includes(e.key))){ e.preventDefault(); }
   });
-  // PWA Register
+  // PWA
   if ('serviceWorker' in navigator) {
      window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(e => console.log('SW Fail')); });
   }
 </script>
 
 <style>
-  /* --- 日系色票系統 (Colordic.org) --- */
   :root {
-    --bg-canvas: #F9F8F4; /* 生成色 (Ecru) - 紙張感 */
-    --bg-sidebar: #FFFFFF; /* 胡粉 (Gofun) - 純白 */
-    --border-color: #E0E0E0;
-    --c-ink: #333333;      /* 墨色 (Sumi) */
-    --c-sub: #666666;      /* 鈍色 (Nibi) */
-    --c-accent: #2B4B65;   /* 藍鉄 (Aitetsu) - 主視覺 */
-    --c-highlight: #BF1E33;/* 茜色 (Akane) - 強調色 */
-    --font-serif: 'Shippori Mincho', serif;
-    --font-sans: 'Zen Kaku Gothic New', sans-serif;
-    --font-editor: 'Noto Sans TC', sans-serif; /* 編輯區專用 */
+    --bg-canvas: #F9F8F4; --bg-sidebar: #FFFFFF; --border-color: #E0E0E0;
+    --c-ink: #333333; --c-sub: #666666; --c-accent: #2B4B65; --c-highlight: #BF1E33;
+    --font-serif: 'Shippori Mincho', serif; /* 標題用 */
+    --font-sans: 'Zen Kaku Gothic New', sans-serif; /* 介面用 */
+    --font-editor: 'Zen Kaku Gothic New', sans-serif; /* 內文編輯用 (日系黑體) */
   }
   [data-theme="dark"] {
-    --bg-canvas: #1A1A1A; --bg-sidebar: #242424; --border-color: #444;
+    --bg-canvas: #1A1A1A; --bg-sidebar: #242424; --border-color: #333;
     --c-ink: #E0E0E0; --c-sub: #999; --c-accent: #8AB4D6; --c-highlight: #FF6B6B;
   }
 
   body { background: var(--bg-canvas); color: var(--c-ink); font-family: var(--font-sans); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
   
-  /* 🟢 稿紙背景 (Draft Grid) - 修復可見度 */
-  .bg-grid { 
-    position: fixed; inset: 0; 
-    background-image: linear-gradient(#E5E5E5 1px, transparent 1px), linear-gradient(90deg, #E5E5E5 1px, transparent 1px); 
-    background-size: 24px 24px; 
-    opacity: 0.5; /* 稍微加深以確保可見 */
-    pointer-events: none; z-index: 0; 
-  }
-  [data-theme="dark"] .bg-grid { opacity: 0.08; background-image: linear-gradient(#555 1px, transparent 1px), linear-gradient(90deg, #555 1px, transparent 1px); }
+  /* 稿紙背景 */
+  .bg-grid { position: fixed; inset: 0; background-image: linear-gradient(#E5E5E5 1px, transparent 1px), linear-gradient(90deg, #E5E5E5 1px, transparent 1px); background-size: 24px 24px; opacity: 0.5; pointer-events: none; z-index: -1; }
+  [data-theme="dark"] .bg-grid { opacity: 0.08; }
 
   .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
   .custom-scroll::-webkit-scrollbar-thumb { background: #CCC; border-radius: 2px; }
 
-  /* 左側側邊欄 */
+  /* 側邊欄 */
   .sidebar { background: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 20; box-shadow: 2px 0 15px rgba(0,0,0,0.03); }
   
-  /* 輸入框 */
   .input-area { width: 100%; background: var(--bg-canvas); border: 1px solid var(--border-color); border-radius: 4px; padding: 12px; font-size: 14px; font-family: var(--font-sans); resize: none; outline: none; transition: 0.2s; line-height: 1.6; }
-  .input-area:focus { border-color: var(--c-accent); background: #FFF; box-shadow: 0 2px 8px rgba(43, 75, 101, 0.1); }
+  .input-area:focus { border-color: var(--c-accent); background: #FFF; }
 
-  /* 關鍵字密度標籤 */
   .density-panel { background: var(--bg-canvas); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; margin-bottom: 10px; max-height: 120px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 6px; }
   .kw-tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; background: #FFF; border: 1px solid var(--border-color); color: var(--c-sub); display: flex; align-items: center; gap: 4px; cursor: default; }
   .kw-tag .count { font-weight: 800; color: var(--c-accent); }
-  .kw-tag.good { border-color: #C6F6D5; background: #F0FFF4; color: #276749; } /* 綠色: 密度適中 */
-  .kw-tag.missing { border-color: #FECACA; background: #FFF5F5; color: #C9171E; } /* 紅色: 缺失 */
+  .kw-tag.good { border-color: #C6F6D5; background: #F0FFF4; color: #276749; }
+  .kw-tag.missing { border-color: #FECACA; background: #FFF5F5; color: #C9171E; }
 
-  /* 右側預覽區 */
+  /* 預覽區 */
   .preview-container { flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden; z-index: 10; }
   
   /* 長條形工具列 (Ribbon) */
@@ -101,37 +85,36 @@
   }
   .tool-btn:hover { background: var(--bg-canvas); color: var(--c-accent); border-color: var(--border-color); }
   .tool-sep { width: 1px; height: 20px; background: var(--border-color); flex-shrink: 0; }
+  
   .color-dot { width: 18px; height: 18px; border-radius: 50%; cursor: pointer; border: 2px solid var(--bg-sidebar); box-shadow: 0 0 0 1px var(--border-color); flex-shrink: 0; transition: transform 0.1s; }
   .color-dot:active { transform: scale(0.9); }
 
-  /* 編輯紙張 */
+  /* 編輯紙張 - 字體美化 */
   .editor-paper { 
     width: 100%; max-width: 800px; 
-    min-height: calc(100vh - 140px); /* 消除下方多餘空白 */
+    min-height: calc(100vh - 140px); 
     margin: 0 auto; 
     background: var(--bg-sidebar); padding: 60px 80px; 
-    outline: none; font-family: var(--font-editor); 
-    font-size: 12pt; line-height: 1.6; /* 網頁閱讀舒適行高 */
+    outline: none; 
+    font-family: var(--font-editor); /* 日系黑體 */
+    font-size: 12pt; line-height: 1.6; 
     color: var(--c-ink); text-align: justify; 
     box-shadow: 0 0 40px rgba(0,0,0,0.03);
   }
   
-  /* 樣式呈現 (Block Display 確保不跑版) */
-  .editor-paper h2 { font-size: 18pt; font-weight: 700; color: var(--c-accent); border-bottom: 1px solid #DDD; padding-bottom: 6px; margin: 24px 0 12px 0; display: block; line-height: 1.4; }
-  .editor-paper h3 { font-size: 14pt; font-weight: 700; color: var(--c-ink); border-left: 4px solid var(--c-highlight); padding-left: 10px; margin: 18px 0 10px 0; display: block; line-height: 1.4; }
+  .editor-paper h2 { font-family: var(--font-serif); font-size: 18pt; font-weight: 700; color: var(--c-accent); border-bottom: 1px solid #DDD; padding-bottom: 6px; margin: 24px 0 12px 0; display: block; line-height: 1.4; }
+  .editor-paper h3 { font-family: var(--font-serif); font-size: 14pt; font-weight: 700; color: var(--c-ink); border-left: 4px solid var(--c-highlight); padding-left: 10px; margin: 18px 0 10px 0; display: block; line-height: 1.4; }
   .editor-paper p { margin-bottom: 12pt; display: block; }
   .highlight-pulse { background-color: rgba(255, 255, 0, 0.4); box-shadow: 0 0 8px rgba(255, 255, 0, 0.6); }
 
-  /* 底部狀態 */
   .stats-bar { background: var(--bg-sidebar); border-top: 1px solid var(--border-color); padding: 8px 20px; font-size: 11px; color: var(--c-sub); display: flex; justify-content: space-between; align-items: center; }
 
   /* 手機浮動選單 */
   .floating-menu { position: fixed; z-index: 999; background: var(--bg-sidebar); border: 1px solid var(--border-color); border-radius: 50px; padding: 6px 12px; display: flex; gap: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); opacity: 0; pointer-events: none; transform: translateY(10px); transition: 0.2s; }
   .floating-menu.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
 
-  /* RWD 設定 */
   @media (max-width: 768px) {
-    .sidebar { display: none; } /* 手機隱藏左側 */
+    .sidebar { display: none; }
     .editor-paper { padding: 30px 20px; width: 100%; box-shadow: none; }
     .mobile-tab-bar { display: flex; }
     .toolbar { padding: 8px 10px; }
@@ -165,7 +148,7 @@
         <svg class="w-8 h-8 text-[var(--c-accent)]" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="20"><circle cx="256" cy="256" r="236"/><path d="M256 100v200M180 300h152"/></svg>
         <div>
           <h1 class="text-lg font-bold font-serif">蛍光ペン <span class="text-xs text-[var(--c-highlight)] font-sans">PRO</span></h1>
-          <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v6.0</p>
+          <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v6.1</p>
         </div>
       </div>
 
@@ -175,12 +158,12 @@
             <h3 class="font-serif font-bold text-sm border-l-4 border-[var(--c-accent)] pl-2">原文輸入</h3>
             <button onclick="App.Core.restore()" class="text-[10px] text-blue-500 hover:underline">還原</button>
           </div>
-          <textarea id="sourceText" class="input-area h-48" placeholder="請在此貼上您的文章草稿..."></textarea>
+          <textarea id="sourceText" class="input-area h-48" placeholder="在此貼上文章..."></textarea>
         </div>
 
         <div>
           <h3 class="font-serif font-bold text-sm border-l-4 border-[var(--c-highlight)] pl-2 mb-2">SEO 關鍵字</h3>
-          <textarea id="kwList" class="input-area h-20 mb-2" placeholder="輸入關鍵字 (一行一個) 以進行密度檢測"></textarea>
+          <textarea id="kwList" class="input-area h-20 mb-2" placeholder="關鍵字 (一行一個)"></textarea>
           <div id="densityPanel" class="density-panel custom-scroll">
              <span class="text-xs text-gray-400 w-full text-center py-2">等待輸入...</span>
           </div>
@@ -197,9 +180,11 @@
           複製到 Docs (格式鎖定)
         </button>
         
-        <div class="flex gap-2 pt-2 border-t border-[var(--border-color)]">
-           <button onclick="App.Storage.clear('all')" class="flex-1 py-1 text-xs text-gray-400 hover:text-red-500">重置</button>
-           <button onclick="App.Storage.downloadBackup()" class="flex-1 py-1 text-xs text-gray-400 hover:text-blue-500">備份</button>
+        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-[var(--border-color)]">
+           <button onclick="App.Storage.clear('source')" class="py-1 text-xs text-gray-500 border border-gray-200 rounded hover:text-red-500">清空原文</button>
+           <button onclick="App.Storage.clear('kw')" class="py-1 text-xs text-gray-500 border border-gray-200 rounded hover:text-red-500">清空關鍵字</button>
+           <button onclick="App.Storage.clear('all')" class="py-1 text-xs text-white bg-gray-400 rounded hover:bg-red-500">全部重置</button>
+           <button onclick="App.Storage.downloadBackup()" class="py-1 text-xs text-[var(--c-accent)] border border-[var(--c-accent)] rounded hover:bg-blue-50">下載備份</button>
         </div>
         <p class="text-[9px] text-center text-gray-300 mt-2">Production by Kaoru Tsai © 2025</p>
       </div>
@@ -207,34 +192,34 @@
 
     <main id="tabPreview" class="preview-container w-full h-full">
       <div class="toolbar custom-scroll">
-        <button onclick="document.execCommand('undo')" class="tool-btn" title="復原"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg></button>
-        <button onclick="document.execCommand('redo')" class="tool-btn" title="重做"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l6 3.7"/></svg></button>
+        <button onmousedown="event.preventDefault()" onclick="document.execCommand('undo')" class="tool-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg></button>
+        <button onmousedown="event.preventDefault()" onclick="document.execCommand('redo')" class="tool-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l6 3.7"/></svg></button>
         <div class="tool-sep"></div>
-        <button onclick="App.Format.cmd('formatBlock','h2')" class="tool-btn font-bold text-lg" title="設定為標題 H2">H2</button>
-        <button onclick="App.Format.cmd('formatBlock','h3')" class="tool-btn font-bold text-base" title="設定為子題 H3">H3</button>
-        <button onclick="App.Format.cmd('formatBlock','p')" class="tool-btn" title="設定為內文 P">P</button>
+        <button onmousedown="event.preventDefault()" onclick="App.Format.cmd('formatBlock','h2')" class="tool-btn font-bold text-lg">H2</button>
+        <button onmousedown="event.preventDefault()" onclick="App.Format.cmd('formatBlock','h3')" class="tool-btn font-bold text-base">H3</button>
+        <button onmousedown="event.preventDefault()" onclick="App.Format.cmd('formatBlock','p')" class="tool-btn">P</button>
         <div class="tool-sep"></div>
-        <select onchange="App.Format.size(this.value)" class="h-8 border border-[var(--border-color)] rounded text-xs bg-[var(--bg-sidebar)] px-1 outline-none font-sans" title="字級">
+        <select onchange="App.Format.size(this.value)" class="h-8 border border-[var(--border-color)] rounded text-xs bg-[var(--bg-sidebar)] px-1 outline-none font-sans">
           <option value="10pt">10</option><option value="11pt">11</option><option value="12pt" selected>12</option><option value="14pt">14</option><option value="18pt">18</option>
         </select>
         <div class="tool-sep"></div>
         <div class="flex gap-2 px-1">
-          <div onclick="App.Format.color('#333333')" class="color-dot bg-[#333333]" title="墨色"></div>
-          <div onclick="App.Format.color('#2B4B65')" class="color-dot bg-[#2B4B65]" title="藍鉄"></div>
-          <div onclick="App.Format.color('#BF1E33')" class="color-dot bg-[#BF1E33]" title="茜色"></div>
-          <div onclick="App.Format.color('#2F5D50')" class="color-dot bg-[#2F5D50]" title="千歲綠"></div>
-          <div onclick="App.Format.color('#6A4C9C')" class="color-dot bg-[#6A4C9C]" title="京紫"></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.color('#333333')" class="color-dot bg-[#333333]" title="墨色"></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.color('#2B4B65')" class="color-dot bg-[#2B4B65]" title="藍鉄"></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.color('#BF1E33')" class="color-dot bg-[#BF1E33]" title="茜色"></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.color('#2F5D50')" class="color-dot bg-[#2F5D50]" title="千歲綠"></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.color('#6A4C9C')" class="color-dot bg-[#6A4C9C]" title="京紫"></div>
         </div>
         <div class="tool-sep"></div>
         <div class="flex gap-2 px-1">
-          <div onclick="App.Format.highlight('#F0DC70')" class="color-dot bg-[#F0DC70]" title="刈安"></div>
-          <div onclick="App.Format.highlight('#F5B199')" class="color-dot bg-[#F5B199]" title="桃色"></div>
-          <div onclick="App.Format.highlight('#A0D8EF')" class="color-dot bg-[#A0D8EF]" title="空色"></div>
-          <div onclick="App.Format.highlight('#C6Eac5')" class="color-dot bg-[#C6Eac5]" title="薄綠"></div>
-          <div onclick="App.Format.highlight('#E0C8F2')" class="color-dot bg-[#E0C8F2]" title="藤色"></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#F0DC70')" class="color-dot bg-[#F0DC70]" title="刈安"></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#F5B199')" class="color-dot bg-[#F5B199]" title="桃色"></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#A0D8EF')" class="color-dot bg-[#A0D8EF]" title="空色"></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#C6Eac5')" class="color-dot bg-[#C6Eac5]" title="薄綠"></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#E0C8F2')" class="color-dot bg-[#E0C8F2]" title="藤色"></div>
         </div>
         <div class="tool-sep"></div>
-        <button onclick="App.Format.remove()" class="tool-btn" title="清除格式"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+        <button onmousedown="event.preventDefault()" onclick="App.Format.remove()" class="tool-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
       </div>
 
       <div class="editor-container custom-scroll">
@@ -243,7 +228,8 @@
 
       <div class="stats-bar">
         <div class="flex gap-4">
-          <span>總字數: <b id="countTotal" class="text-[var(--c-accent)]">0</b></span>
+          <span id="saveStatus" class="text-[var(--c-highlight)] font-bold opacity-0 transition-opacity">已儲存</span>
+          <span>字數: <b id="countTotal">0</b></span>
           <span id="selCountGroup" class="opacity-50">選取: <b id="countSel">0</b></span>
         </div>
         <button id="btnPunc" onclick="App.UI.togglePunctuation()" class="flex items-center gap-1 text-xs px-2 py-1 rounded border hover:bg-gray-100">
@@ -254,27 +240,47 @@
   </div>
 
   <nav class="mobile-tab-bar">
-    <button onclick="App.UI.switchMobileTab('input')" class="tab-btn active" id="tabBtnInput">
-      <svg class="w-5 h-5 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-      編輯來源
-    </button>
-    <button onclick="App.UI.switchMobileTab('preview')" class="tab-btn" id="tabBtnPreview">
-      <svg class="w-5 h-5 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-      即時預覽
-    </button>
+    <button onclick="App.UI.switchMobileTab('input')" class="tab-btn active" id="tabBtnInput">編輯來源</button>
+    <button onclick="App.UI.switchMobileTab('preview')" class="tab-btn" id="tabBtnPreview">即時預覽</button>
   </nav>
 
   <script>
     const Config = {
-        // AI 標題建議 (簡易版)
         titles: (kw) => [`${kw}懶人包：2025最新攻略`, `為什麼${kw}這麼受歡迎？`, `${kw}完全解析：新手必看`]
     };
 
     const Storage = {
-        save: (key, val) => localStorage.setItem(key, val),
+        save: (key, val) => {
+            localStorage.setItem(key, val);
+            App.UI.showSaved();
+        },
         get: (key) => localStorage.getItem(key),
-        clear: (type) => { if(confirm('確定要全部重置嗎？無法復原。')){ if(type==='all'){ localStorage.clear(); Dom.editor.innerHTML=''; } App.Core.forceSync(); }},
-        downloadBackup: () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([`<html><body>${Dom.editor.innerHTML}</body></html>`], {type:'text/html'})); a.download = `backup_${new Date().toISOString().slice(0,10)}.html`; a.click(); }
+        // 🟢 修復：三種清除模式
+        clear: (type) => { 
+            let msg = '確定要清除？';
+            if(type === 'source') msg = '確定清空左側原文？';
+            if(type === 'kw') msg = '確定清空關鍵字？';
+            if(type === 'all') msg = '⚠️ 確定全部重置？(無法復原)';
+            
+            if(!confirm(msg)) return;
+
+            if(type === 'source' || type === 'all') { Dom.source.value = ''; Storage.save('fluo_src', ''); }
+            if(type === 'kw' || type === 'all') { Dom.kw.value = ''; Storage.save('fluo_kw', ''); }
+            if(type === 'all') { Dom.editor.innerHTML = ''; }
+            
+            App.Core.forceSync();
+        },
+        // 🟢 修復：備份下載
+        downloadBackup: () => { 
+            const blob = new Blob([`
+                <html><head><meta charset="UTF-8"><title>Backup</title></head>
+                <body>${Dom.editor.innerHTML}</body></html>
+            `], {type: "text/html;charset=utf-8"});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `fluo_backup_${new Date().toISOString().slice(0,10)}.html`;
+            a.click();
+        }
     };
 
     let Dom = {};
@@ -282,17 +288,15 @@
     const App = {
         state: { isAutoSync: true, includePunctuation: true },
         Init: () => {
-            Dom = { source: document.getElementById('sourceText'), kw: document.getElementById('kwList'), editor: document.getElementById('editor'), density: document.getElementById('densityPanel'), countTotal: document.getElementById('countTotal'), countSel: document.getElementById('countSel'), puncDot: document.getElementById('puncDot') };
+            Dom = { source: document.getElementById('sourceText'), kw: document.getElementById('kwList'), editor: document.getElementById('editor'), density: document.getElementById('densityPanel'), countTotal: document.getElementById('countTotal'), countSel: document.getElementById('countSel'), puncDot: document.getElementById('puncDot'), saveStatus: document.getElementById('saveStatus') };
 
             if(Storage.get('fluo_src')) Dom.source.value = Storage.get('fluo_src');
             if(Storage.get('fluo_kw')) Dom.kw.value = Storage.get('fluo_kw');
-            App.Core.runSync(); // 初次同步
+            App.Core.runSync();
 
-            // 事件監聽
             Dom.source.addEventListener('input', () => { App.state.isAutoSync=true; App.Core.runSync(); });
             Dom.kw.addEventListener('input', () => { App.Core.runSync(); });
-            // 當在預覽區打字時，暫停左側同步以免覆蓋
-            Dom.editor.addEventListener('input', () => { App.state.isAutoSync=false; App.UI.updateStats(); });
+            Dom.editor.addEventListener('input', () => { App.state.isAutoSync=false; App.UI.updateStats(); Storage.save('fluo_temp', Dom.editor.innerHTML); });
             document.addEventListener('selectionchange', App.UI.updateStats);
         },
         Core: {
@@ -300,16 +304,13 @@
                 if(!App.state.isAutoSync) return;
                 const raw = Dom.source.value;
                 const kws = Dom.kw.value.split('\n').filter(k => k.trim());
-                
-                // 1. 轉義與標註
                 let safeText = raw.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
                 kws.forEach(k => { if(k) safeText = safeText.replace(new RegExp(k, 'gi'), `<b style="color:var(--c-highlight)">${k}</b>`); });
                 
-                // 2. 分段邏輯 (<p> Wrap)
                 const html = safeText.split('\n').map(line => line.trim() ? `<p>${line}</p>` : '<p><br></p>').join('');
                 Dom.editor.innerHTML = html || '<p class="text-gray-300">請在左側輸入文字...</p>';
                 
-                App.Core.analyzeDensity(); // 執行密度
+                App.Core.analyzeDensity();
                 Storage.save('fluo_src', raw);
                 Storage.save('fluo_kw', Dom.kw.value);
                 App.UI.updateStats();
@@ -318,12 +319,10 @@
                 const text = Dom.source.value;
                 const kws = Dom.kw.value.split('\n').filter(k => k.trim());
                 if(kws.length === 0) { Dom.density.innerHTML = '<span class="text-xs text-gray-400 w-full text-center py-2">無關鍵字</span>'; return; }
-                
                 let html = '';
                 kws.forEach(kw => {
                     const count = (text.match(new RegExp(kw, 'gi')) || []).length;
                     const density = (text.length > 0) ? ((count * kw.length / text.length) * 100).toFixed(1) : 0;
-                    // 密度判斷：0=缺失(紅)，0.5~5%=良好(綠)
                     let cls = count === 0 ? 'missing' : (density > 0.5 && density < 5 ? 'good' : '');
                     html += `<div class="kw-tag ${cls}">${kw} <span class="count">${count}</span> <span style="opacity:0.6">(${density}%)</span></div>`;
                 });
@@ -331,38 +330,24 @@
             },
             restore: () => { if(confirm('將預覽區內容還原到輸入框？(會覆蓋左側)')) { Dom.source.value = Dom.editor.innerText; App.state.isAutoSync=true; App.Core.runSync(); }},
             
-            // 🟢 複製到 Docs (核心需求：單行行距)
             copyToDocs: async () => {
                 const wrapper = document.createElement('div');
-                // inline style 是 Docs 唯一吃得到的東西
                 wrapper.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 12pt; line-height: 1.0; color: #333; background: white;";
-                
                 const clone = Dom.editor.cloneNode(true);
                 const applyStyle = (node) => {
                     if (node.nodeType === 1) {
-                        // 強制覆蓋行高為 1.0
                         node.style.lineHeight = "1.0"; 
-                        node.style.marginBottom = "12pt"; // 用 margin 模擬段落感
-                        
-                        if(node.tagName === 'H2') { 
-                            node.style.fontSize="18pt"; node.style.fontWeight="bold"; node.style.color="#2B4B65"; 
-                            node.style.lineHeight="1.2"; // 標題稍微鬆一點
-                            node.style.borderBottom="1px solid #DDD";
-                        }
-                        if(node.tagName === 'H3') { 
-                            node.style.fontSize="14pt"; node.style.fontWeight="bold"; node.style.color="#333"; 
-                            node.style.lineHeight="1.2";
-                            node.style.borderLeft="4px solid #BF1E33"; node.style.paddingLeft="8px";
-                        }
+                        node.style.marginBottom = "12pt"; 
+                        if(node.tagName === 'H2') { node.style.fontSize="18pt"; node.style.fontWeight="bold"; node.style.color="#2B4B65"; node.style.lineHeight="1.2"; node.style.borderBottom="1px solid #DDD"; }
+                        if(node.tagName === 'H3') { node.style.fontSize="14pt"; node.style.fontWeight="bold"; node.style.color="#333"; node.style.lineHeight="1.2"; node.style.borderLeft="4px solid #BF1E33"; node.style.paddingLeft="8px"; }
                     }
                     node.childNodes.forEach(applyStyle);
                 };
                 applyStyle(clone);
                 wrapper.innerHTML = clone.innerHTML;
-
                 try {
                     await navigator.clipboard.write([new ClipboardItem({'text/html': new Blob([wrapper.outerHTML],{type:'text/html'}), 'text/plain': new Blob([Dom.editor.innerText],{type:'text/plain'})})]);
-                    alert('✨ 已複製！\n格式：Noto Sans TC / 12pt / 單行行距 (Docs專用)');
+                    alert('✨ 已複製！(Noto Sans TC / 12pt / 單行行距)');
                 } catch(e) { alert('複製失敗，請手動全選複製。'); }
             },
             forceSync: () => { App.state.isAutoSync=true; App.Core.runSync(); }
@@ -389,17 +374,20 @@
                 const sel = window.getSelection().toString();
                 Dom.countSel.innerText = App.state.includePunctuation ? sel.length : sel.replace(/[^\w\u4e00-\u9fa5]/g, '').length;
                 
-                // 手機浮動選單顯示邏輯
                 const floatMenu = document.getElementById('mobileFloatMenu');
                 if(window.innerWidth < 768 && sel.length > 0) {
                     floatMenu.classList.add('show');
-                    // 簡單定位
                     floatMenu.style.top = '100px'; 
                     floatMenu.style.left = '50%';
                     floatMenu.style.transform = 'translateX(-50%)';
                 } else {
                     floatMenu.classList.remove('show');
                 }
+            },
+            // 🟢 修復：儲存狀態顯示
+            showSaved: () => {
+                Dom.saveStatus.style.opacity = '1';
+                setTimeout(() => { Dom.saveStatus.style.opacity = '0'; }, 1500);
             },
             togglePunctuation: () => {
                 App.state.includePunctuation = !App.state.includePunctuation;
@@ -417,12 +405,6 @@
             toggleTheme: () => {
                const isDark = document.body.getAttribute('data-theme') === 'dark';
                document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-            }
-        },
-        AI: {
-            generate: () => {
-               const kw = Dom.kw.value.split('\n')[0] || '您的主題';
-               alert(`💡 標題建議：\n1. 【${kw}】2025 最新攻略\n2. 為什麼你需要 ${kw}？\n3. ${kw} 懶人包總整理`);
             }
         }
     };
