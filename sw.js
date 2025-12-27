@@ -1,5 +1,5 @@
-// sw.js - v6.8 (Font Size Engine Upgrade)
-const CACHE_NAME = 'fluo-v6.8'; 
+// sw.js - v6.9 (Smart Highlight Engine)
+const CACHE_NAME = 'fluo-v6.9'; 
 const ASSETS = [
   './',
   './index.html',
