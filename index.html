@@ -32,46 +32,76 @@
 </script>
 
 <style>
+  /* --- 日系色票系統 (和風配色) --- */
   :root {
-    --bg-canvas: #F9F8F4; --bg-sidebar: #FFFFFF; --border-color: #E0E0E0;
-    --c-ink: #333333; --c-sub: #666666; --c-accent: #2B4B65; --c-highlight: #BF1E33;
-    --font-serif: 'Shippori Mincho', serif; --font-sans: 'Zen Kaku Gothic New', sans-serif; --font-editor: 'Noto Sans TC', sans-serif;
+    /* 白晝模式 */
+    --bg-canvas: #F9F8F4; /* 生成色 */
+    --bg-sidebar: #FFFFFF; /* 胡粉 */
+    --border-color: #E0E0E0;
+    --c-ink: #333333;      /* 墨色 */
+    --c-sub: #666666;      /* 鈍色 */
+    --c-accent: #2B4B65;   /* 藍鉄 */
+    --c-highlight: #BF1E33;/* 茜色 */
+    
+    --font-serif: 'Shippori Mincho', serif;
+    --font-sans: 'Zen Kaku Gothic New', sans-serif;
+    --font-editor: 'Noto Sans TC', sans-serif;
   }
+  
+  /* 🟢 深色模式優化 (Japanese Aesthetic) */
   [data-theme="dark"] {
-    --bg-canvas: #1A1A1A; --bg-sidebar: #242424; --border-color: #444;
-    --c-ink: #E0E0E0; --c-sub: #999; --c-accent: #8AB4D6; --c-highlight: #FF6B6B;
+    --bg-canvas: #202020; /* 消炭色 (Keshi-zumi) - 暖調碳灰 */
+    --bg-sidebar: #2B2B2B; /* 呂色 (Ro-iro) - 深沈黑灰 */
+    --border-color: #3E3E3E;
+    
+    --c-ink: #E6E6E6;      /* 象牙色 (Ivory) - 柔和白 */
+    --c-sub: #9E9E9E;      /* 銀鼠 (Gin-nezumi) */
+    
+    --c-accent: #7DA3C2;   /* 水淺葱 (Mizu-asagi) - 帶灰階的優雅藍 */
+    --c-highlight: #D47070;/* 甚三紅 (Jinzamomi) - 柔和茜紅 */
   }
 
-  body { background: var(--bg-canvas); color: var(--c-ink); font-family: var(--font-sans); height: 100vh; height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
+  body { background: var(--bg-canvas); color: var(--c-ink); font-family: var(--font-sans); height: 100vh; height: 100dvh; overflow: hidden; display: flex; flex-direction: column; transition: background 0.3s, color 0.3s; }
+  
+  /* 背景網格優化 */
   .bg-grid { position: fixed; inset: 0; background-image: linear-gradient(#E5E5E5 1px, transparent 1px), linear-gradient(90deg, #E5E5E5 1px, transparent 1px); background-size: 24px 24px; opacity: 0.5; pointer-events: none; z-index: 0; }
-  [data-theme="dark"] .bg-grid { opacity: 0.08; background-image: linear-gradient(#555 1px, transparent 1px), linear-gradient(90deg, #555 1px, transparent 1px); }
+  [data-theme="dark"] .bg-grid { opacity: 0.05; background-image: linear-gradient(#666 1px, transparent 1px), linear-gradient(90deg, #666 1px, transparent 1px); }
+
   .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
   .custom-scroll::-webkit-scrollbar-thumb { background: #CCC; border-radius: 2px; }
+  [data-theme="dark"] .custom-scroll::-webkit-scrollbar-thumb { background: #555; }
 
-  .sidebar { background: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 20; box-shadow: 2px 0 15px rgba(0,0,0,0.03); }
-  .input-area { width: 100%; background: var(--bg-canvas); border: 1px solid var(--border-color); border-radius: 4px; padding: 12px; font-size: 14px; font-family: var(--font-sans); resize: none; outline: none; transition: 0.2s; line-height: 1.6; }
-  .input-area:focus { border-color: var(--c-accent); background: #FFF; box-shadow: 0 2px 8px rgba(43, 75, 101, 0.1); }
+  .sidebar { background: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 20; box-shadow: 2px 0 15px rgba(0,0,0,0.03); transition: background 0.3s; }
+  
+  .input-area { width: 100%; background: var(--bg-canvas); border: 1px solid var(--border-color); border-radius: 4px; padding: 12px; font-size: 14px; font-family: var(--font-sans); resize: none; outline: none; transition: 0.2s; line-height: 1.6; color: var(--c-ink); }
+  .input-area:focus { border-color: var(--c-accent); background: var(--bg-sidebar); box-shadow: 0 2px 8px rgba(0,0,0, 0.1); }
+
   .density-panel { background: var(--bg-canvas); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; margin-bottom: 10px; max-height: 120px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 6px; }
-  .kw-tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; background: #FFF; border: 1px solid var(--border-color); color: var(--c-sub); display: flex; align-items: center; gap: 4px; cursor: default; }
+  .kw-tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; background: var(--bg-sidebar); border: 1px solid var(--border-color); color: var(--c-sub); display: flex; align-items: center; gap: 4px; cursor: default; }
   .kw-tag .count { font-weight: 800; color: var(--c-accent); }
   .kw-tag.good { border-color: #C6F6D5; background: #F0FFF4; color: #276749; }
   .kw-tag.missing { border-color: #FECACA; background: #FFF5F5; color: #C9171E; }
+  [data-theme="dark"] .kw-tag.good { background: #1C3325; border-color: #276749; color: #81E6D9; }
+  [data-theme="dark"] .kw-tag.missing { background: #3B1C1C; border-color: #742A2A; color: #FC8181; }
 
   .preview-container { flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden; z-index: 10; }
-  .toolbar { background: var(--bg-sidebar); border-bottom: 1px solid var(--border-color); padding: 8px 16px; display: flex; align-items: center; gap: 12px; overflow-x: auto; white-space: nowrap; z-index: 30; }
+  .toolbar { background: var(--bg-sidebar); border-bottom: 1px solid var(--border-color); padding: 8px 16px; display: flex; align-items: center; gap: 12px; overflow-x: auto; white-space: nowrap; z-index: 30; transition: background 0.3s; }
   .tool-btn { display: flex; align-items: center; justify-content: center; height: 32px; min-width: 32px; padding: 0 8px; border-radius: 4px; color: var(--c-sub); font-size: 13px; font-family: var(--font-serif); font-weight: 500; cursor: pointer; border: 1px solid transparent; }
   .tool-btn:hover { background: var(--bg-canvas); color: var(--c-accent); border-color: var(--border-color); }
   .tool-sep { width: 1px; height: 20px; background: var(--border-color); flex-shrink: 0; }
   .color-dot { width: 18px; height: 18px; border-radius: 50%; cursor: pointer; border: 2px solid var(--bg-sidebar); box-shadow: 0 0 0 1px var(--border-color); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-  .color-none { border: 1px solid #CCC; background: transparent; }
-  .color-none svg { width: 10px; height: 10px; color: #999; }
+  .color-none { border: 1px solid var(--c-sub); background: transparent; }
+  .color-none svg { width: 10px; height: 10px; color: var(--c-sub); }
 
-  .editor-paper { width: 100%; max-width: 800px; min-height: calc(100vh - 140px); margin: 0 auto; background: var(--bg-sidebar); padding: 60px 80px; outline: none; font-family: var(--font-editor); font-size: 12pt; line-height: 1.6; color: var(--c-ink); text-align: justify; box-shadow: 0 0 40px rgba(0,0,0,0.03); }
-  .editor-paper h2 { font-family: var(--font-serif); font-size: 18pt; font-weight: 700; color: var(--c-accent); border-bottom: 1px solid #DDD; padding-bottom: 6px; margin: 24px 0 12px 0; display: block; line-height: 1.4; }
+  .editor-paper { width: 100%; max-width: 800px; min-height: calc(100vh - 140px); margin: 0 auto; background: var(--bg-sidebar); padding: 60px 80px; outline: none; font-family: var(--font-editor); font-size: 12pt; line-height: 1.6; color: var(--c-ink); text-align: justify; box-shadow: 0 0 40px rgba(0,0,0,0.03); transition: background 0.3s; }
+  .editor-paper h2 { font-family: var(--font-serif); font-size: 18pt; font-weight: 700; color: var(--c-accent); border-bottom: 1px solid var(--border-color); padding-bottom: 6px; margin: 24px 0 12px 0; display: block; line-height: 1.4; }
   .editor-paper h3 { font-family: var(--font-serif); font-size: 14pt; font-weight: 700; color: var(--c-ink); border-left: 4px solid var(--c-highlight); padding-left: 10px; margin: 18px 0 10px 0; display: block; line-height: 1.4; }
   .editor-paper p { margin-bottom: 12pt; display: block; }
   .highlight-pulse { background-color: rgba(255, 255, 0, 0.4); box-shadow: 0 0 8px rgba(255, 255, 0, 0.6); }
-  .stats-bar { background: var(--bg-sidebar); border-top: 1px solid var(--border-color); padding: 8px 20px; font-size: 11px; color: var(--c-sub); display: flex; justify-content: space-between; align-items: center; }
+  [data-theme="dark"] .highlight-pulse { background-color: rgba(255, 215, 0, 0.2); }
+
+  .stats-bar { background: var(--bg-sidebar); border-top: 1px solid var(--border-color); padding: 8px 20px; font-size: 11px; color: var(--c-sub); display: flex; justify-content: space-between; align-items: center; transition: background 0.3s; }
+  
   .floating-menu { position: fixed; z-index: 999; background: var(--bg-sidebar); border: 1px solid var(--border-color); border-radius: 50px; padding: 6px 12px; display: flex; gap: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); opacity: 0; pointer-events: none; transform: translateY(10px); transition: 0.2s; }
   .floating-menu.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
 
@@ -83,42 +113,42 @@
     .mobile-active-page { display: flex !important; flex-direction: column; height: calc(100dvh - 48px - 50px); overflow: hidden; }
     .mobile-scroll-area { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 20px; }
   }
-  .mobile-tab-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 50px; background: var(--bg-sidebar); border-top: 1px solid var(--border-color); z-index: 50; justify-content: space-around; align-items: center; display: none; padding-bottom: env(safe-area-inset-bottom); }
+  .mobile-tab-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 50px; background: var(--bg-sidebar); border-top: 1px solid var(--border-color); z-index: 50; justify-content: space-around; align-items: center; display: none; padding-bottom: env(safe-area-inset-bottom); transition: background 0.3s; }
   .tab-btn { flex: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; color: var(--c-sub); font-family: var(--font-serif); }
   .tab-btn.active { color: var(--c-highlight); font-weight: bold; background: rgba(0,0,0,0.02); }
+  [data-theme="dark"] .tab-btn.active { background: rgba(255,255,255,0.05); }
 </style>
 </head>
 <body>
   <div class="bg-grid"></div>
 
-  <header class="h-12 md:hidden flex items-center justify-between px-4 bg-[var(--bg-sidebar)] border-b border-[var(--border-color)] sticky top-0 z-40 shrink-0">
+  <header class="h-12 md:hidden flex items-center justify-between px-4 bg-[var(--bg-sidebar)] border-b border-[var(--border-color)] sticky top-0 z-40 shrink-0 transition-colors duration-300">
     <div class="flex items-center gap-2 font-serif text-[var(--c-ink)]">
-      <svg class="w-5 h-5" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="20"><path d="M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z" stroke='%23333' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 180V320' stroke='%23333' stroke-width='24' stroke-linecap='round'/><circle cx='256' cy='370' r='24' fill='%23BF1E33'/></svg>
+      <svg class="w-5 h-5" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="20"><path d="M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z" stroke='currentColor' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 180V320' stroke='currentColor' stroke-width='24' stroke-linecap='round'/><circle cx='256' cy='370' r='24' fill='var(--c-highlight)' stroke="none"/></svg>
       <span>蛍光ペン</span>
     </div>
-    <button onclick="App.UI.toggleTheme()"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+    <button onclick="App.UI.toggleTheme()"><svg class="w-5 h-5 text-[var(--c-sub)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
   </header>
 
   <div id="mobileFloatMenu" class="floating-menu">
      <div onmousedown="event.preventDefault()" onclick="App.Format.removeHighlight()" class="color-dot color-none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
      <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#F0DC70')" class="color-dot bg-[#F0DC70]"></div>
-     <div class="w-[1px] h-4 bg-gray-200"></div>
+     <div class="w-[1px] h-4 bg-gray-200 opacity-50"></div>
      <div onmousedown="event.preventDefault()" onclick="App.Format.removeColor()" class="color-dot color-none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
      <div onmousedown="event.preventDefault()" onclick="App.Format.color('#BF1E33')" class="color-dot bg-[#BF1E33]"></div>
-     <div class="w-[1px] h-4 bg-gray-200"></div>
-     <button onmousedown="event.preventDefault()" onclick="App.Format.remove()" class="text-gray-500"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+     <div class="w-[1px] h-4 bg-gray-200 opacity-50"></div>
+     <button onmousedown="event.preventDefault()" onclick="App.Format.remove()" class="text-[var(--c-sub)]"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
   </div>
 
   <div class="flex-1 flex overflow-hidden relative">
-    
     <aside id="tabInput" class="sidebar flex flex-col w-full md:w-[320px] lg:w-[360px] custom-scroll bg-[var(--bg-sidebar)] z-20 border-r border-[var(--border-color)]">
       <div class="mobile-scroll-area p-5 flex flex-col gap-4">
           <div class="flex items-center justify-between mb-2">
             <div class="flex items-center gap-3">
-              <svg class="w-8 h-8 text-[var(--c-accent)] hidden md:block" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="20"><path d="M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z" stroke='currentColor' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 180V320' stroke='currentColor' stroke-width='24' stroke-linecap='round'/><circle cx='256' cy='370' r='24' fill='%23BF1E33'/></svg>
+              <svg class="w-8 h-8 text-[var(--c-accent)] hidden md:block" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="20"><path d="M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z" stroke='currentColor' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 180V320' stroke='currentColor' stroke-width='24' stroke-linecap='round'/><circle cx='256' cy='370' r='24' fill='var(--c-highlight)' stroke="none"/></svg>
               <div class="hidden md:block">
                 <h1 class="text-lg font-bold font-serif">蛍光ペン <span class="text-xs text-[var(--c-highlight)] font-sans">PRO</span></h1>
-                <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v7.1</p>
+                <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v7.2</p>
               </div>
             </div>
             <button onclick="App.UI.toggleTheme()" class="text-[var(--c-sub)] hover:text-[var(--c-accent)] hidden md:block" title="切換深色模式">
@@ -142,15 +172,15 @@
 
           <div class="mt-4 space-y-3 pb-8">
             <button onclick="App.Core.smartHighlight()" class="w-full py-3 bg-[var(--c-highlight)] text-white font-bold rounded shadow-md hover:opacity-90 transition text-sm font-serif tracking-wide">⟳ 一鍵標註 (Sync & Check)</button>
-            <button onclick="App.Core.copyToDocs()" class="w-full py-2 border border-[var(--c-accent)] text-[var(--c-accent)] rounded hover:bg-blue-50 transition text-sm flex justify-center items-center gap-2 font-serif"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg> 複製到 Docs (格式鎖定)</button>
+            <button onclick="App.Core.copyToDocs()" class="w-full py-2 border border-[var(--c-accent)] text-[var(--c-accent)] rounded hover:bg-blue-50 hover:bg-opacity-10 transition text-sm flex justify-center items-center gap-2 font-serif"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg> 複製到 Docs (格式鎖定)</button>
             <div class="grid grid-cols-2 gap-2 pt-2 border-t border-[var(--border-color)]">
-               <button onclick="App.Storage.clear('source')" class="py-1 text-xs text-gray-500 border border-gray-200 rounded hover:text-red-500 font-serif">清空原文</button>
-               <button onclick="App.Storage.clear('kw')" class="py-1 text-xs text-gray-500 border border-gray-200 rounded hover:text-red-500 font-serif">清空關鍵字</button>
-               <button onclick="App.Storage.download('html')" class="py-1 text-xs text-[var(--c-accent)] border border-[var(--c-accent)] rounded hover:bg-blue-50 font-serif">備份 HTML</button>
-               <button onclick="App.Storage.download('doc')" class="py-1 text-xs text-[var(--c-accent)] border border-[var(--c-accent)] rounded hover:bg-blue-50 font-serif">備份 Word</button>
-               <button onclick="App.Storage.clear('all')" class="col-span-2 py-2 text-xs text-white bg-gray-400 rounded hover:bg-red-500 font-serif">全部重置 (危險)</button>
+               <button onclick="App.Storage.clear('source')" class="py-1 text-xs text-gray-500 border border-gray-200 hover:border-red-500 rounded hover:text-red-500 font-serif transition">清空原文</button>
+               <button onclick="App.Storage.clear('kw')" class="py-1 text-xs text-gray-500 border border-gray-200 hover:border-red-500 rounded hover:text-red-500 font-serif transition">清空關鍵字</button>
+               <button onclick="App.Storage.download('html')" class="py-1 text-xs text-[var(--c-accent)] border border-[var(--c-accent)] rounded hover:bg-[var(--c-accent)] hover:text-white transition font-serif">備份 HTML</button>
+               <button onclick="App.Storage.download('doc')" class="py-1 text-xs text-[var(--c-accent)] border border-[var(--c-accent)] rounded hover:bg-[var(--c-accent)] hover:text-white transition font-serif">備份 Word</button>
+               <button onclick="App.Storage.clear('all')" class="col-span-2 py-2 text-xs text-white bg-gray-400 rounded hover:bg-red-500 transition font-serif">全部重置 (危險)</button>
             </div>
-            <p class="text-[9px] text-center text-gray-300 mt-2 font-serif">Production by Kaoru Tsai © 2025</p>
+            <p class="text-[9px] text-center text-[var(--c-sub)] mt-2 font-serif opacity-60">Production by Kaoru Tsai © 2025</p>
           </div>
       </div>
     </aside>
@@ -170,7 +200,7 @@
         <div class="tool-sep"></div>
         <div class="flex items-center gap-1">
             <button onmousedown="event.preventDefault()" onclick="App.Format.stepSize(-1)" class="tool-btn font-serif text-sm px-1">A-</button>
-            <select id="fontSizeSelect" onchange="App.Format.setSize(this.value)" class="h-8 border border-[var(--border-color)] rounded text-xs bg-[var(--bg-sidebar)] px-1 outline-none font-sans w-12 text-center"><option value="10pt">10</option><option value="11pt">11</option><option value="12pt" selected>12</option><option value="13pt">13</option><option value="14pt">14</option><option value="15pt">15</option><option value="16pt">16</option><option value="18pt">18</option><option value="20pt">20</option><option value="24pt">24</option><option value="30pt">30</option><option value="36pt">36</option><option value="48pt">48</option></select>
+            <select id="fontSizeSelect" onchange="App.Format.setSize(this.value)" class="h-8 border border-[var(--border-color)] rounded text-xs bg-[var(--bg-sidebar)] px-1 outline-none font-sans w-12 text-center text-[var(--c-ink)]"><option value="10pt">10</option><option value="11pt">11</option><option value="12pt" selected>12</option><option value="13pt">13</option><option value="14pt">14</option><option value="15pt">15</option><option value="16pt">16</option><option value="18pt">18</option><option value="20pt">20</option><option value="24pt">24</option><option value="30pt">30</option><option value="36pt">36</option><option value="48pt">48</option></select>
             <button onmousedown="event.preventDefault()" onclick="App.Format.stepSize(1)" class="tool-btn font-serif text-lg px-1">A+</button>
         </div>
         <div class="tool-sep"></div>
@@ -205,7 +235,7 @@
           <span>字數: <b id="countTotal">0</b></span>
           <span id="selCountGroup" class="opacity-50">選取: <b id="countSel">0</b></span>
         </div>
-        <button id="btnPunc" onclick="App.UI.togglePunctuation()" class="flex items-center gap-1 text-xs px-2 py-1 rounded border hover:bg-gray-100">
+        <button id="btnPunc" onclick="App.UI.togglePunctuation()" class="flex items-center gap-1 text-xs px-2 py-1 rounded border hover:bg-gray-100 dark:hover:bg-gray-700 transition">
           <span class="w-2 h-2 rounded-full bg-green-500" id="puncDot"></span> 含標點
         </button>
       </div>
@@ -289,51 +319,27 @@
                 walk(editor); App.Core.analyzeDensity(); App.UI.updateStats(); App.Storage.save('fluo_temp', editor.innerHTML);
             },
             restore: () => { if(confirm('將預覽區內容還原到輸入框？')) { App.Dom.source.value = App.Dom.editor.innerText; App.state.isAutoSync=true; App.Core.runSync(); }},
-            // 🟢 修正：Google Docs 複製邏輯 (精準權重控制)
             copyToDocs: async () => {
                 const wrapper = document.createElement('div');
-                // 預設全部為 400 (正常), Noto Sans TC, 12pt, 行高 1.0
                 wrapper.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 12pt; font-weight: 400; line-height: 1.0; color: #333; background: white;";
                 const clone = App.Dom.editor.cloneNode(true);
-                
                 const bake = (node) => {
                     if (node.nodeType === 1) { 
                         const style = window.getComputedStyle(node);
+                        if (node.style.color && node.style.color.includes('var(')) { const v = node.style.color.match(/var\(([^)]+)\)/)[1]; if (Config.colors[v]) node.style.color = Config.colors[v]; }
                         
-                        // 1. 色彩烘焙
-                        if (node.style.color && node.style.color.includes('var(')) {
-                            const v = node.style.color.match(/var\(([^)]+)\)/)[1];
-                            if (Config.colors[v]) node.style.color = Config.colors[v];
-                        }
-                        
-                        // 2. 粗體判斷 (修正：只有真的是粗體的才給 700)
+                        // 🟢 核心修正：精準的粗體判斷
                         const isBold = (parseInt(style.fontWeight) >= 700) || node.tagName === 'B' || node.tagName === 'STRONG' || /^H[1-6]$/.test(node.tagName);
                         node.style.fontWeight = isBold ? '700' : '400';
                         
-                        // 3. 基本重置
-                        node.style.lineHeight = "1.0"; 
-                        node.style.marginBottom = "12pt"; 
-                        
-                        // 4. 標題例外處理
-                        if(node.tagName === 'H2') { 
-                            node.style.fontSize="18pt"; node.style.fontWeight="700"; node.style.color="#2B4B65"; 
-                            node.style.lineHeight="1.2"; node.style.borderBottom="1px solid #DDD"; 
-                        }
-                        if(node.tagName === 'H3') { 
-                            node.style.fontSize="14pt"; node.style.fontWeight="700"; node.style.color="#333"; 
-                            node.style.lineHeight="1.2"; node.style.borderLeft="4px solid #BF1E33"; node.style.paddingLeft="8px"; 
-                        }
+                        node.style.lineHeight = "1.0"; node.style.marginBottom = "12pt"; 
+                        if(node.tagName === 'H2') { node.style.fontSize="18pt"; node.style.fontWeight="700"; node.style.color="#2B4B65"; node.style.lineHeight="1.2"; node.style.borderBottom="1px solid #DDD"; }
+                        if(node.tagName === 'H3') { node.style.fontSize="14pt"; node.style.fontWeight="700"; node.style.color="#333"; node.style.lineHeight="1.2"; node.style.borderLeft="4px solid #BF1E33"; node.style.paddingLeft="8px"; }
                     }
                     node.childNodes.forEach(bake);
                 };
-                
-                bake(clone); 
-                wrapper.innerHTML = clone.innerHTML;
-                
-                try { 
-                    await navigator.clipboard.write([new ClipboardItem({'text/html': new Blob([wrapper.outerHTML],{type:'text/html'}), 'text/plain': new Blob([App.Dom.editor.innerText],{type:'text/plain'})})]); 
-                    alert('✨ 已複製！(Docs 格式鎖定)'); 
-                } catch(e) { alert('複製失敗'); }
+                bake(clone); wrapper.innerHTML = clone.innerHTML;
+                try { await navigator.clipboard.write([new ClipboardItem({'text/html': new Blob([wrapper.outerHTML],{type:'text/html'}), 'text/plain': new Blob([App.Dom.editor.innerText],{type:'text/plain'})})]); alert('✨ 已複製！(Docs 格式鎖定)'); } catch(e) { alert('複製失敗'); }
             },
             forceSync: () => { App.Core.smartHighlight(); }
         },
