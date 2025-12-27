@@ -1,5 +1,5 @@
-// sw.js - v6.6 (Backup Upgrade)
-const CACHE_NAME = 'fluo-v6.6'; 
+// sw.js - v6.7 (Mobile UX Fix)
+const CACHE_NAME = 'fluo-v6.7'; 
 const ASSETS = [
   './',
   './index.html',
