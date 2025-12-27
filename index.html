@@ -18,17 +18,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <script>
-  // 智慧右鍵防護
+  // 智慧右鍵
   document.addEventListener('contextmenu', e => {
     const isEditable = e.target.closest('textarea, input, [contenteditable="true"]');
     if (isEditable) return; 
     e.preventDefault();     
   });
-  // 禁止 Ctrl+S，允許 F12
+  // 禁止 Ctrl+S
   document.addEventListener('keydown', e => {
     if((e.ctrlKey && ['s','S','u','U'].includes(e.key))){ e.preventDefault(); }
   });
-  // PWA 註冊
+  // PWA Register
   if ('serviceWorker' in navigator) {
      window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(e => console.log('SW Fail')); });
   }
@@ -44,10 +44,9 @@
     --c-sub: #666666;      
     --c-accent: #2B4B65;   
     --c-highlight: #BF1E33;
-    /* 字體設定：日系優先 */
-    --font-serif: 'Shippori Mincho', serif; 
+    --font-serif: 'Shippori Mincho', serif;
     --font-sans: 'Zen Kaku Gothic New', sans-serif;
-    --font-editor: 'Zen Kaku Gothic New', 'Noto Sans TC', sans-serif;
+    --font-editor: 'Noto Sans TC', sans-serif;
   }
   [data-theme="dark"] {
     --bg-canvas: #1A1A1A; --bg-sidebar: #242424; --border-color: #444;
@@ -63,7 +62,7 @@
   .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
   .custom-scroll::-webkit-scrollbar-thumb { background: #CCC; border-radius: 2px; }
 
-  /* 側邊欄 */
+  /* 左側側邊欄 */
   .sidebar { background: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 20; box-shadow: 2px 0 15px rgba(0,0,0,0.03); }
   
   .input-area { width: 100%; background: var(--bg-canvas); border: 1px solid var(--border-color); border-radius: 4px; padding: 12px; font-size: 14px; font-family: var(--font-sans); resize: none; outline: none; transition: 0.2s; line-height: 1.6; }
@@ -76,10 +75,10 @@
   .kw-tag.good { border-color: #C6F6D5; background: #F0FFF4; color: #276749; }
   .kw-tag.missing { border-color: #FECACA; background: #FFF5F5; color: #C9171E; }
 
-  /* 預覽區 */
+  /* 右側預覽區 */
   .preview-container { flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden; z-index: 10; }
   
-  /* 工具列 */
+  /* 長條形工具列 */
   .toolbar { 
     background: var(--bg-sidebar); border-bottom: 1px solid var(--border-color); 
     padding: 8px 16px; display: flex; align-items: center; gap: 12px; 
@@ -161,7 +160,7 @@
           <svg class="w-8 h-8 text-[var(--c-accent)]" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="20"><path d="M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z" stroke='currentColor' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 180V320' stroke='currentColor' stroke-width='24' stroke-linecap='round'/><circle cx='256' cy='370' r='24' fill='%23BF1E33'/></svg>
           <div>
             <h1 class="text-lg font-bold font-serif">蛍光ペン <span class="text-xs text-[var(--c-highlight)] font-sans">PRO</span></h1>
-            <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v6.4</p>
+            <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v6.6</p>
           </div>
         </div>
         <button onclick="App.UI.toggleTheme()" class="text-[var(--c-sub)] hover:text-[var(--c-accent)]" title="切換深色模式">
@@ -200,8 +199,8 @@
         <div class="grid grid-cols-2 gap-2 pt-2 border-t border-[var(--border-color)]">
            <button onclick="App.Storage.clear('source')" class="py-1 text-xs text-gray-500 border border-gray-200 rounded hover:text-red-500 font-serif">清空原文</button>
            <button onclick="App.Storage.clear('kw')" class="py-1 text-xs text-gray-500 border border-gray-200 rounded hover:text-red-500 font-serif">清空關鍵字</button>
-           <button onclick="App.Storage.clear('all')" class="py-1 text-xs text-white bg-gray-400 rounded hover:bg-red-500 font-serif">全部重置</button>
-           <button onclick="App.Storage.downloadBackup()" class="py-1 text-xs text-[var(--c-accent)] border border-[var(--c-accent)] rounded hover:bg-blue-50 font-serif">下載備份</button>
+           <button onclick="App.Storage.download('html')" class="py-1 text-xs text-[var(--c-accent)] border border-[var(--c-accent)] rounded hover:bg-blue-50 font-serif">備份 HTML</button>
+           <button onclick="App.Storage.download('doc')" class="py-1 text-xs text-[var(--c-accent)] border border-[var(--c-accent)] rounded hover:bg-blue-50 font-serif">備份 Word</button>
         </div>
         <p class="text-[9px] text-center text-gray-300 mt-2 font-serif">Production by Kaoru Tsai © 2025</p>
       </div>
@@ -272,6 +271,17 @@
   </nav>
 
   <script>
+    // 🟢 色票對應表 (用於 Style Baking)
+    const Config = {
+        colors: {
+            '#333333': '#333333', '#2B4B65': '#2B4B65', '#BF1E33': '#BF1E33', 
+            '#2F5D50': '#2F5D50', '#6A4C9C': '#6A4C9C', 
+            'var(--c-ink)': '#333333',
+            'var(--c-accent)': '#2B4B65',
+            'var(--c-highlight)': '#BF1E33' 
+        }
+    };
+
     const App = {
         state: { isAutoSync: true, includePunctuation: true },
         
@@ -283,28 +293,31 @@
             get: (key) => localStorage.getItem(key),
             
             clear: (type) => { 
-                let msg = '';
-                if(type === 'source') msg = '確定清空【原文輸入】？';
-                else if(type === 'kw') msg = '確定清空【關鍵字】？';
-                else if(type === 'all') msg = '⚠️ 警告：確定要【全部重置】嗎？這將無法復原。';
-                
-                if(!confirm(msg)) return;
-
-                if(type === 'source' || type === 'all') { document.getElementById('sourceText').value = ''; App.Storage.save('fluo_src', ''); }
-                if(type === 'kw' || type === 'all') { document.getElementById('kwList').value = ''; App.Storage.save('fluo_kw', ''); }
-                if(type === 'all') { document.getElementById('editor').innerHTML = ''; App.Storage.save('fluo_temp', ''); }
-                
+                if(!confirm('確定清除？此動作無法復原。')) return;
+                if(type === 'source') { document.getElementById('sourceText').value = ''; App.Storage.save('fluo_src', ''); }
+                if(type === 'kw') { document.getElementById('kwList').value = ''; App.Storage.save('fluo_kw', ''); }
                 App.Core.forceSync();
             },
             
-            downloadBackup: () => { 
+            // 🟢 雙格式下載 (HTML / Word)
+            download: (format) => { 
                 const content = document.getElementById('editor').innerHTML;
-                const htmlContent = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Backup</title></head><body style="font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px;">${content}</body></html>`;
+                // 強制注入日系樣式 (Style Baking for Backup)
+                const style = `
+                    body { font-family: 'Shippori Mincho', 'Zen Kaku Gothic New', sans-serif; max-width: 800px; margin: 20px auto; padding: 40px; color: #333; line-height: 1.6; }
+                    h2 { font-size: 18pt; color: #2B4B65; border-bottom: 1px solid #DDD; padding-bottom: 6px; margin: 24px 0 12px 0; }
+                    h3 { font-size: 14pt; color: #333; border-left: 4px solid #BF1E33; padding-left: 10px; margin: 18px 0 10px 0; }
+                    p { margin-bottom: 12pt; }
+                `;
+                const fullHtml = `
+                    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                    <head><meta charset='utf-8'><title>Backup</title><style>${style}</style></head>
+                    <body>${content}</body></html>`;
                 
-                const blob = new Blob([htmlContent], {type: "text/html;charset=utf-8"});
+                const blob = new Blob([fullHtml], { type: format === 'doc' ? 'application/msword' : 'text/html' });
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);
-                a.download = `fluo_backup_${new Date().toISOString().slice(0,10)}.html`;
+                a.download = `fluo_backup_${new Date().toISOString().slice(0,10)}.${format}`;
                 document.body.appendChild(a); 
                 a.click();
                 document.body.removeChild(a);
@@ -312,7 +325,6 @@
         },
 
         Init: () => {
-            // Bindings
             App.Dom = { 
                 source: document.getElementById('sourceText'), 
                 kw: document.getElementById('kwList'), 
@@ -324,17 +336,11 @@
                 saveStatus: document.getElementById('saveStatus') 
             };
 
-            // Load Theme Preference
-            if(localStorage.getItem('fluo_theme') === 'dark') {
-               document.body.setAttribute('data-theme', 'dark');
-            }
-
-            // Load Data
+            if(localStorage.getItem('fluo_theme') === 'dark') document.body.setAttribute('data-theme', 'dark');
             if(App.Storage.get('fluo_src')) App.Dom.source.value = App.Storage.get('fluo_src');
             if(App.Storage.get('fluo_kw')) App.Dom.kw.value = App.Storage.get('fluo_kw');
             App.Core.runSync();
 
-            // Event Listeners
             App.Dom.source.addEventListener('input', () => { App.state.isAutoSync=true; App.Core.runSync(); });
             App.Dom.kw.addEventListener('input', () => { App.Core.runSync(); });
             App.Dom.editor.addEventListener('input', () => { 
@@ -374,24 +380,35 @@
                 });
                 App.Dom.density.innerHTML = html;
             },
-            restore: () => { if(confirm('將預覽區內容還原到輸入框？(會覆蓋左側)')) { App.Dom.source.value = App.Dom.editor.innerText; App.state.isAutoSync=true; App.Core.runSync(); }},
+            restore: () => { if(confirm('將預覽區內容還原到輸入框？')) { App.Dom.source.value = App.Dom.editor.innerText; App.state.isAutoSync=true; App.Core.runSync(); }},
+            
+            // 🟢 Style Baking for Google Docs (複製時)
             copyToDocs: async () => {
                 const wrapper = document.createElement('div');
+                // 核心：Docs 複製時使用緊密行高 (1.0) 與 Noto Sans TC
                 wrapper.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 12pt; line-height: 1.0; color: #333; background: white;";
+                
                 const clone = App.Dom.editor.cloneNode(true);
-                const applyStyle = (node) => {
-                    if (node.nodeType === 1) {
-                        node.style.lineHeight = "1.0"; node.style.marginBottom = "12pt"; 
-                        if(node.tagName === 'H2') { node.style.fontSize="18pt"; node.style.fontWeight="bold"; node.style.color="#2B4B65"; node.style.lineHeight="1.2"; node.style.borderBottom="1px solid #DDD"; }
-                        if(node.tagName === 'H3') { node.style.fontSize="14pt"; node.style.fontWeight="bold"; node.style.color="#333"; node.style.lineHeight="1.2"; node.style.borderLeft="4px solid #BF1E33"; node.style.paddingLeft="8px"; }
+                const bakeStyles = (node) => {
+                    if (node.nodeType === 1) { 
+                        // 將變數轉為 Hex 色碼
+                        if (node.style.color && node.style.color.includes('var(')) {
+                            const varName = node.style.color.match(/var\(([^)]+)\)/)[1];
+                            if (Config.colors[varName]) node.style.color = Config.colors[varName];
+                        }
+                        node.style.lineHeight = "1.0"; 
+                        node.style.marginBottom = "12pt"; 
+                        if(node.tagName === 'H2') { node.style.fontSize="18pt"; node.style.color="#2B4B65"; node.style.lineHeight="1.2"; node.style.borderBottom="1px solid #DDD"; }
+                        if(node.tagName === 'H3') { node.style.fontSize="14pt"; node.style.color="#333"; node.style.lineHeight="1.2"; node.style.borderLeft="4px solid #BF1E33"; node.style.paddingLeft="8px"; }
                     }
-                    node.childNodes.forEach(applyStyle);
+                    node.childNodes.forEach(bakeStyles);
                 };
-                applyStyle(clone);
+                bakeStyles(clone);
+                
                 wrapper.innerHTML = clone.innerHTML;
                 try {
                     await navigator.clipboard.write([new ClipboardItem({'text/html': new Blob([wrapper.outerHTML],{type:'text/html'}), 'text/plain': new Blob([App.Dom.editor.innerText],{type:'text/plain'})})]);
-                    alert('✨ 已複製！(Noto Sans TC / 12pt / 單行行距)');
+                    alert('✨ 已複製！(Docs 格式鎖定：行高 1.0)');
                 } catch(e) { alert('複製失敗，請手動全選複製。'); }
             },
             forceSync: () => { App.state.isAutoSync=true; App.Core.runSync(); }
@@ -457,7 +474,7 @@
         }
     };
     
-    // 確保 App 為全域變數，解決按鈕找不到 App.Storage 的問題
+    // 確保 App 為全域變數
     window.App = App;
     document.addEventListener('DOMContentLoaded', App.Init);
   </script>
