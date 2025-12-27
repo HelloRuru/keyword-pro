@@ -8,290 +8,160 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Shippori+Mincho:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
 
+<script>
+  document.addEventListener('contextmenu', event => event.preventDefault());
+  document.addEventListener('keydown', event => {
+    if (event.key === 'F12' || 
+        (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'J' || event.key === 'C')) || 
+        (event.ctrlKey && (event.key === 'u' || event.key === 'U' || event.key === 's' || event.key === 'S'))) {
+        event.preventDefault();
+        alert('系統保護中：禁止檢視原始碼與另存。\nProduction by Kaoru Tsai © 2025');
+    }
+  });
+</script>
+
 <style>
-  /* --- 🟢 色票系統 (Wairo Palette Extended) --- */
+  /* --- 🟢 色票系統 --- */
   :root {
-    /* Light Mode (Default) */
-    --bg-canvas: #F9F8F4;
-    --bg-sidebar: #FFFFFF;
-    --bg-panel: #F8F9FA;
-    --border-color: #EBEBEB;
-    
-    /* 文字色票 */
-    --c-ink: #303133;      /* 墨 */
-    --c-sub: #555555;      /* 次要文字 */
-    --c-iron: #2B4B65;     /* 藍鉄 */
-    --c-crimson: #BF1E33;  /* 真紅 */
-    --c-forest: #2F5D50;   /* 千歲綠 */
-    --c-purple: #6A4C9C;   /* 京紫 */
-    --c-gold: #B49658;     /* 枯茶 */
-    
-    /* 螢光筆色票 */
-    --hl-yellow: #F0DC70;
-    --hl-pink: #F5B199;
-    --hl-blue: #A0D8EF;
-    --hl-green: #C6Eac5;
-    --hl-purple: #E0C8F2;
-
-    /* 字體 */
-    --font-ui: 'Zen Kaku Gothic New', sans-serif;
-    --font-serif: 'Shippori Mincho', serif;
-    --font-docs: 'Noto Sans TC', sans-serif;
-
-    /* 紋理 */
+    --bg-canvas: #F9F8F4; --bg-sidebar: #FFFFFF; --bg-panel: #F8F9FA; --border-color: #EBEBEB;
+    --c-ink: #303133; --c-sub: #555555; --c-iron: #2B4B65; --c-crimson: #BF1E33; --c-forest: #2F5D50; --c-purple: #6A4C9C; --c-gold: #B49658;
+    --hl-yellow: #F0DC70; --hl-pink: #F5B199; --hl-blue: #A0D8EF; --hl-green: #C6Eac5; --hl-purple: #E0C8F2;
+    --font-ui: 'Zen Kaku Gothic New', sans-serif; --font-serif: 'Shippori Mincho', serif; --font-docs: 'Noto Sans TC', sans-serif;
     --grid-pattern: linear-gradient(#E5E5E5 1px, transparent 1px), linear-gradient(90deg, #E5E5E5 1px, transparent 1px);
   }
 
-  /* --- 🌓 Dark Mode Override --- */
   [data-theme="dark"] {
-    --bg-canvas: #1A1A1A;     /* 深炭 */
-    --bg-sidebar: #222222;    /* 墨黑 */
-    --bg-panel: #2C2C2C;
-    --border-color: #333333;
-    
-    --c-ink: #E0C088;         /* 流金 */
-    --c-sub: #A0A0A0;
-    --c-iron: #8AB4D6;        /* 淺藍 */
-    --c-crimson: #FF6B6B;     /* 亮紅 */
-    
+    --bg-canvas: #1A1A1A; --bg-sidebar: #222222; --bg-panel: #2C2C2C; --border-color: #333333;
+    --c-ink: #E0C088; --c-sub: #A0A0A0; --c-iron: #8AB4D6; --c-crimson: #FF6B6B;
     --grid-pattern: linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px);
   }
 
-  /* --- 基礎設定 --- */
-  body {
-    background-color: var(--bg-canvas);
-    color: var(--c-ink);
-    font-family: var(--font-ui);
-    height: 100vh; overflow: hidden; display: flex; flex-direction: column;
-    transition: background-color 0.3s, color 0.3s;
-  }
-
-  /* 方格紙背景 */
-  .bg-grid {
-    position: fixed; inset: 0; 
-    background-image: var(--grid-pattern);
-    background-size: 20px 20px;
-    opacity: 0.4; pointer-events: none; z-index: -1;
-  }
-
+  body { background-color: var(--bg-canvas); color: var(--c-ink); font-family: var(--font-ui); height: 100vh; overflow: hidden; display: flex; flex-direction: column; transition: background-color 0.3s, color 0.3s; user-select: none; }
+  input, textarea, [contenteditable] { user-select: text; }
+  .bg-grid { position: fixed; inset: 0; background-image: var(--grid-pattern); background-size: 20px 20px; opacity: 0.4; pointer-events: none; z-index: -1; }
   .font-serif { font-family: var(--font-serif); }
-  
-  /* 自定義捲軸 */
   .custom-scroll::-webkit-scrollbar { width: 6px; }
   .custom-scroll::-webkit-scrollbar-track { background: transparent; }
   .custom-scroll::-webkit-scrollbar-thumb { background: #E0E0E0; border-radius: 3px; }
   [data-theme="dark"] .custom-scroll::-webkit-scrollbar-thumb { background: #444; }
 
-  /* --- 左側：輸入區 (Sidebar) --- */
-  .sidebar-container {
-    background: var(--bg-sidebar); border-right: 1px solid var(--border-color);
-    display: flex; flex-direction: column; z-index: 20;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.02);
-    transition: background 0.3s, border 0.3s;
-  }
-
-  .section-title {
-    font-family: var(--font-serif); font-weight: 800; color: var(--c-ink);
-    font-size: 0.95rem; letter-spacing: 0.05em; margin-bottom: 0.8rem;
-    display: flex; align-items: center; gap: 8px;
-    position: relative; padding-left: 12px;
-  }
-  .section-title::before {
-    content: ''; position: absolute; left: 0; top: 15%; bottom: 15%;
-    width: 3px; background: var(--c-iron); border-radius: 2px;
-  }
+  /* Layout */
+  .sidebar-container { background: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 20; box-shadow: 2px 0 10px rgba(0,0,0,0.02); transition: background 0.3s, border 0.3s; }
+  .section-title { font-family: var(--font-serif); font-weight: 800; color: var(--c-ink); font-size: 0.95rem; letter-spacing: 0.05em; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 8px; position: relative; padding-left: 12px; }
+  .section-title::before { content: ''; position: absolute; left: 0; top: 15%; bottom: 15%; width: 3px; background: var(--c-iron); border-radius: 2px; }
   .section-title.accent::before { background: var(--c-crimson); }
 
-  .input-field {
-    width: 100%; background: var(--bg-panel);
-    border: 1px solid var(--border-color); border-radius: 6px;
-    padding: 12px; font-size: 14px; color: var(--c-ink); line-height: 1.6;
-    transition: all 0.3s; resize: none; outline: none;
-    font-family: var(--font-ui);
-  }
-  .input-field:focus { 
-    background: var(--bg-sidebar); border-color: var(--c-iron); 
-    box-shadow: 0 4px 12px rgba(43, 75, 101, 0.08); 
-  }
+  .input-field { width: 100%; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 6px; padding: 12px; font-size: 14px; color: var(--c-ink); line-height: 1.6; transition: all 0.3s; resize: none; outline: none; font-family: var(--font-ui); }
+  .input-field:focus { background: var(--bg-sidebar); border-color: var(--c-iron); box-shadow: 0 4px 12px rgba(43, 75, 101, 0.08); }
 
-  /* --- 關鍵字與檢查面板 --- */
-  .density-panel {
-    background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 6px;
-    padding: 8px; margin-bottom: 10px; max-height: 100px; overflow-y: auto;
-    display: flex; flex-wrap: wrap; gap: 6px;
-  }
-  
-  .localization-panel {
-    background: rgba(255, 200, 0, 0.1); border: 1px solid rgba(255, 200, 0, 0.3);
-    border-radius: 6px; padding: 8px; margin-bottom: 15px;
-    font-size: 11px; color: var(--c-ink); display: none;
-  }
+  .density-panel { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; margin-bottom: 10px; max-height: 100px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 6px; }
+  .localization-panel { background: rgba(255, 200, 0, 0.1); border: 1px solid rgba(255, 200, 0, 0.3); border-radius: 6px; padding: 8px; margin-bottom: 15px; font-size: 11px; color: var(--c-ink); display: none; }
   .loc-item { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
   .loc-arrow { color: #999; font-size: 10px; }
 
-  .kw-tag {
-    font-size: 11px; padding: 2px 8px; border-radius: 4px;
-    background: var(--bg-sidebar); border: 1px solid var(--border-color); color: var(--c-sub);
-    display: flex; align-items: center; gap: 4px;
-    font-family: var(--font-ui); font-weight: 500;
-    cursor: default; transition: all 0.2s;
-  }
-  .kw-tag:hover {
-     border-color: var(--c-iron); transform: translateY(-1px);
-     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  }
+  .kw-tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; background: var(--bg-sidebar); border: 1px solid var(--border-color); color: var(--c-sub); display: flex; align-items: center; gap: 4px; font-family: var(--font-ui); font-weight: 500; cursor: default; transition: all 0.2s; }
+  .kw-tag:hover { border-color: var(--c-iron); transform: translateY(-1px); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
   .kw-tag .count { font-weight: 800; color: var(--c-iron); }
   .kw-tag.missing { border-color: #FECACA; background: #FFF5F5; color: #C9171E; }
   .kw-tag.good { border-color: #C6F6D5; background: #F0FFF4; color: #276749; }
 
-  /* --- 右側：預覽區 (Editor) --- */
-  .preview-wrapper {
-    flex: 1; display: flex; flex-direction: column; 
-    background: var(--bg-canvas); position: relative;
-    overflow-y: hidden; transition: background 0.3s;
-  }
-  
-  .editor-container {
-    flex: 1; overflow-y: auto; padding: 20px 0; scroll-behavior: smooth;
-  }
-
-  .editor-paper {
-    width: 100%; max-width: 820px; 
-    min-height: 100%; margin: 0 auto; 
-    background: var(--bg-sidebar); 
-    padding: 60px 80px 100px 80px; 
-    box-shadow: 0 0 40px rgba(0,0,0,0.03);
-    outline: none;
-    font-family: var(--font-docs);
-    font-size: 12pt; line-height: 1.0; color: var(--c-ink);
-    letter-spacing: 0.02em; text-align: justify;
-    transition: background 0.3s, color 0.3s;
-  }
-  
-  /* H2, H3 Style */
-  .editor-paper h2 { 
-    font-family: var(--font-docs); font-size: 18pt; font-weight: 700; color: var(--c-iron); 
-    border-bottom: 1px solid var(--border-color); padding-bottom: 8px; margin: 24px 0 16px 0;
-  }
-  .editor-paper h3 { 
-    font-family: var(--font-docs); font-size: 14pt; font-weight: 700; color: var(--c-ink);
-    border-left: 4px solid var(--c-crimson); padding-left: 10px; margin: 20px 0 12px 0;
-  }
+  .preview-wrapper { flex: 1; display: flex; flex-direction: column; background: var(--bg-canvas); position: relative; overflow-y: hidden; transition: background 0.3s; }
+  .editor-container { flex: 1; overflow-y: auto; padding: 20px 0; scroll-behavior: smooth; }
+  .editor-paper { width: 100%; max-width: 820px; min-height: 100%; margin: 0 auto; background: var(--bg-sidebar); padding: 60px 80px 100px 80px; box-shadow: 0 0 40px rgba(0,0,0,0.03); outline: none; font-family: var(--font-docs); font-size: 12pt; line-height: 1.0; color: var(--c-ink); letter-spacing: 0.02em; text-align: justify; transition: background 0.3s, color 0.3s; }
+  .editor-paper h2 { font-family: var(--font-docs); font-size: 18pt; font-weight: 700; color: var(--c-iron); border-bottom: 1px solid var(--border-color); padding-bottom: 8px; margin: 24px 0 16px 0; }
+  .editor-paper h3 { font-family: var(--font-docs); font-size: 14pt; font-weight: 700; color: var(--c-ink); border-left: 4px solid var(--c-crimson); padding-left: 10px; margin: 20px 0 12px 0; }
   .editor-paper p { margin-bottom: 12pt; }
+  .highlight-pulse { background-color: rgba(255, 255, 0, 0.4); border-radius: 2px; box-shadow: 0 0 8px rgba(255, 255, 0, 0.6); transition: all 0.2s; }
+  [data-theme="dark"] .highlight-pulse { background-color: rgba(255, 215, 0, 0.3); box-shadow: 0 0 8px rgba(255, 215, 0, 0.4); color: #FFF; }
 
-  .highlight-pulse {
-     background-color: rgba(255, 255, 0, 0.4); border-radius: 2px;
-     box-shadow: 0 0 8px rgba(255, 255, 0, 0.6); transition: all 0.2s;
-  }
-  [data-theme="dark"] .highlight-pulse {
-     background-color: rgba(255, 215, 0, 0.3);
-     box-shadow: 0 0 8px rgba(255, 215, 0, 0.4); color: #FFF;
-  }
-
-  /* --- 工具列 (Toolbar) --- */
-  .toolbar-sticky {
-    position: sticky; top: 0; z-index: 40;
-    background: var(--bg-canvas); border-bottom: 1px solid var(--border-color);
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 8px 12px; backdrop-filter: blur(8px);
-  }
-  .toolbar-inner {
-    display: flex; align-items: center; gap: 6px; 
-    background: var(--bg-sidebar); padding: 4px 8px; border-radius: 8px;
-    border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-    flex-wrap: wrap;
-  }
-  
-  .btn-tool {
-    height: 32px; width: 32px; /* 固定寬高適合手指點擊 */
-    border-radius: 4px;
-    color: var(--c-sub);
-    transition: all 0.2s; cursor: pointer; border: 1px solid transparent;
-    display: flex; align-items: center; justify-content: center;
-  }
+  /* Toolbar */
+  .toolbar-sticky { position: sticky; top: 0; z-index: 40; background: var(--bg-canvas); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; backdrop-filter: blur(8px); transition: all 0.3s ease; }
+  [data-theme="dark"] .toolbar-sticky { background: rgba(34, 34, 34, 0.65); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+  .toolbar-inner { display: flex; align-items: center; gap: 6px; background: var(--bg-sidebar); padding: 4px 8px; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.04); flex-wrap: wrap; }
+  .btn-tool { height: 32px; width: 32px; border-radius: 4px; color: var(--c-sub); transition: all 0.2s; cursor: pointer; border: 1px solid transparent; display: flex; align-items: center; justify-content: center; }
   .btn-tool svg { width: 16px; height: 16px; stroke-width: 1.5; }
   .btn-tool:hover { background: var(--bg-panel); color: var(--c-iron); }
-  
   .divider { width: 1px; height: 18px; background: var(--border-color); margin: 0 4px; }
-
-  .color-dot { 
-    width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--bg-sidebar); 
-    box-shadow: 0 0 0 1px var(--border-color); cursor: pointer; transition: all 0.2s; 
-  }
+  .color-dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--bg-sidebar); box-shadow: 0 0 0 1px var(--border-color); cursor: pointer; transition: all 0.2s; }
   .color-dot:hover { transform: scale(1.15); z-index: 10; }
+  select.tool-select { height: 32px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px; padding: 0 4px; color: var(--c-sub); background: var(--bg-sidebar); outline: none; cursor: pointer; font-family: var(--font-docs); }
 
-  select.tool-select {
-    height: 32px; border: 1px solid var(--border-color); border-radius: 4px;
-    font-size: 13px; padding: 0 4px; color: var(--c-sub); background: var(--bg-sidebar); 
-    outline: none; cursor: pointer; font-family: var(--font-docs);
-  }
+  /* Floating Menu */
+  .floating-menu { position: fixed; z-index: 999; background: var(--bg-sidebar); border: 1px solid var(--border-color); border-radius: 50px; padding: 6px 12px; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); opacity: 0; pointer-events: none; transform: translateY(10px); transition: opacity 0.2s, transform 0.2s; }
+  .floating-menu.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  .float-divider { width: 1px; height: 16px; background: var(--border-color); }
 
-  /* --- 底部資訊列 (Stats Bar) --- */
-  .stats-bar {
-    background: var(--bg-sidebar); border-top: 1px solid var(--border-color);
-    padding: 6px 20px; display: flex; justify-content: space-between; align-items: center;
-    font-size: 11px; color: var(--c-sub); font-family: var(--font-ui);
-    z-index: 30;
-  }
+  /* AI Modal */
+  .ai-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+  .ai-modal { background: var(--bg-sidebar); width: 90%; max-width: 500px; border-radius: 12px; padding: 20px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-height: 80vh; overflow-y: auto; }
+  .ai-result-item { margin-bottom: 12px; padding: 10px; background: var(--bg-panel); border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer; transition: 0.2s; font-size: 13px; color: var(--c-ink); }
+  .ai-result-item:hover { border-color: var(--c-iron); background: var(--bg-sidebar); }
+  .ai-label { font-size: 10px; color: var(--c-sub); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; font-weight: bold; }
+
+  /* Buttons */
+  .btn-primary { width: 100%; background: var(--c-crimson); color: white; border: none; padding: 12px; border-radius: 6px; font-family: var(--font-serif); letter-spacing: 0.1em; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(191, 30, 51, 0.3); transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(191, 30, 51, 0.4); }
+  .btn-secondary { flex: 1; background: var(--bg-sidebar); border: 1px solid var(--border-color); color: var(--c-sub); padding: 8px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 4px; }
+  .btn-secondary:hover { border-color: var(--c-iron); color: var(--c-iron); background: var(--bg-panel); }
+  
+  /* Stats Bar */
+  .stats-bar { background: var(--bg-sidebar); border-top: 1px solid var(--border-color); padding: 6px 20px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--c-sub); font-family: var(--font-ui); z-index: 30; }
   .stat-group { display: flex; gap: 15px; align-items: center; }
   .stat-item { display: flex; gap: 4px; }
   .stat-val { font-weight: 700; color: var(--c-iron); }
-  
-  .toggle-btn {
-    display: flex; align-items: center; gap: 6px; cursor: pointer;
-    padding: 2px 8px; border-radius: 12px; border: 1px solid var(--border-color);
-    transition: all 0.2s;
-  }
+  .toggle-btn { display: flex; align-items: center; gap: 6px; cursor: pointer; padding: 2px 8px; border-radius: 12px; border: 1px solid var(--border-color); transition: all 0.2s; }
   .toggle-btn.active { background: #E6FFFA; border-color: #38B2AC; color: #2C7A7B; }
   [data-theme="dark"] .toggle-btn.active { background: #1D4044; color: #4FD1C5; border-color: #2C7A7B; }
-
-  /* --- 按鈕與通用 --- */
-  .btn-primary {
-    width: 100%; background: var(--c-crimson); color: white; border: none; 
-    padding: 12px; border-radius: 6px; 
-    font-family: var(--font-serif); letter-spacing: 0.1em; font-weight: 700;
-    cursor: pointer; box-shadow: 0 4px 12px rgba(191, 30, 51, 0.3); 
-    transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
-    font-size: 14px;
-  }
-  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(191, 30, 51, 0.4); }
-  
-  .btn-secondary {
-    flex: 1; background: var(--bg-sidebar); border: 1px solid var(--border-color); color: var(--c-sub);
-    padding: 8px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: 0.2s;
-    display: flex; justify-content: center; align-items: center; gap: 4px;
-  }
-  .btn-secondary:hover { border-color: var(--c-iron); color: var(--c-iron); background: var(--bg-panel); }
 
   .clear-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 6px; }
   .copyright-text { text-align: center; margin-top: 20px; font-size: 10px; color: #AAA; font-family: sans-serif; letter-spacing: 0.5px; }
 
-  /* --- RWD --- */
   @media (max-width: 768px) {
     .sidebar-container, .preview-wrapper { width: 100% !important; height: auto; }
     #sectionInput { height: calc(100vh - 120px); }
     .editor-paper { padding: 30px 20px; min-height: 80vh; }
-    /* Toolbar Mobile Optimization */
     .toolbar-sticky { flex-wrap: wrap; gap: 8px; padding: 8px 10px; }
     .toolbar-inner { flex: 1; overflow-x: auto; padding-right: 20px; -webkit-overflow-scrolling: touch; }
     .stats-bar { flex-direction: column; gap: 8px; align-items: flex-start; padding: 10px 15px; }
     .mobile-hidden { display: none !important; }
   }
+  @media (min-width: 769px) { .floating-menu { display: none !important; } }
 </style>
 </head>
 <body>
   <div class="bg-grid"></div>
 
+  <div id="aiModal" class="ai-modal-overlay" onclick="closeAiModal(event)">
+     <div class="ai-modal" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center mb-4">
+           <h3 class="font-serif font-bold text-lg text-[var(--c-iron)]">✨ AI 智慧建議</h3>
+           <button onclick="closeAiModal(null)" class="text-2xl text-[var(--c-sub)]">&times;</button>
+        </div>
+        <div id="aiContent">
+           </div>
+        <p class="text-[10px] text-gray-400 mt-4 text-center">點擊建議即可複製 • Logic-Based AI Engine</p>
+     </div>
+  </div>
+
   <header class="h-14 flex md:hidden items-center px-4 bg-white border-b z-50 justify-between sticky top-0">
     <span class="font-serif font-bold text-lg text-gray-800 flex items-center gap-2">
-      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#303133" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-         <path d="M16.5 3.5L20.5 7.5L7.5 20.5H3.5V16.5L16.5 3.5Z" />
-         <path d="M16 19L20 22" />
-         <path d="M4 22h16" />
-      </svg>
+      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#303133" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 3.5L20.5 7.5L7.5 20.5H3.5V16.5L16.5 3.5Z" /><path d="M16 19L20 22" /><path d="M4 22h16" /></svg>
       蛍光ペン <span class="text-xs font-sans text-red-600">PRO</span>
     </span>
   </header>
+
+  <div id="mobileFloatMenu" class="floating-menu">
+     <div onmousedown="event.preventDefault()" onclick="applyColor('#BF1E33')" class="color-dot" style="background:#BF1E33" title="真紅"></div>
+     <div onmousedown="event.preventDefault()" onclick="applyColor('#2B4B65')" class="color-dot" style="background:#2B4B65" title="藍鉄"></div>
+     <div onmousedown="event.preventDefault()" onclick="applyColor('#2F5D50')" class="color-dot" style="background:#2F5D50" title="千歲綠"></div>
+     <div class="float-divider"></div>
+     <div onmousedown="event.preventDefault()" onclick="applyHighlight('#F0DC70')" class="color-dot" style="background:var(--hl-yellow)" title="刈安"></div>
+     <div onmousedown="event.preventDefault()" onclick="applyHighlight('#F5B199')" class="color-dot" style="background:var(--hl-pink)" title="一斤染"></div>
+     <div class="float-divider"></div>
+     <div onmousedown="event.preventDefault()" onclick="removeFormatting()" class="btn-tool w-6 h-6 p-0" title="清除">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+     </div>
+  </div>
 
   <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative h-screen">
     
@@ -299,22 +169,17 @@
       <div class="p-5 flex flex-col min-h-full">
           
           <div class="hidden md:flex items-center gap-3 mb-6 select-none">
-            <svg class="w-10 h-10 text-[#303133] dark:text-[#E0C088]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-               <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
-               <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
-               <path d="M2 2l7.586 7.586"></path>
-               <circle cx="11" cy="11" r="2"></circle>
-            </svg>
+            <svg class="w-10 h-10 text-[#303133] dark:text-[#E0C088]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>
             <div>
               <h1 class="font-serif font-bold text-lg text-[var(--c-ink)] tracking-widest leading-none">蛍光ペン <span class="text-xs font-sans text-[var(--c-crimson)]">PRO</span></h1>
-              <p class="text-[9px] text-gray-400 tracking-[0.2em] mt-1">DOCS DRAFTING TOOL v3.3</p>
+              <p class="text-[9px] text-gray-400 tracking-[0.2em] mt-1">DOCS DRAFTING TOOL v3.5</p>
             </div>
           </div>
 
           <div class="mb-4">
             <div class="flex justify-between items-end mb-2">
               <div class="section-title mb-0">原文輸入</div>
-              <button onclick="restoreFromPreview()" class="text-[10px] text-blue-600 hover:underline flex items-center gap-1" title="將預覽區文字反向同步回此處">
+              <button onclick="restoreFromPreview()" class="text-[10px] text-blue-600 hover:underline flex items-center gap-1" title="還原">
                  <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                  還原(從預覽)
               </button>
@@ -329,13 +194,17 @@
              <div id="densityPanel" class="density-panel custom-scroll">
                 <span class="text-xs text-gray-400 w-full text-center py-2">等待輸入...</span>
              </div>
-
              <div id="locPanel" class="localization-panel"></div>
           </div>
 
           <div class="mt-auto pb-4">
+            <button onclick="generateAI()" class="btn-primary mb-3 !bg-indigo-600 !shadow-indigo-200">
+               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+               <span>✨ AI 智慧建議 (Titles & Meta)</span>
+            </button>
+
             <button onclick="forceSync()" class="btn-primary mb-3">
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
               <span>一鍵標註 (Sync & Check)</span>
             </button>
             
@@ -350,39 +219,26 @@
               <button onclick="clearData('kw')" class="btn-secondary text-[10px]">清空關鍵字</button>
               <button onclick="clearData('all')" class="btn-secondary text-[10px] !text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">全部重置</button>
             </div>
-            
-            <div class="copyright-text">
-              Production by Kaoru Tsai，於2025製作
-            </div>
+            <div class="copyright-text">Production by Kaoru Tsai，於2025製作</div>
           </div>
       </div>
     </aside>
 
     <main id="sectionPreview" class="preview-wrapper mobile-hidden custom-scroll">
-      
       <div class="toolbar-sticky">
         <div class="toolbar-inner">
           <div class="tool-group">
-            <button onmousedown="event.preventDefault()" onclick="document.execCommand('undo')" class="btn-tool" title="復原">
-               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg>
-            </button>
-            <button onmousedown="event.preventDefault()" onclick="document.execCommand('redo')" class="btn-tool" title="重做">
-               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l6 3.7"/></svg>
-            </button>
+            <button onmousedown="event.preventDefault()" onclick="document.execCommand('undo')" class="btn-tool" title="復原"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg></button>
+            <button onmousedown="event.preventDefault()" onclick="document.execCommand('redo')" class="btn-tool" title="重做"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l6 3.7"/></svg></button>
           </div>
           <div class="divider"></div>
-
           <div class="tool-group">
              <button onmousedown="event.preventDefault()" onclick="execCmd('formatBlock','h2')" class="btn-tool font-bold" title="標題 H2">H2</button>
              <button onmousedown="event.preventDefault()" onclick="execCmd('formatBlock','h3')" class="btn-tool font-bold" title="標題 H3">H3</button>
              <button onmousedown="event.preventDefault()" onclick="execCmd('formatBlock','p')" class="btn-tool" title="內文 P">P</button>
-             
-             <button onmousedown="event.preventDefault()" onclick="removeFormatting()" class="btn-tool" title="清除格式 (保留文字)">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l5 5L22 2l-5-5L2 12zM12 2l10 10M12 22h10"/></svg>
-             </button>
+             <button onmousedown="event.preventDefault()" onclick="removeFormatting()" class="btn-tool" title="清除格式"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l5 5L22 2l-5-5L2 12zM12 2l10 10M12 22h10"/></svg></button>
           </div>
           <div class="divider"></div>
-
           <div class="tool-group">
             <select onchange="changeFontSize(this.value)" class="tool-select" title="字級調整">
               <option value="10pt">10</option>
@@ -393,7 +249,6 @@
             </select>
           </div>
           <div class="divider"></div>
-          
           <div class="tool-group px-1">
             <div onmousedown="event.preventDefault()" onclick="applyColor('#303133')" class="color-dot" style="background:#303133" title="墨"></div>
             <div onmousedown="event.preventDefault()" onclick="applyColor('#2B4B65')" class="color-dot" style="background:#2B4B65" title="藍鉄"></div>
@@ -402,7 +257,6 @@
             <div onmousedown="event.preventDefault()" onclick="applyColor('#6A4C9C')" class="color-dot" style="background:#6A4C9C" title="京紫"></div>
           </div>
           <div class="divider"></div>
-          
           <div class="tool-group px-1">
             <div onmousedown="event.preventDefault()" onclick="applyHighlight('#F0DC70')" class="color-dot" style="background:var(--hl-yellow)" title="刈安"></div>
             <div onmousedown="event.preventDefault()" onclick="applyHighlight('#F5B199')" class="color-dot" style="background:var(--hl-pink)" title="一斤染"></div>
@@ -411,7 +265,6 @@
             <div onmousedown="event.preventDefault()" onclick="applyHighlight('#E0C8F2')" class="color-dot" style="background:var(--hl-purple)" title="藤色"></div>
           </div>
         </div>
-
         <button onclick="toggleTheme()" class="btn-tool rounded-full w-8 h-8 ml-2 border border-gray-200 dark:border-gray-600" title="切換深色模式">
           <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
         </button>
@@ -423,18 +276,12 @@
       
       <div class="stats-bar">
         <div class="stat-group">
-          <div class="stat-item">
-             <span>總字數:</span> <span id="countTotal" class="stat-val">0</span>
-          </div>
-          <div class="stat-item" style="opacity:0.6" id="selCountGroup">
-             <span>選取:</span> <span id="countSel" class="stat-val">0</span>
-          </div>
+          <div class="stat-item"><span>總字數:</span> <span id="countTotal" class="stat-val">0</span></div>
+          <div class="stat-item" style="opacity:0.6" id="selCountGroup"><span>選取:</span> <span id="countSel" class="stat-val">0</span></div>
         </div>
-        
         <div class="stat-group">
            <div id="btnPunc" class="toggle-btn" onclick="togglePunctuation()" title="點擊切換">
-             <svg id="puncIcon" class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
-             含標點
+             <svg id="puncIcon" class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg> 含標點
            </div>
         </div>
       </div>
@@ -452,18 +299,6 @@
     </button>
   </nav>
 
-// 🛡️ 簡易防護腳本
-document.addEventListener('contextmenu', event => event.preventDefault()); // 禁止右鍵
-document.addEventListener('keydown', event => {
-    // 禁止 F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
-    if (event.key === 'F12' || 
-        (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'J')) || 
-        (event.ctrlKey && event.key === 'U')) {
-        event.preventDefault();
-        alert('版權所有，請勿查看原始碼 © 2025 Kaoru Tsai'); // 嚇阻訊息
-    }
-});
-  
   <script>
     // --- Config & State ---
     const source = document.getElementById('sourceText');
@@ -471,6 +306,9 @@ document.addEventListener('keydown', event => {
     const editor = document.getElementById('editor');
     const densityPanel = document.getElementById('densityPanel');
     const locPanel = document.getElementById('locPanel');
+    const floatMenu = document.getElementById('mobileFloatMenu');
+    const aiModal = document.getElementById('aiModal');
+    const aiContent = document.getElementById('aiContent');
     
     // Stats Elements
     const elCountTotal = document.getElementById('countTotal');
@@ -484,79 +322,48 @@ document.addEventListener('keydown', event => {
     let saveTimer = null;
     let syncTimer = null;
 
-    // Localization Dictionary (Mainland/HK -> Taiwan)
-    const locDict = {
-       '質量': '品質', '視頻': '影片', '高清': '高畫質', '硬件': '硬體',
-       '軟件': '軟體', '項目': '專案', '信息': '資訊', '網上': '線上',
-       '服務器': '伺服器', '程序': '程式', '鼠標': '滑鼠', '打印': '列印',
-       '屏幕': '螢幕', '內存': '記憶體'
-    };
+    const locDict = {'質量': '品質', '視頻': '影片', '高清': '高畫質', '硬件': '硬體', '軟件': '軟體', '項目': '專案', '信息': '資訊', '網上': '線上', '服務器': '伺服器', '程序': '程式', '鼠標': '滑鼠', '打印': '列印', '屏幕': '螢幕', '內存': '記憶體'};
 
-    // --- Init ---
     window.addEventListener('DOMContentLoaded', () => {
-      // Load Data
       if(localStorage.getItem('fluo_src')) source.value = localStorage.getItem('fluo_src');
       if(localStorage.getItem('fluo_kw')) kwInput.value = localStorage.getItem('fluo_kw');
-      
       const cachedHtml = localStorage.getItem('fluo_html');
       if(cachedHtml) {
         editor.innerHTML = cachedHtml;
-        if(editor.innerText.replace(/\n/g,'').trim() !== source.value.replace(/\n/g,'').trim()) {
-           isAutoSync = false;
-        }
-      } else {
-        runSyncLogic(true);
-      }
-
-      // Load Theme
-      if(localStorage.getItem('fluo_theme') === 'dark') {
-        document.body.setAttribute('data-theme', 'dark');
-        updateThemeIcon(true);
-      }
-
-      analyzeDensity();
-      updateWordCount();
+        if(editor.innerText.replace(/\n/g,'').trim() !== source.value.replace(/\n/g,'').trim()) isAutoSync = false;
+      } else { runSyncLogic(true); }
+      if(localStorage.getItem('fluo_theme') === 'dark') { document.body.setAttribute('data-theme', 'dark'); updateThemeIcon(true); }
+      analyzeDensity(); updateWordCount();
     });
 
-    // --- Core Logic: Sync ---
+    // --- Core Sync ---
     function runSyncLogic(silent = false) {
       if(!isAutoSync) return;
-      
       let text = source.value;
       if(!text) { if(!silent) editor.innerHTML = ''; return; }
-
       const rawKws = kwInput.value.split('\n');
       const uniqueKws = [...new Set(rawKws.map(k => k.trim()).filter(k => k))];
-
       let html = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
       uniqueKws.forEach(kw => {
         const regex = new RegExp(`(${escapeRegExp(kw)})`, 'gi');
-        // 加入 data-kw 屬性以便 Hover 識別
         html = html.replace(regex, `<span class="kw-highlight" data-kw="${kw.toLowerCase()}" style="color: #BF1E33; font-weight: 700;">$1</span>`);
       });
-
       const paragraphs = html.split(/\n\s*\n/).map(p => {
         if(!p.trim()) return '';
         return `<p style="margin-bottom: 12pt;">${p.replace(/\n/g, '<br>')}</p>`;
       }).join('');
-
       editor.innerHTML = paragraphs;
-      analyzeDensity();
-      triggerSave();
+      analyzeDensity(); triggerSave();
     }
 
-    // --- Localization & Density ---
+    // --- Density & Loc ---
     function analyzeDensity() {
       const text = source.value;
       const totalLen = text.length;
-      
-      // 1. Density
       if(totalLen === 0) { densityPanel.innerHTML = '<span class="text-xs text-gray-400">無內容</span>'; }
       else {
           const rawKws = kwInput.value.split('\n').filter(k => k.trim());
           const uniqueKws = [...new Set(rawKws.map(k => k.trim()))];
-          
           if(uniqueKws.length === 0) { densityPanel.innerHTML = '<span class="text-xs text-gray-400">無關鍵字</span>'; }
           else {
               let html = '';
@@ -565,256 +372,178 @@ document.addEventListener('keydown', event => {
                 const matches = text.match(regex);
                 const count = matches ? matches.length : 0;
                 const density = ((count * kw.length / totalLen) * 100).toFixed(1);
-                
-                let statusClass = '';
-                if(count === 0) statusClass = 'missing';
-                else if(density > 0.5 && density < 5) statusClass = 'good';
-
-                html += `<div class="kw-tag ${statusClass}" 
-                          onmouseenter="highlightKw('${kw}')" 
-                          onmouseleave="unhighlightKw('${kw}')">
-                  ${kw} <span class="count">${count}</span> <span style="font-size:9px; opacity:0.7">(${density}%)</span>
-                </div>`;
+                let statusClass = count === 0 ? 'missing' : (density > 0.5 && density < 5 ? 'good' : '');
+                html += `<div class="kw-tag ${statusClass}" onmouseenter="highlightKw('${kw}')" onmouseleave="unhighlightKw('${kw}')">${kw} <span class="count">${count}</span> <span style="font-size:9px; opacity:0.7">(${density}%)</span></div>`;
               });
               densityPanel.innerHTML = html;
           }
       }
-
-      // 2. Localization Check
       let locHtml = '';
       for (const [bad, good] of Object.entries(locDict)) {
-          if (text.includes(bad)) {
-             locHtml += `<div class="loc-item">⚠️ 建議將 <b>${bad}</b> <span class="loc-arrow">➔</span> <b>${good}</b></div>`;
-          }
+          if (text.includes(bad)) locHtml += `<div class="loc-item">⚠️ 建議將 <b>${bad}</b> <span class="loc-arrow">➔</span> <b>${good}</b></div>`;
       }
-      if(locHtml) {
-         locPanel.style.display = 'block';
-         locPanel.innerHTML = '<div style="font-weight:700; margin-bottom:4px; color:#D97706">在地化提醒 (TW)</div>' + locHtml;
-      } else {
-         locPanel.style.display = 'none';
-      }
+      locPanel.style.display = locHtml ? 'block' : 'none';
+      if(locHtml) locPanel.innerHTML = '<div style="font-weight:700; margin-bottom:4px; color:#D97706">在地化提醒 (TW)</div>' + locHtml;
     }
 
-    // --- Hover Preview Logic ---
     function highlightKw(kw) {
         const lowerKw = kw.toLowerCase();
         const spans = editor.querySelectorAll(`span[data-kw="${lowerKw}"]`);
         spans.forEach(span => span.classList.add('highlight-pulse'));
     }
-    
     function unhighlightKw(kw) {
         const lowerKw = kw.toLowerCase();
         const spans = editor.querySelectorAll(`span[data-kw="${lowerKw}"]`);
         spans.forEach(span => span.classList.remove('highlight-pulse'));
     }
 
-    // --- Stats Logic ---
+    // --- 🟢 AI Logic (Heuristic) ---
+    function generateAI() {
+       const text = source.value;
+       if(text.length < 50) { alert('文章內容太少，無法分析。'); return; }
+       
+       // 1. Get Top Keyword
+       const rawKws = kwInput.value.split('\n').map(k => k.trim()).filter(k => k);
+       let topKw = "您的主題";
+       if(rawKws.length > 0) topKw = rawKws[0]; // Simple logic: take first kw
+
+       // 2. Templates
+       const titles = [
+          `【2025最新】${topKw}完全攻略：新手必看的重點整理`,
+          `還在煩惱${topKw}？掌握這幾點讓你事半功倍`,
+          `${topKw}是什麼？完整解析與實用技巧`,
+          `為什麼你需要${topKw}？專家告訴你背後的秘密`,
+          `5分鐘搞懂${topKw}：懶人包總整理`
+       ];
+
+       // 3. Meta Description (First 80 chars + Call to Action)
+       const cleanText = text.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+       let firstSentence = cleanText.substring(0, 85);
+       if(firstSentence.length >= 85) firstSentence += "...";
+       const metaDesc = `${firstSentence} 本文將深入探討 ${topKw} 的核心觀念與應用技巧，立即點擊閱讀完整內容！`;
+
+       // 4. Render
+       let html = `<div class="ai-label">SEO 標題建議</div>`;
+       titles.forEach(t => {
+          html += `<div class="ai-result-item" onclick="copyText('${t}')">${t}</div>`;
+       });
+       html += `<div class="ai-label mt-4">Meta Description 建議</div>`;
+       html += `<div class="ai-result-item" onclick="copyText('${metaDesc}')">${metaDesc}</div>`;
+
+       aiContent.innerHTML = html;
+       aiModal.style.display = 'flex';
+    }
+
+    function closeAiModal(e) { aiModal.style.display = 'none'; }
+    function copyText(txt) {
+       navigator.clipboard.writeText(txt).then(() => alert('已複製：' + txt));
+    }
+
+    // --- Stats ---
     function updateWordCount() {
        const text = editor.innerText;
-       const selection = window.getSelection().toString();
-       
+       const selection = window.getSelection();
+       const selText = selection.toString();
        elCountTotal.innerText = countText(text);
-       
-       if(selection) {
+       if(selText) {
           document.getElementById('selCountGroup').style.opacity = '1';
-          elCountSel.innerText = countText(selection);
+          elCountSel.innerText = countText(selText);
+          if(window.innerWidth < 768) showFloatingMenu(selection);
        } else {
           document.getElementById('selCountGroup').style.opacity = '0.5';
           elCountSel.innerText = '0';
+          floatMenu.classList.remove('show');
        }
     }
-
+    function showFloatingMenu(selection) {
+       const range = selection.getRangeAt(0);
+       const rect = range.getBoundingClientRect();
+       const menuWidth = 180; 
+       let top = rect.top - 60; 
+       let left = rect.left + (rect.width / 2) - (menuWidth / 2);
+       if(left < 10) left = 10;
+       if(top < 60) top = rect.bottom + 10;
+       floatMenu.style.top = `${top}px`;
+       floatMenu.style.left = `${left}px`;
+       floatMenu.classList.add('show');
+    }
     function countText(str) {
        if(!str) return 0;
-       if(includePunctuation) {
-          return str.replace(/[\n\r]/g, '').length;
-       } else {
-          const clean = str.replace(/[^\w\u4e00-\u9fa5]/g, '');
-          return clean.length;
-       }
+       if(includePunctuation) { return str.replace(/[\n\r]/g, '').length; } 
+       else { return str.replace(/[^\w\u4e00-\u9fa5]/g, '').length; }
     }
-
     function togglePunctuation() {
        includePunctuation = !includePunctuation;
-       if(includePunctuation) {
-          btnPunc.classList.add('active');
-          puncIcon.style.color = 'green';
-       } else {
-          btnPunc.classList.remove('active');
-          puncIcon.style.color = '#DDD';
-       }
+       if(includePunctuation) { btnPunc.classList.add('active'); puncIcon.style.color = 'green'; } 
+       else { btnPunc.classList.remove('active'); puncIcon.style.color = '#DDD'; }
        updateWordCount();
     }
     document.addEventListener('selectionchange', updateWordCount);
 
-    // --- Theme Logic ---
     function toggleTheme() {
        const isDark = document.body.getAttribute('data-theme') === 'dark';
-       if(isDark) {
-          document.body.removeAttribute('data-theme');
-          localStorage.setItem('fluo_theme', 'light');
-          updateThemeIcon(false);
-       } else {
-          document.body.setAttribute('data-theme', 'dark');
-          localStorage.setItem('fluo_theme', 'dark');
-          updateThemeIcon(true);
-       }
+       if(isDark) { document.body.removeAttribute('data-theme'); localStorage.setItem('fluo_theme', 'light'); updateThemeIcon(false); } 
+       else { document.body.setAttribute('data-theme', 'dark'); localStorage.setItem('fluo_theme', 'dark'); updateThemeIcon(true); }
     }
-    
     function updateThemeIcon(isDark) {
-       // Sun vs Moon
        if(isDark) themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
        else themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
     }
 
-    // --- Event Listeners ---
     function handleInput() {
-      if(isAutoSync) {
-        clearTimeout(syncTimer);
-        syncTimer = setTimeout(() => runSyncLogic(true), 500);
-      } else {
-        analyzeDensity();
-      }
-      triggerSave();
-      updateWordCount();
+      if(isAutoSync) { clearTimeout(syncTimer); syncTimer = setTimeout(() => runSyncLogic(true), 500); } 
+      else { analyzeDensity(); }
+      triggerSave(); updateWordCount();
     }
-    source.addEventListener('input', handleInput);
-    kwInput.addEventListener('input', handleInput);
+    source.addEventListener('input', handleInput); kwInput.addEventListener('input', handleInput);
+    editor.addEventListener('input', () => { if(isAutoSync) isAutoSync = false; triggerSave(); updateWordCount(); });
 
-    editor.addEventListener('input', () => {
-      if(isAutoSync) isAutoSync = false;
-      triggerSave();
-      updateWordCount();
-    });
-
-    // --- Helper Functions ---
-    function restoreFromPreview() {
-       if(confirm('將預覽區的文字內容還原到輸入框？')) {
-          source.value = editor.innerText;
-          forceSync(); 
-       }
-    }
-
-    function escapeRegExp(string) {
-      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    }
-
-    function triggerSave() {
-      clearTimeout(saveTimer);
-      saveTimer = setTimeout(() => {
-        localStorage.setItem('fluo_src', source.value);
-        localStorage.setItem('fluo_kw', kwInput.value);
-        localStorage.setItem('fluo_html', editor.innerHTML);
-      }, 800);
-    }
-    
-    function forceSync() {
-      isAutoSync = true;
-      runSyncLogic();
-      if(window.innerWidth < 768) switchTab('preview');
-    }
-
-    function clearData(type) {
-       if(confirm('確定清空？(無法復原)')) {
-          if(type === 'source' || type === 'all') source.value = '';
-          if(type === 'kw' || type === 'all') kwInput.value = '';
-          if(type === 'all') { editor.innerHTML = ''; localStorage.clear(); }
-          forceSync();
-       }
-    }
-
-    // --- 🟢 New Feature: Remove Formatting ---
-    function removeFormatting() {
-       // 標準指令，清除選取範圍的樣式 (Bold, Color, etc)
-       document.execCommand('removeFormat', false, null);
-       // 同時清除背景色 (螢光筆)
-       document.execCommand('backColor', false, 'transparent');
-       
-       if(isAutoSync) isAutoSync = false;
-       updateWordCount();
-    }
-
-    // --- Copy Logic (Force Clean Style) ---
+    function restoreFromPreview() { if(confirm('將預覽區的文字內容還原到輸入框？')) { source.value = editor.innerText; forceSync(); } }
+    function escapeRegExp(string) { return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+    function triggerSave() { clearTimeout(saveTimer); saveTimer = setTimeout(() => { localStorage.setItem('fluo_src', source.value); localStorage.setItem('fluo_kw', kwInput.value); localStorage.setItem('fluo_html', editor.innerHTML); }, 800); }
+    function forceSync() { isAutoSync = true; runSyncLogic(); if(window.innerWidth < 768) switchTab('preview'); }
+    function clearData(type) { if(confirm('確定清空？(無法復原)')) { if(type === 'source' || type === 'all') source.value = ''; if(type === 'kw' || type === 'all') kwInput.value = ''; if(type === 'all') { editor.innerHTML = ''; localStorage.clear(); } forceSync(); } }
+    function removeFormatting() { document.execCommand('removeFormat', false, null); document.execCommand('backColor', false, 'transparent'); if(isAutoSync) isAutoSync = false; updateWordCount(); }
     async function copyToClipboard() {
       const wrapper = document.createElement('div');
-      
       const baseStyle = "font-family: 'Noto Sans TC', sans-serif; font-size: 12pt; line-height: 1.0; color: #303133; text-align: justify; background: white;";
       wrapper.style.cssText = baseStyle;
-      
       const clone = editor.cloneNode(true);
-      
-      clone.querySelectorAll('.kw-highlight').forEach(el => {
-         el.classList.remove('kw-highlight', 'highlight-pulse');
-         el.removeAttribute('data-kw');
-      });
-
+      clone.querySelectorAll('.kw-highlight').forEach(el => { el.classList.remove('kw-highlight', 'highlight-pulse'); el.removeAttribute('data-kw'); });
       const recursiveApply = (node) => {
          if(node.nodeType === 1) { 
-            if(node.tagName === 'H2') {
-               node.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 18pt; font-weight: 700; color: #2B4B65; border-bottom: 1px solid #E0E0E0; padding-bottom: 8px; margin-top: 24px; margin-bottom: 16px; line-height: 1.2;";
-            }
-            else if(node.tagName === 'H3') {
-               node.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 14pt; font-weight: 700; color: #303133; border-left: 4px solid #BF1E33; padding-left: 10px; margin-top: 20px; margin-bottom: 12px; line-height: 1.2;";
-            }
-            else if(node.tagName === 'P') {
-               node.style.cssText = baseStyle + " margin-bottom: 12pt;";
-            }
+            if(node.tagName === 'H2') { node.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 18pt; font-weight: 700; color: #2B4B65; border-bottom: 1px solid #E0E0E0; padding-bottom: 8px; margin-top: 24px; margin-bottom: 16px; line-height: 1.2;"; }
+            else if(node.tagName === 'H3') { node.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 14pt; font-weight: 700; color: #303133; border-left: 4px solid #BF1E33; padding-left: 10px; margin-top: 20px; margin-bottom: 12px; line-height: 1.2;"; }
+            else if(node.tagName === 'P') { node.style.cssText = baseStyle + " margin-bottom: 12pt;"; }
          }
          node.childNodes.forEach(recursiveApply);
       };
       recursiveApply(clone);
-
       wrapper.innerHTML = clone.innerHTML;
-
       try {
         const htmlBlob = new Blob([wrapper.outerHTML], {type: 'text/html'});
         const textBlob = new Blob([editor.innerText], {type: 'text/plain'});
         await navigator.clipboard.write([new ClipboardItem({'text/html': htmlBlob, 'text/plain': textBlob})]);
         alert('✨ 已複製標準格式！\n即使在深色模式，貼上 Docs 也會是正確的白底黑字。');
-      } catch(e) {
-        alert('複製受阻，請手動全選複製。');
-      }
+      } catch(e) { alert('複製受阻，請手動全選複製。'); }
     }
-
-    // --- Formatting Tools ---
-    function execCmd(cmd, val) {
-      document.execCommand(cmd, false, val);
-      if(isAutoSync) isAutoSync = false;
-      updateWordCount();
-    }
-    
+    function execCmd(cmd, val) { document.execCommand(cmd, false, val); if(isAutoSync) isAutoSync = false; updateWordCount(); }
     function changeFontSize(pt) {
        try {
          const selection = window.getSelection();
          if (!selection.isCollapsed) {
-            const range = selection.getRangeAt(0);
-            const span = document.createElement("span");
-            span.style.fontSize = pt;
+            const range = selection.getRangeAt(0); const span = document.createElement("span"); span.style.fontSize = pt;
             try { range.surroundContents(span); } catch (e) { alert('跨段落選取無法精準調整字級。'); return; }
-         } else {
-            alert('請先選取文字');
-         }
-         if(isAutoSync) isAutoSync = false;
-         updateWordCount();
+         } else { alert('請先選取文字'); }
+         if(isAutoSync) isAutoSync = false; updateWordCount();
        } catch(e) { console.error(e); }
     }
-
     function applyColor(hex) { execCmd('foreColor', hex); }
-    function applyHighlight(hex) { 
-       if(!document.execCommand('hiliteColor', false, hex)) document.execCommand('backColor', false, hex);
-       if(isAutoSync) isAutoSync = false;
-    }
-
+    function applyHighlight(hex) { if(!document.execCommand('hiliteColor', false, hex)) document.execCommand('backColor', false, hex); if(isAutoSync) isAutoSync = false; }
     function switchTab(tab) {
-      const input = document.getElementById('sectionInput');
-      const preview = document.getElementById('sectionPreview');
-      if(tab === 'input') {
-        input.classList.remove('mobile-hidden');
-        preview.classList.add('mobile-hidden');
-      } else {
-        input.classList.add('mobile-hidden');
-        preview.classList.remove('mobile-hidden');
-      }
+      const input = document.getElementById('sectionInput'); const preview = document.getElementById('sectionPreview');
+      if(tab === 'input') { input.classList.remove('mobile-hidden'); preview.classList.add('mobile-hidden'); } 
+      else { input.classList.add('mobile-hidden'); preview.classList.remove('mobile-hidden'); }
     }
   </script>
 </body>
