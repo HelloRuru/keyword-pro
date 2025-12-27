@@ -1,5 +1,5 @@
-// sw.js - v6.9 (Non-destructive Highlight)
-const CACHE_NAME = 'fluo-v6.9'; 
+// sw.js - v7.1 (Fix Copy Bold Issue)
+const CACHE_NAME = 'fluo-v7.1'; 
 const ASSETS = [
   './',
   './index.html',
