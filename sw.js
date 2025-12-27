@@ -1,5 +1,5 @@
-// sw.js - v7.6 (Clipboard Interceptor)
-const CACHE_NAME = 'fluo-v7.6'; 
+// sw.js - v7.7 (Mobile Layout & Button Feedback Fix)
+const CACHE_NAME = 'fluo-v7.7'; 
 const ASSETS = [
   './',
   './index.html',
