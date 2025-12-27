@@ -6,12 +6,13 @@
 > **「 像是紙上作業般的優雅，卻擁有數位的精準。」**
 >
 > 專為 SEO 內容創作者打造的數位文房具。
-> 以利休色系的沈穩美學，解決 **Google Docs 貼上跑版**、**草稿意外遺失** 與 **結構化標註** 的生產力痛點。
+> 結合 **字數統計**、**結構化標註** 與 **Google Docs 完美移植技術**，
+> 在極簡的日系雜誌風格中，找回書寫的節奏。
 
 <br>
 
-![Version](https://img.shields.io/badge/Version-v7.0_Golden_Master-715C1F?style=for-the-badge&logo=git&logoColor=white)
-![Tool](https://img.shields.io/badge/Feature-Auto_Save_Engine-B7282E?style=for-the-badge&logo=google-docs&logoColor=white)
+![Version](https://img.shields.io/badge/Version-v4.0_Stable-715C1F?style=for-the-badge&logo=git&logoColor=white)
+![Design](https://img.shields.io/badge/Design-Zen_Aesthetics-B7282E?style=for-the-badge&logo=artstation&logoColor=white)
 ![Copyright](https://img.shields.io/badge/Copyright-©2025_Kaoru_Tsai-192F60?style=for-the-badge)
 
 </div>
@@ -22,42 +23,40 @@
 
 ## 📖 序言 (Introduction)
 
-**蛍光ペン PRO (Highlighter PRO)** 是一款運行於瀏覽器的 **SEO 寫作輔助工具 (SPA)**。
+**蛍光ペン PRO (Highlighter PRO)** 不僅僅是一個編輯器，它是運行於瀏覽器上的 **「職人級 SEO 文案工具」**。
 
-它摒棄了繁雜的後台與多餘的按鈕，回歸書寫的本質。我們在介面上導入了極微細的 **「紙張噪點 (Paper Noise)」** 與 **「文具實體感」**，並搭載了最先進的 **防災記憶引擎**。無論是不小心關閉分頁或瀏覽器崩潰，您的靈感都將被完整保留。
+我們摒棄了繁雜的後台，回歸書寫本質。透過 **「線條感圖示 (Line-art Icons)」** 與 **「紙張紋理 (Grid Texture)」**，營造出如同翻閱日系雜誌般的視覺體驗。搭載最先進的 **樣式烘焙技術 (Style Baking)**，解決了寫手最頭痛的 Google Docs 貼上跑版問題。
 
-這是專為那些在乎「手感」與「交付品質」的職人寫手所設計的工具。
+**Production by Kaoru Tsai，於 2025 製作。**
 
 ---
 
-## ⚡ 痛點與解方 (Philosophy)
+## ⚡ 核心哲學 (Philosophy & Solutions)
 
-針對 SEO 內容工作者最常遇到的挑戰，我們以「穩定性」與「格式化」為核心提出解方。
+我們針對 SEO 寫手的真實工作場景，重新定義了數位寫作的標準。
 
 | 寫手的痛點 (Pain Points) | 蛍光ペン PRO 的解法 (Solution) |
 | :--- | :--- |
-| **網頁崩潰，草稿全滅** | **防災記憶系統 (Auto-Save)**<br>內建 LocalStorage 引擎，即時監聽每一個按鍵。無論重新整理或關閉視窗，再次打開時內容依舊存在。 |
-| **Google Docs 格式跑版** | **樣式鎖定技術 (Style Lock)**<br>透過 H1/H2/P 按鈕，將 24/18/12pt 字級與行高直接寫入代碼。貼上 Google Docs 時，格式將被強制保留。 |
-| **介面操作不直覺** | **雙語友善介面 (Bilingual UI)**<br>全站按鈕採中英對照設計（如：Undo/復原），搭配直覺的「文具系」圖標，降低操作門檻。 |
-| **關鍵字標註耗時** | **一鍵注入 (Auto Inject)**<br>輸入關鍵字庫後，系統瞬間將文內目標詞轉為 **[茜色+粗體]**，視覺化檢視 SEO 密度。 |
-| **誤刪資料** | **三段式重置防呆**<br>提供「僅清空原文」、「僅清空關鍵字」與「全部還原」選項，並設有二重確認機制，防止誤觸。 |
+| **Google Docs 貼上跑版** | **樣式烘焙技術 (Style Baking)**<br>獨家開發的轉換引擎，將網頁上的 H2/H3/色票/螢光筆，強制封裝為 Google Docs 可識別的內嵌樣式。**複製即貼上，格式零誤差。** |
+| **字數控制困難** | **即時數據儀表 (Live Stats)**<br>底部常駐字數統計條。支援「總字數」與「選取範圍字數」雙重監測，並可一鍵切換「含/不含標點符號」，精準控制 SEO 密度。 |
+| **關鍵字標註耗時** | **一鍵注入 (Auto Inject)**<br>輸入關鍵字庫後，系統瞬間將文內目標詞轉為 **[茜色+粗體]**，並提供 **「懸停聚焦 (Hover Focus)」** 功能，滑鼠移過即可高亮檢視分佈。 |
+| **手機修改不便** | **浮動文具盒 (Mobile Float Menu)**<br>專為行動裝置設計。在手機上選取文字時，會自動彈出精簡版工具列，讓手指無需在螢幕上下來回奔波。 |
 
 ---
 
-## ✨ 核心機能 (Craftsmanship)
+## ✨ 機能工藝 (Craftsmanship)
 
-### 01. 利休色調・沉浸式寫作空間 (Rikyu Workspace)
-* **紙上書寫感**：背景採用「米色畫布」疊加 SVG 噪點紋理，模擬真實紙張觸感，降低長時間注視螢幕的疲勞。
-* **狀態指示燈**：右下角搭載動態燈號，即時顯示 **[🟠 儲存中]** 與 **[🟢 已儲存]** 狀態，讓您安心寫作。
+### 01. 雜誌感介面設計 (Magazine UI)
+* **視覺語言**：全站採用 `1.2px` 極細線條 SVG 圖示，搭配 `Shippori Mincho` (襯線體) 與 `Zen Kaku Gothic` (黑體)，呈現日系排版的空氣感。
+* **深色模式**：搭載 **「墨金 (Sumi-Gold)」** 夜間主題，配合毛玻璃 (Glassmorphism) 特效工具列，提供沉浸式的夜間寫作體驗。
 
-### 02. 直覺式編輯工具列 (Stationery Toolbar)
-* **結構化標籤**：H1 (大標)、H2 (副標)、P (內文) 獨立按鈕，一鍵賦予文章 SEO 權重與正確字級。
-* **重點螢光筆**：提供 **[重點 (Red Marker)]** 按鈕與多色色票（墨/紺/蘇芳），模擬真實螢光筆與鋼筆的批註體驗。
-* **微觸感設計**：按鈕採懸浮卡片設計，滑鼠滑過時會有細微的上浮動畫，提供明確的互動反饋。
+### 02. 結構化編輯 (Structured Editing)
+* **SEO 標籤鎖定**：提供 H2 (章節)、H3 (子題)、P (內文) 獨立按鈕，確保文章結構符合搜尋引擎喜好。
+* **文具系配色**：內建 5 款精選 **「日本傳統色」** 文字墨水（如：藍鉄、千歲綠）與 5 款柔和螢光筆，告別刺眼的預設色彩。
 
-### 03. 無縫交付 (Seamless Delivery)
-* **智能複製引擎**：點擊 **[複製文案]** 時，系統會自動清洗雜訊並封裝格式。
-* **交付標準化**：直接貼上 Google Docs，即可獲得完美的微軟正黑體排版，無需二次調整。
+### 03. 安全與防護 (Security & Legal)
+* **防災記憶 (Auto-Save)**：內建 LocalStorage 引擎，即時監聽每一個按鍵。無論瀏覽器崩潰或斷電，靈感都被完整保留。
+* **防盜機制**：底層植入防護腳本，禁用右鍵與原始碼檢視，保護您的原創工具不被輕易抄襲。
 
 ---
 
@@ -65,50 +64,54 @@
 
 ### Step 1. 入稿 (Input)
 > 在左側側邊欄貼上您的文章草稿。
-* 系統會立即啟動 **Auto-Save**，您會看到右下角狀態燈號閃爍。
-* 支援純文字貼上，系統會自動轉換為標準段落。
+* 系統支援純文字貼上，會自動轉換為標準段落格式。
+* 您可以隨時點擊 **「✨ AI 智慧建議」**，獲取 SEO 標題與 Meta Description 靈感。
 
-### Step 2. 定義 (Define)
-> 在左下方「SEO 關鍵字庫」輸入鎖定的關鍵字（每行一個）。
-* 輸入完畢後，點擊紅色的 **[一鍵注入樣式]** 按鈕。
-* 文章內的所有關鍵字將立即轉為 **紅色粗體**。
+### Step 2. 標註 (Highlight)
+> 在左下方輸入 SEO 關鍵字。
+* 點擊紅色的 **[一鍵標註]**，系統將自動計算密度並標示關鍵字。
+* 利用滑鼠游標滑過左側關鍵字卡片，右側文章會產生 **呼吸燈效果**，幫助您確認關鍵字分佈位置。
 
-### Step 3. 結構 (Structure)
-> 設定文章骨架，這對 SEO 至關重要。
-* 選取大標題 → 點擊上方 `H1` (鎖定 24pt)。
-* 選取副標題 → 點擊上方 `H2` (鎖定 18pt)。
-* 使用 `重點` 按鈕標記重要段落。
+### Step 3. 編輯 (Edit)
+> 像在紙上畫重點一樣。
+* 選取文字，透過頂部（或手機浮動）工具列進行 **H2/H3 設定**、**文字上色** 或 **畫螢光筆**。
+* 若需修改，使用 **[橡皮擦]** 圖示可一鍵清除格式但保留文字。
 
-### Step 4. 交付 (Export)
-> 完成編輯。
-* 點擊右上方 **[複製文案]** 按鈕（出現綠色打勾提示）。
-* 前往 Google Docs 按下貼上 (Ctrl+V)，格式將完美呈現。
-* 若需重新開始，點擊左側 **[清空重置]** 並選擇對應項目。
+### Step 4. 交付 (Delivery)
+> 完美的最後一哩路。
+* 確認底部字數符合需求。
+* 點擊 **[複製到 Docs]**。
+* 前往 Google Docs 按下貼上 (Ctrl+V)，您將看到連字體（Noto Sans TC）與行距都已被完美設定。
 
 ---
 
 ## 🛠️ 技術規格 (Specifications)
 
-* **Version**: v7.0 (Golden Master / 最終穩定版)
-* **Architecture**: Vanilla JS (ES6+) + Tailwind CSS
-* **Core Engine**: LocalStorage (記憶), Selection Range API (游標), Style Injection (格式)
-* **Typography**: Shippori Mincho (UI Serif), Zen Kaku Gothic New (UI Sans), Microsoft JhengHei (Content)
+* **Version**: v4.0 (Robust Architecture / 穩健架構版)
+* **Architecture**: Single-File HTML / Vanilla JS (ES6+) / Tailwind CSS
+* **Typography**: Noto Sans TC (Google Docs Target), Shippori Mincho (UI)
+* **Compatibility**: iOS Safari, Android Chrome, Desktop Browsers
 
 ---
 
-## ©️ 權利聲明 (Legal)
+## ©️ 權利聲明 (Legal Disclaimer)
 
 **蛍光ペン PRO (Highlighter PRO)**
 *The SEO Writer's Digital Stationery.*
 
-* **Designer & Developer**: Kaoru Tsai
-* **Copyright**: © 2025 Kaoru Tsai. All Rights Reserved.
+* **Creator**: Kaoru Tsai
+* **Production Year**: 2025
 
-> 本網站所載之程式碼邏輯、介面設計、圖示系統與品牌文案均受著作權法保護。
-> 未經授權，禁止複製、修改、重製或用於商業用途。
+> **Production by Kaoru Tsai，於 2025 製作。**
+>
+> 本軟體（包含程式碼邏輯、介面設計、圖示系統、配色方案與文案）之著作權及智慧財產權，均專屬於 **Kaoru Tsai** 所有。
+>
+> 1. **授權範圍**：僅授權予終端使用者進行內容創作與編輯使用。
+> 2. **禁止事項**：嚴禁任何形式的逆向工程 (Reverse Engineering)、源碼解構、複製、重製、修改或將本工具之全部或部分用於商業販售與二次分發。
+> 3. **法律效力**：任何違反上述聲明之行為，製作者將保留一切法律追訴權。
 
 <br>
 
 <div align="center">
-  <small>Made with ❤️ and ☕ for writers.</small>
+  <small>Made with ❤️ and ☕ in Taiwan.</small>
 </div>
