@@ -1,5 +1,5 @@
-// sw.js - v8.4 (Highlight Algorithm Fix)
-const CACHE_NAME = 'fluo-v8.4'; 
+// sw.js - v8.7 (Line Height 1.0 Fix)
+const CACHE_NAME = 'fluo-v8.7'; 
 const ASSETS = [
   './',
   './index.html',
