@@ -49,7 +49,16 @@
   .custom-scroll::-webkit-scrollbar-thumb { background: #CCC; border-radius: 2px; }
   [data-theme="dark"] .custom-scroll::-webkit-scrollbar-thumb { background: #555; }
 
-  .sidebar { background: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 20; box-shadow: 2px 0 15px rgba(0,0,0,0.03); transition: background 0.3s; }
+  /* 🟢 CSS 修復重點：側邊欄樣式 */
+  .sidebar { 
+    background: var(--bg-sidebar); 
+    border-right: 1px solid var(--border-color); 
+    display: flex; flex-direction: column; 
+    z-index: 20; 
+    box-shadow: 2px 0 15px rgba(0,0,0,0.03); 
+    transition: background 0.3s; 
+  }
+  
   .input-area { width: 100%; background: var(--bg-canvas); border: 1px solid var(--border-color); border-radius: 4px; padding: 12px; font-size: 14px; font-family: var(--font-sans); resize: none; outline: none; transition: 0.2s; line-height: 1.6; color: var(--c-ink); }
   .input-area:focus { border-color: var(--c-accent); background: var(--bg-sidebar); box-shadow: 0 2px 8px rgba(0,0,0, 0.1); }
   .density-panel { background: var(--bg-canvas); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; margin-bottom: 10px; max-height: 120px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 6px; }
@@ -61,6 +70,7 @@
   [data-theme="dark"] .kw-tag.missing { background: #3B1C1C; border-color: #742A2A; color: #FC8181; }
 
   .preview-container { flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden; z-index: 10; }
+  
   .toolbar { 
     background: var(--bg-sidebar); border-bottom: 1px solid var(--border-color); 
     padding: 8px 16px; display: flex; align-items: center; gap: 12px; 
@@ -92,8 +102,10 @@
   .floating-menu { position: fixed; z-index: 999; background: var(--bg-sidebar); border: 1px solid var(--border-color); border-radius: 50px; padding: 6px 12px; display: flex; gap: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); opacity: 0; pointer-events: none; transform: translateY(10px); transition: 0.2s; }
   .floating-menu.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
 
+  /* 🟢 RWD 手機版關鍵修正 */
   @media (max-width: 768px) {
-    .sidebar { display: none; width: 100% !important; border-right: none; height: 100%; }
+    /* 移除舊的 display:none 規則，完全依賴 HTML class */
+    .sidebar { width: 100% !important; border-right: none; height: 100%; }
     .editor-paper { padding: 20px 16px; width: 100%; box-shadow: none; min-height: calc(100dvh - 150px); }
     .mobile-tab-bar { display: flex; }
     .toolbar { padding: 8px 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -128,6 +140,7 @@
   </div>
 
   <div class="flex-1 flex overflow-hidden relative">
+    
     <aside id="tabInput" class="sidebar flex flex-col w-full md:w-[320px] lg:w-[360px] custom-scroll bg-[var(--bg-sidebar)] z-20 border-r border-[var(--border-color)]">
       <div class="mobile-scroll-area p-5 flex flex-col gap-4">
           <div class="flex items-center justify-between mb-2">
@@ -135,7 +148,7 @@
               <svg class="w-8 h-8 text-[var(--c-accent)] hidden md:block" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="20"><path d="M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z" stroke='currentColor' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 180V320' stroke='currentColor' stroke-width='24' stroke-linecap='round'/><circle cx='256' cy='370' r='24' fill='var(--c-highlight)' stroke="none"/></svg>
               <div class="hidden md:block">
                 <h1 class="text-lg font-bold font-serif">蛍光ペン <span class="text-xs text-[var(--c-highlight)] font-sans">PRO</span></h1>
-                <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v7.6</p>
+                <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v7.7</p>
               </div>
             </div>
             <button onclick="App.UI.toggleTheme()" class="text-[var(--c-sub)] hover:text-[var(--c-accent)] hidden md:block" title="切換深色模式">
@@ -158,7 +171,7 @@
           </div>
 
           <div class="mt-4 space-y-3 pb-8">
-            <button onclick="App.Core.smartHighlight()" class="w-full py-3 bg-[var(--c-highlight)] text-white font-bold rounded shadow-md hover:opacity-90 transition text-sm font-serif tracking-wide">⟳ 一鍵標註 (Sync & Check)</button>
+            <button onclick="App.Core.forceSync()" class="w-full py-3 bg-[var(--c-highlight)] text-white font-bold rounded shadow-md hover:opacity-90 transition text-sm font-serif tracking-wide">⟳ 一鍵標註 (Sync & Check)</button>
             <button onclick="App.Core.copyToDocs()" class="w-full py-2 border border-[var(--c-accent)] text-[var(--c-accent)] rounded hover:bg-blue-50 hover:bg-opacity-10 transition text-sm flex justify-center items-center gap-2 font-serif"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg> 複製到 Docs (格式鎖定)</button>
             <div class="grid grid-cols-2 gap-2 pt-2 border-t border-[var(--border-color)]">
                <button onclick="App.Storage.clear('source')" class="py-1 text-xs text-gray-500 border border-gray-200 hover:border-red-500 rounded hover:text-red-500 font-serif transition">清空原文</button>
@@ -272,7 +285,6 @@
             App.Dom.kw.addEventListener('input', () => { App.Core.analyzeDensity(); App.Storage.save('fluo_kw', App.Dom.kw.value); });
             App.Dom.editor.addEventListener('input', () => { App.state.isAutoSync=false; App.UI.updateStats(); App.Storage.save('fluo_temp', App.Dom.editor.innerHTML); });
             
-            // 🟢 新增：攔截手動複製，強制執行樣式烘焙
             App.Dom.editor.addEventListener('copy', (e) => { App.Core.handleManualCopy(e); });
 
             document.addEventListener('selectionchange', () => { App.UI.updateStats(); const sel = window.getSelection(); if(sel.rangeCount > 0 && !sel.isCollapsed) { let p = sel.anchorNode.parentElement; if(p.tagName!=='SPAN') p=p.closest('span'); if(p&&p.style.fontSize) App.Dom.fontSelect.value = p.style.fontSize; }});
@@ -291,6 +303,23 @@
                 let html = '';
                 kws.forEach(kw => { const count = (text.match(new RegExp(kw, 'gi'))||[]).length; const d = (text.length>0)?((count*kw.length/text.length)*100).toFixed(1):0; let cls=count===0?'missing':(d>0.5&&d<5?'good':''); html += `<div class="kw-tag ${cls}">${kw} <span class="count">${count}</span> <span style="opacity:0.6">(${d}%)</span></div>`; });
                 App.Dom.density.innerHTML = html;
+            },
+            // 🟢 改良版 forceSync：判斷是否需要完整同步還是只標註
+            forceSync: () => {
+                const editorEmpty = !App.Dom.editor.innerText.trim();
+                const sourceHasText = App.Dom.source.value.trim().length > 0;
+                
+                if (editorEmpty && sourceHasText) {
+                    App.state.isAutoSync = true;
+                    App.Core.runSync();
+                    alert('✨ 已從原文同步並標註！');
+                } else {
+                    App.Core.smartHighlight();
+                    // 提供視覺回饋
+                    const kws = App.Dom.kw.value.trim();
+                    if(!kws) alert('⚠️ 請先輸入關鍵字');
+                    else alert('✨ 標註檢查完成！');
+                }
             },
             smartHighlight: () => {
                 const editor = App.Dom.editor; const kws = App.Dom.kw.value.split('\n').filter(k => k.trim());
@@ -311,13 +340,11 @@
                 walk(editor); App.Core.analyzeDensity(); App.UI.updateStats(); App.Storage.save('fluo_temp', editor.innerHTML);
             },
             restore: () => { if(confirm('將預覽區內容還原到輸入框？')) { App.Dom.source.value = App.Dom.editor.innerText; App.state.isAutoSync=true; App.Core.runSync(); }},
-            // 🟢 重複使用的烘焙邏輯
             bakeStyles: (rootNode) => {
                 const bake = (node) => {
                     if (node.nodeType === 1) { 
                         const style = window.getComputedStyle(node);
                         if (node.style.color && node.style.color.includes('var(')) { const v = node.style.color.match(/var\(([^)]+)\)/)[1]; if (Config.colors[v]) node.style.color = Config.colors[v]; }
-                        // Strict Bold Check
                         const isBold = (parseInt(style.fontWeight) >= 700) || ['H2','H3','B','STRONG'].includes(node.tagName);
                         node.style.fontWeight = isBold ? '700' : '400';
                         node.style.lineHeight = "1.0"; node.style.marginBottom = "12pt"; 
@@ -328,38 +355,27 @@
                 };
                 bake(rootNode);
             },
-            // 🟢 剪貼簿攔截器 (處理 Ctrl+C)
             handleManualCopy: (e) => {
                 const sel = window.getSelection();
                 if (sel.rangeCount === 0) return;
-                e.preventDefault(); // 阻止原生複製
-                
+                e.preventDefault(); 
                 const range = sel.getRangeAt(0);
                 const div = document.createElement('div');
                 div.appendChild(range.cloneContents());
-                
-                App.Core.bakeStyles(div); // 執行烘焙
-                
-                // 包裝器
+                App.Core.bakeStyles(div);
                 const wrapper = document.createElement('div');
                 wrapper.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 12pt; font-weight: 400; line-height: 1.0; color: #333; background: white;";
                 wrapper.appendChild(div);
-
-                if (e.clipboardData) {
-                    e.clipboardData.setData('text/html', wrapper.outerHTML);
-                    e.clipboardData.setData('text/plain', sel.toString());
-                }
+                if (e.clipboardData) { e.clipboardData.setData('text/html', wrapper.outerHTML); e.clipboardData.setData('text/plain', sel.toString()); }
             },
-            // 🟢 按鈕複製
             copyToDocs: async () => {
                 const wrapper = document.createElement('div');
                 wrapper.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 12pt; font-weight: 400; line-height: 1.0; color: #333; background: white;";
                 const clone = App.Dom.editor.cloneNode(true);
-                App.Core.bakeStyles(clone); // 執行烘焙
+                App.Core.bakeStyles(clone);
                 wrapper.innerHTML = clone.innerHTML;
                 try { await navigator.clipboard.write([new ClipboardItem({'text/html': new Blob([wrapper.outerHTML],{type:'text/html'}), 'text/plain': new Blob([App.Dom.editor.innerText],{type:'text/plain'})})]); alert('✨ 已複製！(Docs 格式鎖定)'); } catch(e) { alert('複製失敗'); }
-            },
-            forceSync: () => { App.Core.smartHighlight(); }
+            }
         },
         Format: {
             cmd: (c, v) => { document.execCommand(c, false, v); App.state.isAutoSync=false; App.UI.updateStats(); },
