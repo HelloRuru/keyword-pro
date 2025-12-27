@@ -1,5 +1,5 @@
-// sw.js - v7.3 (Final Stable Release)
-const CACHE_NAME = 'fluo-v7.3'; 
+// sw.js - v7.4 (Copy Fidelity Fix)
+const CACHE_NAME = 'fluo-v7.4'; 
 const ASSETS = [
   './',
   './index.html',
