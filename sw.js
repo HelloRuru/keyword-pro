@@ -1,5 +1,5 @@
-// sw.js - v6.2 (Add Reset Color Options)
-const CACHE_NAME = 'fluo-v6.2'; 
+// sw.js - v6.3 (Fix Buttons & Add Styles)
+const CACHE_NAME = 'fluo-v6.3'; 
 const ASSETS = [
   './',
   './index.html',
