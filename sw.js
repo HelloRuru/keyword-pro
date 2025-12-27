@@ -1,5 +1,5 @@
-// sw.js - v6.1 (Fix Toolbar & Fonts)
-const CACHE_NAME = 'fluo-v6.1'; 
+// sw.js - v6.2 (Add Reset Color Options)
+const CACHE_NAME = 'fluo-v6.2'; 
 const ASSETS = [
   './',
   './index.html',
