@@ -1,5 +1,5 @@
-// sw.js - v6.3 (Fix Deploy Error)
-const CACHE_NAME = 'fluo-v6.3'; 
+// sw.js - v6.4 (Final Stable Release)
+const CACHE_NAME = 'fluo-v6.4'; 
 const ASSETS = [
   './',
   './index.html',
