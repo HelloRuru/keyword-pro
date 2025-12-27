@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
 <title>蛍光ペン PRO | SEO文案數位工具</title>
-<meta name="description" content="專為內容創作者設計的日系數位文房具。具備 PWA 離線寫作、SEO 關鍵字密度檢測、Google Docs 格式無縫貼上、一鍵標註與深色模式功能。讓您的文字編輯、分析與排版工作更優雅高效。">
-<meta name="keywords" content="SEO工具, 文案編輯, 關鍵字密度, PWA, 離線寫作, Google Docs, 螢光筆, 蛍光ペン, 數位文房具">
+<meta name="description" content="專為SEO內容創作者設計的日系數位文房具。具備 PWA 離線寫作、SEO 關鍵字密度檢測、Google Docs 格式無縫貼上、一鍵標註與深色模式功能。">
+<meta name="keywords" content="SEO工具, 文案編輯, 關鍵字密度, PWA, 離線寫作, Google Docs, 螢光筆, 蛍光ペン, 數位文房具, GEO優化">
 <meta name="robots" content="index, follow">
 <meta name="author" content="Kaoru Tsai">
 
@@ -14,6 +14,21 @@
 <meta property="og:description" content="專為內容創作者設計的日系數位文房具。讓您的文字編輯、關鍵字分析與排版工作更優雅高效。">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="蛍光ペン PRO">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "蛍光ペン PRO",
+  "alternateName": "Fluo Pen PRO",
+  "description": "專為 SEO 文案與內容創作者設計的輕量級 PWA 編輯器。",
+  "applicationCategory": "ProductivityApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD" },
+  "featureList": [ "PWA 離線使用", "SEO 關鍵字密度即時檢測", "Google Docs 格式完美貼上", "一鍵自動標註關鍵字", "日系極簡介面", "跨平台支援" ],
+  "author": { "@type": "Person", "name": "Kaoru Tsai" }
+}
+</script>
 
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#F9F8F4">
@@ -147,7 +162,7 @@
               <svg class="w-8 h-8 text-[var(--c-accent)] hidden md:block" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="20"><path d="M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z" stroke='currentColor' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 180V320' stroke='currentColor' stroke-width='24' stroke-linecap='round'/><circle cx='256' cy='370' r='24' fill='var(--c-highlight)' stroke="none"/></svg>
               <div class="hidden md:block">
                 <h1 class="text-lg font-bold font-serif">蛍光ペン <span class="text-xs text-[var(--c-highlight)] font-sans">PRO</span></h1>
-                <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v8.2</p>
+                <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v8.4</p>
               </div>
             </div>
             <button onclick="App.UI.toggleTheme()" class="text-[var(--c-sub)] hover:text-[var(--c-accent)] hidden md:block" title="切換深色模式">
@@ -262,7 +277,6 @@
   <script>
     const Config = {
         colors: { '#333333': '#333333', '#2B4B65': '#2B4B65', '#BF1E33': '#BF1E33', '#2F5D50': '#2F5D50', '#6A4C9C': '#6A4C9C', 'var(--c-ink)': '#333333', 'var(--c-accent)': '#2B4B65', 'var(--c-highlight)': '#BF1E33' },
-        // 🟢 v8.2：維持標準字級定義
         fontScale: [10, 11, 12, 14, 16, 18, 20, 24, 28, 36, 48, 72]
     };
 
@@ -294,7 +308,6 @@
             const savedHtml = App.Storage.get('fluo_temp');
             if(savedHtml && savedHtml.trim().length > 0) { App.Dom.editor.innerHTML = savedHtml; App.state.isAutoSync = false; App.Core.analyzeDensity(); } else { App.Core.runSync(); }
             
-            // 🟢 Debounce for Input (0.5s delay)
             let debounceTimer;
             App.Dom.source.addEventListener('input', () => { 
                 clearTimeout(debounceTimer);
@@ -316,7 +329,6 @@
                 if(!App.state.isAutoSync) return;
                 const raw = App.Dom.source.value; const safeText = raw.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
                 const html = safeText.split('\n').map(line => line.trim() ? `<p>${line}</p>` : '<p><br></p>').join('');
-                // Avoid redundant rewrite if content is same (prevent flicker)
                 if (App.Dom.editor.innerHTML !== html) {
                     App.Dom.editor.innerHTML = html || '<p class="text-gray-300">請在左側輸入文字...</p>';
                     App.Core.smartHighlight(); 
@@ -336,23 +348,65 @@
                 if (editorEmpty && sourceHasText) { App.state.isAutoSync = true; App.Core.runSync(); alert('✨ 已從原文同步並標註！'); } 
                 else { App.Core.smartHighlight(); const kws = App.Dom.kw.value.trim(); if(!kws) alert('⚠️ 請先輸入關鍵字'); else alert('✨ 標註檢查完成！'); }
             },
+            // 🟢 v8.4 關鍵字標註邏輯重寫：全字串遍歷，解決重複與漏標
             smartHighlight: () => {
-                const editor = App.Dom.editor; const kws = App.Dom.kw.value.split('\n').filter(k => k.trim());
-                editor.querySelectorAll('b[data-auto="true"]').forEach(m => { const p = m.parentNode; while(m.firstChild) p.insertBefore(m.firstChild, m); p.removeChild(m); });
+                const editor = App.Dom.editor;
+                const kws = App.Dom.kw.value.split('\n').filter(k => k.trim());
+                
+                // 1. 清除舊的自動標註 (保留手動樣式)
+                editor.querySelectorAll('b[data-auto="true"]').forEach(mark => {
+                    const text = document.createTextNode(mark.textContent);
+                    mark.parentNode.replaceChild(text, mark);
+                });
                 editor.normalize();
-                if(kws.length === 0) { App.UI.updateStats(); return; }
+
+                if (kws.length === 0) { App.UI.updateStats(); return; }
+
+                // 2. 遞迴遍歷所有 Text Node
                 const walk = (node) => {
+                    // 只處理文字節點
                     if (node.nodeType === 3) {
-                        const text = node.nodeValue; kws.sort((a,b) => b.length - a.length); let match = null;
-                        for (let kw of kws) { const idx = text.toLowerCase().indexOf(kw.toLowerCase()); if (idx !== -1) { match = { idx, len: kw.length }; break; } }
-                        if (match) {
-                            const after = node.splitText(match.idx + match.len); const middle = node.splitText(match.idx);
-                            const b = document.createElement('b'); b.setAttribute('data-auto', 'true'); b.style.color = '#BF1E33'; b.textContent = middle.nodeValue;
-                            middle.parentNode.replaceChild(b, middle); walk(after);
+                        const text = node.nodeValue;
+                        // 尋找最早出現的關鍵字
+                        let bestMatch = null;
+                        
+                        kws.forEach(kw => {
+                            const idx = text.toLowerCase().indexOf(kw.toLowerCase());
+                            if (idx !== -1) {
+                                // 如果尚未找到，或者這個關鍵字出現得更早
+                                // 或者同時出現但這個關鍵字更長 (長詞優先)
+                                if (!bestMatch || idx < bestMatch.idx || (idx === bestMatch.idx && kw.length > bestMatch.len)) {
+                                    bestMatch = { idx, len: kw.length, str: kw };
+                                }
+                            }
+                        });
+
+                        // 3. 如果找到關鍵字，進行切割與替換
+                        if (bestMatch) {
+                            const matchText = text.substr(bestMatch.idx, bestMatch.len);
+                            const afterText = node.splitText(bestMatch.idx + bestMatch.len); // 切出後半段
+                            const middleNode = node.splitText(bestMatch.idx); // 切出關鍵字 (中間段)
+                            
+                            const b = document.createElement('b');
+                            b.setAttribute('data-auto', 'true');
+                            b.style.color = '#BF1E33';
+                            b.textContent = middleNode.nodeValue;
+                            
+                            middleNode.parentNode.replaceChild(b, middleNode);
+                            
+                            // 遞迴處理後半段 (這樣才能抓到後面的關鍵字，即使是短詞)
+                            walk(afterText); 
                         }
-                    } else if (node.nodeType === 1 && node.childNodes && !['SCRIPT','STYLE'].includes(node.tagName)) { Array.from(node.childNodes).forEach(walk); }
+                    } else if (node.nodeType === 1 && node.childNodes && !['SCRIPT', 'STYLE'].includes(node.tagName)) {
+                        // 遍歷子節點 (必須轉為 Array 避免動態更新導致的無限迴圈)
+                        Array.from(node.childNodes).forEach(walk);
+                    }
                 };
-                walk(editor); App.Core.analyzeDensity(); App.UI.updateStats(); App.Storage.save('fluo_temp', editor.innerHTML);
+
+                walk(editor);
+                App.Core.analyzeDensity(); 
+                App.UI.updateStats(); 
+                App.Storage.save('fluo_temp', editor.innerHTML);
             },
             restore: () => { if(confirm('確定要還原預覽區？')) { App.state.isAutoSync=true; App.Core.runSync(); }},
             bakeStyles: (rootNode) => {
