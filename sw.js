@@ -1,5 +1,5 @@
-// sw.js - v6.4 (Final Stable Release)
-const CACHE_NAME = 'fluo-v6.4'; 
+// sw.js - v6.4 (Clean Re-upload)
+const CACHE_NAME = 'fluo-v6.4';
 const ASSETS = [
   './',
   './index.html',
@@ -8,7 +8,7 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (e) => {
-  self.skipWaiting(); 
+  self.skipWaiting();
   e.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)));
 });
 
