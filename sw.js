@@ -1,5 +1,5 @@
-// sw.js - v7.2 (Dark Mode Aesthetic Upgrade)
-const CACHE_NAME = 'fluo-v7.2'; 
+// sw.js - v7.3 (iOS Icon Fix)
+const CACHE_NAME = 'fluo-v7.3'; 
 const ASSETS = [
   './',
   './index.html',
