@@ -58,12 +58,11 @@
   .kw-tag.missing { border-color: #FECACA; background: #FFF5F5; color: #C9171E; }
 
   .preview-container { flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden; z-index: 10; }
-  .toolbar { background: var(--bg-sidebar); border-bottom: 1px solid var(--border-color); padding: 8px 16px; display: flex; align-items: center; gap: 12px; overflow-x: auto; white-space: nowrap; z-index: 30; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-  .tool-btn { display: flex; align-items: center; justify-content: center; height: 32px; min-width: 32px; padding: 0 8px; border-radius: 4px; color: var(--c-sub); font-size: 13px; font-family: var(--font-serif); font-weight: 500; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
+  .toolbar { background: var(--bg-sidebar); border-bottom: 1px solid var(--border-color); padding: 8px 16px; display: flex; align-items: center; gap: 12px; overflow-x: auto; white-space: nowrap; z-index: 30; }
+  .tool-btn { display: flex; align-items: center; justify-content: center; height: 32px; min-width: 32px; padding: 0 8px; border-radius: 4px; color: var(--c-sub); font-size: 13px; font-family: var(--font-serif); font-weight: 500; cursor: pointer; border: 1px solid transparent; }
   .tool-btn:hover { background: var(--bg-canvas); color: var(--c-accent); border-color: var(--border-color); }
   .tool-sep { width: 1px; height: 20px; background: var(--border-color); flex-shrink: 0; }
-  .color-dot { width: 18px; height: 18px; border-radius: 50%; cursor: pointer; border: 2px solid var(--bg-sidebar); box-shadow: 0 0 0 1px var(--border-color); flex-shrink: 0; transition: transform 0.1s; display: flex; align-items: center; justify-content: center; }
-  .color-dot:active { transform: scale(0.9); }
+  .color-dot { width: 18px; height: 18px; border-radius: 50%; cursor: pointer; border: 2px solid var(--bg-sidebar); box-shadow: 0 0 0 1px var(--border-color); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
   .color-none { border: 1px solid #CCC; background: transparent; }
   .color-none svg { width: 10px; height: 10px; color: #999; }
 
@@ -77,7 +76,7 @@
   .floating-menu.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
 
   @media (max-width: 768px) {
-    .sidebar { display: none; width: 100% !important; border-right: none; }
+    .sidebar { display: none; width: 100% !important; border-right: none; height: 100%; }
     .editor-paper { padding: 20px 16px; width: 100%; box-shadow: none; min-height: calc(100dvh - 150px); }
     .mobile-tab-bar { display: flex; }
     .toolbar { padding: 8px 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -101,24 +100,25 @@
   </header>
 
   <div id="mobileFloatMenu" class="floating-menu">
-     <div onmousedown="event.preventDefault()" onclick="App.Format.removeHighlight()" class="color-dot color-none" title="移除螢光"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+     <div onmousedown="event.preventDefault()" onclick="App.Format.removeHighlight()" class="color-dot color-none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
      <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#F0DC70')" class="color-dot bg-[#F0DC70]"></div>
      <div class="w-[1px] h-4 bg-gray-200"></div>
-     <div onmousedown="event.preventDefault()" onclick="App.Format.removeColor()" class="color-dot color-none" title="重置文字色"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+     <div onmousedown="event.preventDefault()" onclick="App.Format.removeColor()" class="color-dot color-none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
      <div onmousedown="event.preventDefault()" onclick="App.Format.color('#BF1E33')" class="color-dot bg-[#BF1E33]"></div>
      <div class="w-[1px] h-4 bg-gray-200"></div>
      <button onmousedown="event.preventDefault()" onclick="App.Format.remove()" class="text-gray-500"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
   </div>
 
   <div class="flex-1 flex overflow-hidden relative">
-    <aside id="tabInput" class="sidebar w-full md:w-[320px] lg:w-[360px] custom-scroll overflow-y-auto p-5 hidden md:flex flex-col h-full mobile-active-page">
-      <div class="mobile-scroll-area flex flex-col gap-4 h-full">
+    
+    <aside id="tabInput" class="sidebar flex flex-col w-full md:w-[320px] lg:w-[360px] custom-scroll bg-[var(--bg-sidebar)] z-20 border-r border-[var(--border-color)]">
+      <div class="mobile-scroll-area p-5 flex flex-col gap-4">
           <div class="flex items-center justify-between mb-2">
             <div class="flex items-center gap-3">
               <svg class="w-8 h-8 text-[var(--c-accent)] hidden md:block" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="20"><path d="M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z" stroke='currentColor' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 180V320' stroke='currentColor' stroke-width='24' stroke-linecap='round'/><circle cx='256' cy='370' r='24' fill='%23BF1E33'/></svg>
               <div class="hidden md:block">
                 <h1 class="text-lg font-bold font-serif">蛍光ペン <span class="text-xs text-[var(--c-highlight)] font-sans">PRO</span></h1>
-                <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v6.9</p>
+                <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v7.1</p>
               </div>
             </div>
             <button onclick="App.UI.toggleTheme()" class="text-[var(--c-sub)] hover:text-[var(--c-accent)] hidden md:block" title="切換深色模式">
@@ -137,21 +137,12 @@
           <div>
             <h3 class="font-serif font-bold text-sm border-l-4 border-[var(--c-highlight)] pl-2 mb-2">SEO 關鍵字</h3>
             <textarea id="kwList" class="input-area h-20 mb-2" placeholder="關鍵字 (一行一個)"></textarea>
-            <div id="densityPanel" class="density-panel custom-scroll">
-               <span class="text-xs text-gray-400 w-full text-center py-2">等待輸入...</span>
-            </div>
+            <div id="densityPanel" class="density-panel custom-scroll"><span class="text-xs text-gray-400 w-full text-center py-2">等待輸入...</span></div>
           </div>
 
           <div class="mt-4 space-y-3 pb-8">
-            <button onclick="App.Core.smartHighlight()" class="w-full py-3 bg-[var(--c-highlight)] text-white font-bold rounded shadow-md hover:opacity-90 transition text-sm font-serif tracking-wide">
-              ⟳ 一鍵標註 (Sync & Check)
-            </button>
-            
-            <button onclick="App.Core.copyToDocs()" class="w-full py-2 border border-[var(--c-accent)] text-[var(--c-accent)] rounded hover:bg-blue-50 transition text-sm flex justify-center items-center gap-2 font-serif">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
-              複製到 Docs (格式鎖定)
-            </button>
-            
+            <button onclick="App.Core.smartHighlight()" class="w-full py-3 bg-[var(--c-highlight)] text-white font-bold rounded shadow-md hover:opacity-90 transition text-sm font-serif tracking-wide">⟳ 一鍵標註 (Sync & Check)</button>
+            <button onclick="App.Core.copyToDocs()" class="w-full py-2 border border-[var(--c-accent)] text-[var(--c-accent)] rounded hover:bg-blue-50 transition text-sm flex justify-center items-center gap-2 font-serif"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg> 複製到 Docs (格式鎖定)</button>
             <div class="grid grid-cols-2 gap-2 pt-2 border-t border-[var(--border-color)]">
                <button onclick="App.Storage.clear('source')" class="py-1 text-xs text-gray-500 border border-gray-200 rounded hover:text-red-500 font-serif">清空原文</button>
                <button onclick="App.Storage.clear('kw')" class="py-1 text-xs text-gray-500 border border-gray-200 rounded hover:text-red-500 font-serif">清空關鍵字</button>
@@ -164,47 +155,41 @@
       </div>
     </aside>
 
-    <main id="tabPreview" class="preview-container w-full h-full">
+    <main id="tabPreview" class="preview-container w-full h-full hidden md:flex flex-col">
       <div class="toolbar custom-scroll shrink-0">
         <button onmousedown="event.preventDefault()" onclick="document.execCommand('undo')" class="tool-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg></button>
         <button onmousedown="event.preventDefault()" onclick="document.execCommand('redo')" class="tool-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l6 3.7"/></svg></button>
         <div class="tool-sep"></div>
-        <button onmousedown="event.preventDefault()" onclick="document.execCommand('bold')" class="tool-btn font-serif font-bold text-lg" title="粗體">B</button>
-        <button onmousedown="event.preventDefault()" onclick="document.execCommand('italic')" class="tool-btn font-serif italic text-lg" title="斜體">I</button>
-        <button onmousedown="event.preventDefault()" onclick="document.execCommand('underline')" class="tool-btn font-serif underline text-lg" title="底線">U</button>
+        <button onmousedown="event.preventDefault()" onclick="document.execCommand('bold')" class="tool-btn font-serif font-bold text-lg">B</button>
+        <button onmousedown="event.preventDefault()" onclick="document.execCommand('italic')" class="tool-btn font-serif italic text-lg">I</button>
+        <button onmousedown="event.preventDefault()" onclick="document.execCommand('underline')" class="tool-btn font-serif underline text-lg">U</button>
         <div class="tool-sep"></div>
         <button onmousedown="event.preventDefault()" onclick="App.Format.cmd('formatBlock','h2')" class="tool-btn font-bold text-lg font-serif">H2</button>
         <button onmousedown="event.preventDefault()" onclick="App.Format.cmd('formatBlock','h3')" class="tool-btn font-bold text-base font-serif">H3</button>
         <button onmousedown="event.preventDefault()" onclick="App.Format.cmd('formatBlock','p')" class="tool-btn font-serif">P</button>
         <div class="tool-sep"></div>
         <div class="flex items-center gap-1">
-            <button onmousedown="event.preventDefault()" onclick="App.Format.stepSize(-1)" class="tool-btn font-serif text-sm px-1" title="縮小字級">A-</button>
-            <select id="fontSizeSelect" onchange="App.Format.setSize(this.value)" class="h-8 border border-[var(--border-color)] rounded text-xs bg-[var(--bg-sidebar)] px-1 outline-none font-sans w-12 text-center">
-              <option value="10pt">10</option><option value="11pt">11</option><option value="12pt" selected>12</option>
-              <option value="13pt">13</option><option value="14pt">14</option><option value="15pt">15</option>
-              <option value="16pt">16</option><option value="18pt">18</option><option value="20pt">20</option>
-              <option value="24pt">24</option><option value="30pt">30</option><option value="36pt">36</option>
-              <option value="48pt">48</option>
-            </select>
-            <button onmousedown="event.preventDefault()" onclick="App.Format.stepSize(1)" class="tool-btn font-serif text-lg px-1" title="放大字級">A+</button>
+            <button onmousedown="event.preventDefault()" onclick="App.Format.stepSize(-1)" class="tool-btn font-serif text-sm px-1">A-</button>
+            <select id="fontSizeSelect" onchange="App.Format.setSize(this.value)" class="h-8 border border-[var(--border-color)] rounded text-xs bg-[var(--bg-sidebar)] px-1 outline-none font-sans w-12 text-center"><option value="10pt">10</option><option value="11pt">11</option><option value="12pt" selected>12</option><option value="13pt">13</option><option value="14pt">14</option><option value="15pt">15</option><option value="16pt">16</option><option value="18pt">18</option><option value="20pt">20</option><option value="24pt">24</option><option value="30pt">30</option><option value="36pt">36</option><option value="48pt">48</option></select>
+            <button onmousedown="event.preventDefault()" onclick="App.Format.stepSize(1)" class="tool-btn font-serif text-lg px-1">A+</button>
         </div>
         <div class="tool-sep"></div>
         <div class="flex gap-2 px-1">
-          <div onmousedown="event.preventDefault()" onclick="App.Format.removeColor()" class="color-dot color-none" title="重置文字顏色"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
-          <div onmousedown="event.preventDefault()" onclick="App.Format.color('#333333')" class="color-dot bg-[#333333]" title="墨色"></div>
-          <div onmousedown="event.preventDefault()" onclick="App.Format.color('#2B4B65')" class="color-dot bg-[#2B4B65]" title="藍鉄"></div>
-          <div onmousedown="event.preventDefault()" onclick="App.Format.color('#BF1E33')" class="color-dot bg-[#BF1E33]" title="茜色"></div>
-          <div onmousedown="event.preventDefault()" onclick="App.Format.color('#2F5D50')" class="color-dot bg-[#2F5D50]" title="千歲綠"></div>
-          <div onmousedown="event.preventDefault()" onclick="App.Format.color('#6A4C9C')" class="color-dot bg-[#6A4C9C]" title="京紫"></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.removeColor()" class="color-dot color-none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.color('#333333')" class="color-dot bg-[#333333]"></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.color('#2B4B65')" class="color-dot bg-[#2B4B65]"></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.color('#BF1E33')" class="color-dot bg-[#BF1E33]"></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.color('#2F5D50')" class="color-dot bg-[#2F5D50]"></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.color('#6A4C9C')" class="color-dot bg-[#6A4C9C]"></div>
         </div>
         <div class="tool-sep"></div>
         <div class="flex gap-2 px-1">
-          <div onmousedown="event.preventDefault()" onclick="App.Format.removeHighlight()" class="color-dot color-none" title="移除螢光筆"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
-          <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#F0DC70')" class="color-dot bg-[#F0DC70]" title="刈安"></div>
-          <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#F5B199')" class="color-dot bg-[#F5B199]" title="桃色"></div>
-          <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#A0D8EF')" class="color-dot bg-[#A0D8EF]" title="空色"></div>
-          <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#C6Eac5')" class="color-dot bg-[#C6Eac5]" title="薄綠"></div>
-          <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#E0C8F2')" class="color-dot bg-[#E0C8F2]" title="藤色"></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.removeHighlight()" class="color-dot color-none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#F0DC70')" class="color-dot bg-[#F0DC70]"></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#F5B199')" class="color-dot bg-[#F5B199]"></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#A0D8EF')" class="color-dot bg-[#A0D8EF]"></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#C6Eac5')" class="color-dot bg-[#C6Eac5]"></div>
+          <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#E0C8F2')" class="color-dot bg-[#E0C8F2]"></div>
         </div>
         <div class="tool-sep"></div>
         <button onmousedown="event.preventDefault()" onclick="App.Format.remove()" class="tool-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
@@ -234,276 +219,140 @@
 
   <script>
     const Config = {
-        colors: {
-            '#333333': '#333333', '#2B4B65': '#2B4B65', '#BF1E33': '#BF1E33', 
-            '#2F5D50': '#2F5D50', '#6A4C9C': '#6A4C9C', 
-            'var(--c-ink)': '#333333', 'var(--c-accent)': '#2B4B65', 'var(--c-highlight)': '#BF1E33' 
-        },
+        colors: { '#333333': '#333333', '#2B4B65': '#2B4B65', '#BF1E33': '#BF1E33', '#2F5D50': '#2F5D50', '#6A4C9C': '#6A4C9C', 'var(--c-ink)': '#333333', 'var(--c-accent)': '#2B4B65', 'var(--c-highlight)': '#BF1E33' },
         fontScale: [10, 11, 12, 13, 14, 15, 16, 18, 20, 24, 30, 36, 48]
     };
 
     const App = {
         state: { isAutoSync: true, includePunctuation: true },
-        
         Storage: {
-            save: (key, val) => {
-                localStorage.setItem(key, val);
-                App.UI.showSaved();
-            },
+            save: (key, val) => { localStorage.setItem(key, val); App.UI.showSaved(); },
             get: (key) => localStorage.getItem(key),
             clear: (type) => { 
                 if(!confirm('確定清除？此動作無法復原。')) return;
                 if(type === 'source') { document.getElementById('sourceText').value = ''; App.Storage.save('fluo_src', ''); }
                 if(type === 'kw') { document.getElementById('kwList').value = ''; App.Storage.save('fluo_kw', ''); }
-                if(type === 'all') { 
-                    document.getElementById('sourceText').value = '';
-                    document.getElementById('kwList').value = '';
-                    document.getElementById('editor').innerHTML = '';
-                    localStorage.clear();
-                }
-                App.Core.runSync(); // Reset
+                if(type === 'all') { document.getElementById('sourceText').value = ''; document.getElementById('kwList').value = ''; document.getElementById('editor').innerHTML = ''; localStorage.clear(); }
+                App.Core.smartHighlight();
             },
             download: (format) => { 
                 const content = document.getElementById('editor').innerHTML;
-                const style = `
-                    body { font-family: 'Shippori Mincho', 'Zen Kaku Gothic New', sans-serif; max-width: 800px; margin: 20px auto; padding: 40px; color: #333; line-height: 1.6; }
-                    h2 { font-size: 18pt; color: #2B4B65; border-bottom: 1px solid #DDD; padding-bottom: 6px; margin: 24px 0 12px 0; }
-                    h3 { font-size: 14pt; color: #333; border-left: 4px solid #BF1E33; padding-left: 10px; margin: 18px 0 10px 0; }
-                    p { margin-bottom: 12pt; }
-                `;
-                const fullHtml = `
-                    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-                    <head><meta charset='utf-8'><title>Backup</title><style>${style}</style></head>
-                    <body>${content}</body></html>`;
+                const style = `body { font-family: 'Shippori Mincho', sans-serif; margin: 20px auto; padding: 40px; color: #333; line-height: 1.6; } h2 { font-size: 18pt; color: #2B4B65; border-bottom: 1px solid #DDD; } h3 { font-size: 14pt; border-left: 4px solid #BF1E33; padding-left: 10px; }`;
+                const fullHtml = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Backup</title><style>${style}</style></head><body>${content}</body></html>`;
                 const blob = new Blob([fullHtml], { type: format === 'doc' ? 'application/msword' : 'text/html' });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = `fluo_backup_${new Date().toISOString().slice(0,10)}.${format}`;
-                document.body.appendChild(a); a.click(); document.body.removeChild(a);
+                const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `fluo_backup_${new Date().toISOString().slice(0,10)}.${format}`; document.body.appendChild(a); a.click(); document.body.removeChild(a);
             }
         },
-
         Init: () => {
-            App.Dom = { 
-                source: document.getElementById('sourceText'), kw: document.getElementById('kwList'), 
-                editor: document.getElementById('editor'), density: document.getElementById('densityPanel'), 
-                countTotal: document.getElementById('countTotal'), countSel: document.getElementById('countSel'), 
-                puncDot: document.getElementById('puncDot'), saveStatus: document.getElementById('saveStatus'),
-                fontSelect: document.getElementById('fontSizeSelect')
-            };
-
+            App.Dom = { source: document.getElementById('sourceText'), kw: document.getElementById('kwList'), editor: document.getElementById('editor'), density: document.getElementById('densityPanel'), countTotal: document.getElementById('countTotal'), countSel: document.getElementById('countSel'), puncDot: document.getElementById('puncDot'), saveStatus: document.getElementById('saveStatus'), fontSelect: document.getElementById('fontSizeSelect') };
             if(localStorage.getItem('fluo_theme') === 'dark') document.body.setAttribute('data-theme', 'dark');
             if(App.Storage.get('fluo_src')) App.Dom.source.value = App.Storage.get('fluo_src');
             if(App.Storage.get('fluo_kw')) App.Dom.kw.value = App.Storage.get('fluo_kw');
-            // 初次載入時，若 Editor 有備份則優先使用，否則 Sync
             const savedHtml = App.Storage.get('fluo_temp');
-            if(savedHtml && savedHtml.trim().length > 0) {
-                App.Dom.editor.innerHTML = savedHtml;
-                App.state.isAutoSync = false;
-                App.Core.analyzeDensity();
-            } else {
-                App.Core.runSync();
-            }
-
+            if(savedHtml && savedHtml.trim().length > 0) { App.Dom.editor.innerHTML = savedHtml; App.state.isAutoSync = false; App.Core.analyzeDensity(); } else { App.Core.runSync(); }
             App.Dom.source.addEventListener('input', () => { App.state.isAutoSync=true; App.Core.runSync(); });
-            App.Dom.kw.addEventListener('input', () => { /* KW changes don't overwrite editor instantly, waiting for sync */ App.Core.analyzeDensity(); App.Storage.save('fluo_kw', App.Dom.kw.value); });
-            App.Dom.editor.addEventListener('input', () => { 
-                App.state.isAutoSync=false; 
-                App.UI.updateStats(); 
-                App.Storage.save('fluo_temp', App.Dom.editor.innerHTML); 
-            });
-            
-            document.addEventListener('selectionchange', () => {
-                App.UI.updateStats();
-                const sel = window.getSelection();
-                if(sel.rangeCount > 0 && !sel.isCollapsed) {
-                    let parent = sel.anchorNode.parentElement;
-                    if(parent.tagName !== 'SPAN') parent = parent.closest('span');
-                    if(parent && parent.style.fontSize) {
-                        App.Dom.fontSelect.value = parent.style.fontSize;
-                    }
-                }
-            });
+            App.Dom.kw.addEventListener('input', () => { App.Core.analyzeDensity(); App.Storage.save('fluo_kw', App.Dom.kw.value); });
+            App.Dom.editor.addEventListener('input', () => { App.state.isAutoSync=false; App.UI.updateStats(); App.Storage.save('fluo_temp', App.Dom.editor.innerHTML); });
+            document.addEventListener('selectionchange', () => { App.UI.updateStats(); const sel = window.getSelection(); if(sel.rangeCount > 0 && !sel.isCollapsed) { let p = sel.anchorNode.parentElement; if(p.tagName!=='SPAN') p=p.closest('span'); if(p&&p.style.fontSize) App.Dom.fontSelect.value = p.style.fontSize; }});
         },
-
         Core: {
             runSync: () => {
                 if(!App.state.isAutoSync) return;
-                const raw = App.Dom.source.value;
-                const safeText = raw.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                // 原始同步：直接覆蓋 (僅在剛開始或 Source 大改時觸發)
+                const raw = App.Dom.source.value; const safeText = raw.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
                 const html = safeText.split('\n').map(line => line.trim() ? `<p>${line}</p>` : '<p><br></p>').join('');
                 App.Dom.editor.innerHTML = html || '<p class="text-gray-300">請在左側輸入文字...</p>';
-                App.Core.smartHighlight(); // Sync 後自動高亮
-                App.Storage.save('fluo_src', raw);
+                App.Core.smartHighlight(); App.Storage.save('fluo_src', raw);
             },
             analyzeDensity: () => {
-                const text = App.Dom.source.value;
-                const kws = App.Dom.kw.value.split('\n').filter(k => k.trim());
+                const text = App.Dom.source.value; const kws = App.Dom.kw.value.split('\n').filter(k => k.trim());
                 if(kws.length === 0) { App.Dom.density.innerHTML = '<span class="text-xs text-gray-400 w-full text-center py-2">無關鍵字</span>'; return; }
                 let html = '';
-                kws.forEach(kw => {
-                    const count = (text.match(new RegExp(kw, 'gi')) || []).length;
-                    const density = (text.length > 0) ? ((count * kw.length / text.length) * 100).toFixed(1) : 0;
-                    let cls = count === 0 ? 'missing' : (density > 0.5 && density < 5 ? 'good' : '');
-                    html += `<div class="kw-tag ${cls}">${kw} <span class="count">${count}</span> <span style="opacity:0.6">(${density}%)</span></div>`;
-                });
+                kws.forEach(kw => { const count = (text.match(new RegExp(kw, 'gi'))||[]).length; const d = (text.length>0)?((count*kw.length/text.length)*100).toFixed(1):0; let cls=count===0?'missing':(d>0.5&&d<5?'good':''); html += `<div class="kw-tag ${cls}">${kw} <span class="count">${count}</span> <span style="opacity:0.6">(${d}%)</span></div>`; });
                 App.Dom.density.innerHTML = html;
             },
-            
-            // 🟢 智慧標註 (非破壞性)
             smartHighlight: () => {
-                const editor = App.Dom.editor;
-                const kws = App.Dom.kw.value.split('\n').filter(k => k.trim());
-                
-                // 1. 清除舊的自動標註 (保留 class="fluo-auto")
-                const oldMarks = editor.querySelectorAll('b[data-auto="true"]');
-                oldMarks.forEach(mark => {
-                    const parent = mark.parentNode;
-                    while(mark.firstChild) parent.insertBefore(mark.firstChild, mark);
-                    parent.removeChild(mark);
-                });
-                editor.normalize(); // 合併斷裂的文字節點
-
+                const editor = App.Dom.editor; const kws = App.Dom.kw.value.split('\n').filter(k => k.trim());
+                editor.querySelectorAll('b[data-auto="true"]').forEach(m => { const p = m.parentNode; while(m.firstChild) p.insertBefore(m.firstChild, m); p.removeChild(m); });
+                editor.normalize();
                 if(kws.length === 0) { App.UI.updateStats(); return; }
-
-                // 2. 遞迴搜尋文字節點並標註
                 const walk = (node) => {
-                    if (node.nodeType === 3) { // Text Node
-                        const text = node.nodeValue;
-                        // 簡單配對：找第一個符合的關鍵字
-                        // (為了效能與避免巢狀迴圈，一次處理一個最優先的關鍵字，遞迴處理剩餘部分)
-                        kws.sort((a,b) => b.length - a.length); // 長詞優先
-                        let match = null, matchKw = '';
-                        
-                        for (let kw of kws) {
-                            const idx = text.toLowerCase().indexOf(kw.toLowerCase());
-                            if (idx !== -1) {
-                                match = { idx, len: kw.length };
-                                matchKw = text.substr(idx, kw.length);
-                                break; 
-                            }
-                        }
-
+                    if (node.nodeType === 3) {
+                        const text = node.nodeValue; kws.sort((a,b) => b.length - a.length); let match = null;
+                        for (let kw of kws) { const idx = text.toLowerCase().indexOf(kw.toLowerCase()); if (idx !== -1) { match = { idx, len: kw.length }; break; } }
                         if (match) {
-                            const after = node.splitText(match.idx + match.len);
-                            const middle = node.splitText(match.idx);
-                            
-                            const b = document.createElement('b');
-                            b.setAttribute('data-auto', 'true');
-                            b.style.color = '#BF1E33'; // 紅色系
-                            b.textContent = middle.nodeValue;
-                            
-                            middle.parentNode.replaceChild(b, middle);
-                            
-                            walk(after); // 繼續處理後面的文字
+                            const after = node.splitText(match.idx + match.len); const middle = node.splitText(match.idx);
+                            const b = document.createElement('b'); b.setAttribute('data-auto', 'true'); b.style.color = '#BF1E33'; b.textContent = middle.nodeValue;
+                            middle.parentNode.replaceChild(b, middle); walk(after);
                         }
-                    } else if (node.nodeType === 1 && node.childNodes && !['SCRIPT','STYLE'].includes(node.tagName)) {
-                        Array.from(node.childNodes).forEach(walk);
-                    }
+                    } else if (node.nodeType === 1 && node.childNodes && !['SCRIPT','STYLE'].includes(node.tagName)) { Array.from(node.childNodes).forEach(walk); }
                 };
-                
-                walk(editor);
-                App.Core.analyzeDensity(); // 更新密度表
-                App.UI.updateStats();
-                App.Storage.save('fluo_temp', editor.innerHTML);
+                walk(editor); App.Core.analyzeDensity(); App.UI.updateStats(); App.Storage.save('fluo_temp', editor.innerHTML);
             },
-
             restore: () => { if(confirm('將預覽區內容還原到輸入框？')) { App.Dom.source.value = App.Dom.editor.innerText; App.state.isAutoSync=true; App.Core.runSync(); }},
+            // 🟢 修正：Google Docs 複製邏輯 (精準權重控制)
             copyToDocs: async () => {
                 const wrapper = document.createElement('div');
-                wrapper.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 12pt; line-height: 1.0; color: #333; background: white;";
+                // 預設全部為 400 (正常), Noto Sans TC, 12pt, 行高 1.0
+                wrapper.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 12pt; font-weight: 400; line-height: 1.0; color: #333; background: white;";
                 const clone = App.Dom.editor.cloneNode(true);
-                const bakeStyles = (node) => {
+                
+                const bake = (node) => {
                     if (node.nodeType === 1) { 
+                        const style = window.getComputedStyle(node);
+                        
+                        // 1. 色彩烘焙
                         if (node.style.color && node.style.color.includes('var(')) {
-                            const varName = node.style.color.match(/var\(([^)]+)\)/)[1];
-                            if (Config.colors[varName]) node.style.color = Config.colors[varName];
+                            const v = node.style.color.match(/var\(([^)]+)\)/)[1];
+                            if (Config.colors[v]) node.style.color = Config.colors[v];
                         }
-                        node.style.lineHeight = "1.0"; node.style.marginBottom = "12pt"; 
-                        if(node.tagName === 'H2') { node.style.fontSize="18pt"; node.style.color="#2B4B65"; node.style.lineHeight="1.2"; node.style.borderBottom="1px solid #DDD"; }
-                        if(node.tagName === 'H3') { node.style.fontSize="14pt"; node.style.color="#333"; node.style.lineHeight="1.2"; node.style.borderLeft="4px solid #BF1E33"; node.style.paddingLeft="8px"; }
+                        
+                        // 2. 粗體判斷 (修正：只有真的是粗體的才給 700)
+                        const isBold = (parseInt(style.fontWeight) >= 700) || node.tagName === 'B' || node.tagName === 'STRONG' || /^H[1-6]$/.test(node.tagName);
+                        node.style.fontWeight = isBold ? '700' : '400';
+                        
+                        // 3. 基本重置
+                        node.style.lineHeight = "1.0"; 
+                        node.style.marginBottom = "12pt"; 
+                        
+                        // 4. 標題例外處理
+                        if(node.tagName === 'H2') { 
+                            node.style.fontSize="18pt"; node.style.fontWeight="700"; node.style.color="#2B4B65"; 
+                            node.style.lineHeight="1.2"; node.style.borderBottom="1px solid #DDD"; 
+                        }
+                        if(node.tagName === 'H3') { 
+                            node.style.fontSize="14pt"; node.style.fontWeight="700"; node.style.color="#333"; 
+                            node.style.lineHeight="1.2"; node.style.borderLeft="4px solid #BF1E33"; node.style.paddingLeft="8px"; 
+                        }
                     }
-                    node.childNodes.forEach(bakeStyles);
+                    node.childNodes.forEach(bake);
                 };
-                bakeStyles(clone);
+                
+                bake(clone); 
                 wrapper.innerHTML = clone.innerHTML;
-                try {
-                    await navigator.clipboard.write([new ClipboardItem({'text/html': new Blob([wrapper.outerHTML],{type:'text/html'}), 'text/plain': new Blob([App.Dom.editor.innerText],{type:'text/plain'})})]);
-                    alert('✨ 已複製！(Docs 格式鎖定)');
-                } catch(e) { alert('複製失敗，請手動全選複製。'); }
+                
+                try { 
+                    await navigator.clipboard.write([new ClipboardItem({'text/html': new Blob([wrapper.outerHTML],{type:'text/html'}), 'text/plain': new Blob([App.Dom.editor.innerText],{type:'text/plain'})})]); 
+                    alert('✨ 已複製！(Docs 格式鎖定)'); 
+                } catch(e) { alert('複製失敗'); }
             },
-            forceSync: () => { 
-                // 按下按鈕時，不再暴力覆蓋，而是執行智慧標註
-                App.Core.smartHighlight(); 
-            }
+            forceSync: () => { App.Core.smartHighlight(); }
         },
-
         Format: {
             cmd: (c, v) => { document.execCommand(c, false, v); App.state.isAutoSync=false; App.UI.updateStats(); },
-            setSize: (pt) => {
-               const sel = window.getSelection();
-               if (sel.isCollapsed) return alert('請先選取文字');
-               document.execCommand('fontSize', false, '7');
-               const fonts = App.Dom.editor.querySelectorAll('font[size="7"]');
-               fonts.forEach(el => { el.removeAttribute('size'); el.style.fontSize = pt; });
-               App.state.isAutoSync=false;
-            },
-            stepSize: (step) => {
-                const sel = window.getSelection();
-                if (sel.isCollapsed) return alert('請先選取文字');
-                let currentPt = 12;
-                if(sel.anchorNode.parentElement.tagName === 'SPAN' && sel.anchorNode.parentElement.style.fontSize) {
-                    currentPt = parseInt(sel.anchorNode.parentElement.style.fontSize);
-                }
-                let idx = Config.fontScale.findIndex(s => s >= currentPt);
-                if (idx === -1) idx = 2;
-                let newIdx = idx + step;
-                if(newIdx < 0) newIdx = 0;
-                if(newIdx >= Config.fontScale.length) newIdx = Config.fontScale.length - 1;
-                const newSize = Config.fontScale[newIdx] + 'pt';
-                App.Format.setSize(newSize);
-                App.Dom.fontSelect.value = newSize;
-            },
-            color: (c) => App.Format.cmd('foreColor', c),
-            highlight: (c) => { document.execCommand('hiliteColor', false, c) || document.execCommand('backColor', false, c); App.state.isAutoSync=false; },
+            setSize: (pt) => { const sel = window.getSelection(); if (sel.isCollapsed) return alert('請先選字'); document.execCommand('fontSize', false, '7'); App.Dom.editor.querySelectorAll('font[size="7"]').forEach(el => { el.removeAttribute('size'); el.style.fontSize = pt; }); App.state.isAutoSync=false; },
+            stepSize: (step) => { const sel = window.getSelection(); if (sel.isCollapsed) return alert('請先選字'); let cur = 12; if(sel.anchorNode.parentElement.tagName === 'SPAN' && sel.anchorNode.parentElement.style.fontSize) cur = parseInt(sel.anchorNode.parentElement.style.fontSize); let idx = Config.fontScale.findIndex(s => s >= cur); if (idx === -1) idx = 2; let nIdx = Math.max(0, Math.min(Config.fontScale.length - 1, idx + step)); const nSize = Config.fontScale[nIdx] + 'pt'; App.Format.setSize(nSize); App.Dom.fontSelect.value = nSize; },
+            color: (c) => App.Format.cmd('foreColor', c), highlight: (c) => { document.execCommand('hiliteColor', false, c) || document.execCommand('backColor', false, c); App.state.isAutoSync=false; },
             removeColor: () => { document.execCommand('foreColor', false, '#333333'); App.state.isAutoSync=false; },
             removeHighlight: () => { document.execCommand('backColor', false, 'transparent'); App.state.isAutoSync=false; },
             remove: () => { App.Format.cmd('removeFormat'); App.Format.cmd('backColor', 'transparent'); }
         },
-
         UI: {
-            updateStats: () => {
-                const text = App.Dom.editor.innerText || '';
-                const clean = App.state.includePunctuation ? text : text.replace(/[^\w\u4e00-\u9fa5]/g, '');
-                App.Dom.countTotal.innerText = clean.replace(/[\n\r]/g, '').length;
-                const sel = window.getSelection().toString();
-                App.Dom.countSel.innerText = App.state.includePunctuation ? sel.length : sel.replace(/[^\w\u4e00-\u9fa5]/g, '').length;
-                
-                const floatMenu = document.getElementById('mobileFloatMenu');
-                if(window.innerWidth < 768 && sel.length > 0) {
-                    floatMenu.classList.add('show');
-                    const rect = window.getSelection().getRangeAt(0).getBoundingClientRect();
-                    floatMenu.style.top = `${Math.max(10, rect.top - 60)}px`;
-                    floatMenu.style.left = `${Math.max(10, rect.left)}px`;
-                } else {
-                    floatMenu.classList.remove('show');
-                }
-            },
-            showSaved: () => {
-                App.Dom.saveStatus.style.opacity = '1';
-                setTimeout(() => { App.Dom.saveStatus.style.opacity = '0'; }, 1500);
-            },
-            togglePunctuation: () => {
-                App.state.includePunctuation = !App.state.includePunctuation;
-                App.Dom.puncDot.className = App.state.includePunctuation ? "w-2 h-2 rounded-full bg-green-500" : "w-2 h-2 rounded-full bg-gray-300";
-                App.UI.updateStats();
-            },
+            updateStats: () => { const t = App.Dom.editor.innerText || ''; const c = App.state.includePunctuation ? t : t.replace(/[^\w\u4e00-\u9fa5]/g, ''); App.Dom.countTotal.innerText = c.replace(/[\n\r]/g, '').length; const s = window.getSelection().toString(); App.Dom.countSel.innerText = App.state.includePunctuation ? s.length : s.replace(/[^\w\u4e00-\u9fa5]/g, '').length; const m = document.getElementById('mobileFloatMenu'); if(window.innerWidth < 768 && s.length > 0) { m.classList.add('show'); m.style.top = '100px'; m.style.left = '50%'; m.style.transform = 'translateX(-50%)'; } else { m.classList.remove('show'); } },
+            showSaved: () => { App.Dom.saveStatus.style.opacity = '1'; setTimeout(() => { App.Dom.saveStatus.style.opacity = '0'; }, 1500); },
+            togglePunctuation: () => { App.state.includePunctuation = !App.state.includePunctuation; App.Dom.puncDot.className = App.state.includePunctuation ? "w-2 h-2 rounded-full bg-green-500" : "w-2 h-2 rounded-full bg-gray-300"; App.UI.updateStats(); },
             switchMobileTab: (tab) => {
-                const input = document.getElementById('tabInput');
-                const preview = document.getElementById('tabPreview');
-                const btnInput = document.getElementById('tabBtnInput');
-                const btnPreview = document.getElementById('tabBtnPreview');
+                const input = document.getElementById('tabInput'); const preview = document.getElementById('tabPreview');
+                const btnInput = document.getElementById('tabBtnInput'); const btnPreview = document.getElementById('tabBtnPreview');
                 if(tab==='input'){ 
                     input.classList.remove('hidden'); input.classList.add('flex'); 
                     preview.classList.remove('flex'); preview.classList.add('hidden'); 
@@ -514,14 +363,9 @@
                     btnInput.classList.remove('active'); btnPreview.classList.add('active'); 
                 }
             },
-            toggleTheme: () => {
-               const isDark = document.body.getAttribute('data-theme') === 'dark';
-               document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-               localStorage.setItem('fluo_theme', isDark ? 'light' : 'dark');
-            }
+            toggleTheme: () => { const isDark = document.body.getAttribute('data-theme') === 'dark'; document.body.setAttribute('data-theme', isDark ? 'light' : 'dark'); localStorage.setItem('fluo_theme', isDark ? 'light' : 'dark'); }
         }
     };
-    
     window.App = App;
     document.addEventListener('DOMContentLoaded', App.Init);
   </script>
