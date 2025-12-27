@@ -4,24 +4,36 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>蛍光ペン PRO - SEO文案數位工具</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23303133' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M20 2c0 0-2 2.5-4 2.5S13 2 13 2H4v18h16V2z'/><path d='M4 22h16'/><path d='M12 2v6'/><path d='M8 5h8'/></svg>">
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#F9F8F4">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='none'><path d='M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z' stroke='%232B4B65' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 180V320' stroke='%232B4B65' stroke-width='24' stroke-linecap='round'/><circle cx='256' cy='370' r='24' fill='%23BF1E33'/></svg>">
+
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Shippori+Mincho:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <script>
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
-    if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C'].includes(e.key))||(e.ctrlKey&&['u','U','s','S'].includes(e.key))){
+    if(e.key==='F12'||(e.ctrlKey&&['u','U','s','S'].includes(e.key))){
       e.preventDefault(); alert('系統保護中：禁止檢視原始碼與另存。\nProduction by Kaoru Tsai © 2025');
     }
   });
+  // PWA Registration
+  if ('serviceWorker' in navigator) {
+     window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(e => console.log('SW Fail')); });
+  }
 </script>
 
 <style>
-  /* --- System Variables --- */
   :root {
     --bg-canvas: #F9F8F4; --bg-sidebar: #FFFFFF; --bg-panel: #F8F9FA; --border-color: #EBEBEB;
-    --c-ink: #303133; --c-sub: #555555; --c-iron: #2B4B65; --c-crimson: #BF1E33; --c-forest: #2F5D50; --c-purple: #6A4C9C;
+    --c-ink: #303133; --c-sub: #555555; 
+    --c-iron: #2B4B65; /* 藍鉄 (Logo Main) */
+    --c-crimson: #BF1E33; /* 茜色 (Logo Accent) */
+    --c-forest: #2F5D50; --c-purple: #6A4C9C;
     --hl-yellow: #F0DC70; --hl-pink: #F5B199; --hl-blue: #A0D8EF; --hl-green: #C6Eac5; --hl-purple: #E0C8F2;
     --font-ui: 'Zen Kaku Gothic New', sans-serif; --font-serif: 'Shippori Mincho', serif; --font-docs: 'Noto Sans TC', sans-serif;
     --grid-pattern: linear-gradient(#E5E5E5 1px, transparent 1px), linear-gradient(90deg, #E5E5E5 1px, transparent 1px);
@@ -32,7 +44,6 @@
     --grid-pattern: linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px);
   }
 
-  /* --- Base --- */
   body { background: var(--bg-canvas); color: var(--c-ink); font-family: var(--font-ui); height: 100vh; overflow: hidden; display: flex; flex-direction: column; transition: 0.3s; user-select: none; }
   input, textarea, [contenteditable] { user-select: text; }
   .bg-grid { position: fixed; inset: 0; background-image: var(--grid-pattern); background-size: 20px 20px; opacity: 0.4; pointer-events: none; z-index: -1; }
@@ -41,7 +52,7 @@
   .custom-scroll::-webkit-scrollbar-thumb { background: #E0E0E0; border-radius: 3px; }
   [data-theme="dark"] .custom-scroll::-webkit-scrollbar-thumb { background: #444; }
 
-  /* --- Layout --- */
+  /* Layout */
   .sidebar-container { background: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 20; box-shadow: 2px 0 10px rgba(0,0,0,0.02); transition: 0.3s; }
   .section-title { font-family: var(--font-serif); font-weight: 800; font-size: 0.95rem; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 8px; position: relative; padding-left: 12px; }
   .section-title::before { content: ''; position: absolute; left: 0; top: 15%; bottom: 15%; width: 3px; background: var(--c-iron); border-radius: 2px; }
@@ -63,8 +74,6 @@
   .preview-wrapper { flex: 1; display: flex; flex-direction: column; background: var(--bg-canvas); position: relative; overflow: hidden; transition: 0.3s; }
   .editor-container { flex: 1; overflow-y: auto; padding: 20px 0; scroll-behavior: smooth; }
   .editor-paper { width: 100%; max-width: 820px; min-height: 100%; margin: 0 auto; background: var(--bg-sidebar); padding: 60px 80px 100px 80px; box-shadow: 0 0 40px rgba(0,0,0,0.03); outline: none; font-family: var(--font-docs); font-size: 12pt; line-height: 1.0; color: var(--c-ink); letter-spacing: 0.02em; text-align: justify; transition: 0.3s; }
-  
-  /* Formatting */
   .editor-paper h2 { font-family: var(--font-docs); font-size: 18pt; font-weight: 700; color: var(--c-iron); border-bottom: 1px solid var(--border-color); padding-bottom: 8px; margin: 24px 0 16px 0; }
   .editor-paper h3 { font-family: var(--font-docs); font-size: 14pt; font-weight: 700; color: var(--c-ink); border-left: 4px solid var(--c-crimson); padding-left: 10px; margin: 20px 0 12px 0; }
   .editor-paper p { margin-bottom: 12pt; }
@@ -132,13 +141,12 @@
            <button onclick="App.AI.close()" class="text-2xl text-[var(--c-sub)]">&times;</button>
         </div>
         <div id="aiContent"></div>
-        <p class="text-[10px] text-gray-400 mt-4 text-center">點擊建議即可複製 • Logic-Based AI Engine</p>
      </div>
   </div>
 
   <header class="h-14 flex md:hidden items-center px-4 bg-white border-b z-50 justify-between sticky top-0">
     <span class="font-serif font-bold text-lg text-gray-800 flex items-center gap-2">
-      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#303133" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 3.5L20.5 7.5L7.5 20.5H3.5V16.5L16.5 3.5Z" /><path d="M16 19L20 22" /><path d="M4 22h16" /></svg>
+      <svg class="w-5 h-5" viewBox="0 0 512 512" fill="none"><path d="M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z" stroke="#303133" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/><path d="M256 180V320" stroke="#303133" stroke-width="24" stroke-linecap="round"/><circle cx="256" cy="370" r="24" fill="#BF1E33"/></svg>
       蛍光ペン <span class="text-xs font-sans text-red-600">PRO</span>
     </span>
   </header>
@@ -146,13 +154,14 @@
   <div id="mobileFloatMenu" class="floating-menu">
      <div onmousedown="event.preventDefault()" onclick="App.Format.color('#BF1E33')" class="color-dot" style="background:#BF1E33" title="真紅"></div>
      <div onmousedown="event.preventDefault()" onclick="App.Format.color('#2B4B65')" class="color-dot" style="background:#2B4B65" title="藍鉄"></div>
-     <div onmousedown="event.preventDefault()" onclick="App.Format.color('#2F5D50')" class="color-dot" style="background:#2F5D50" title="千歲綠"></div>
      <div class="float-divider"></div>
      <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#F0DC70')" class="color-dot" style="background:var(--hl-yellow)" title="刈安"></div>
-     <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#F5B199')" class="color-dot" style="background:var(--hl-pink)" title="一斤染"></div>
      <div class="float-divider"></div>
      <div onmousedown="event.preventDefault()" onclick="App.Format.remove()" class="btn-tool w-6 h-6 p-0" title="清除">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+     </div>
+     <div id="synonymBtn" onmousedown="event.preventDefault()" class="hidden btn-tool w-6 h-6 p-0 text-yellow-600" title="替換詞">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3M3.337 17h4.673M12 21v-1"/></svg>
      </div>
   </div>
 
@@ -160,10 +169,10 @@
     <aside id="sectionInput" class="sidebar-container w-full md:w-[360px] custom-scroll overflow-y-auto">
       <div class="p-5 flex flex-col min-h-full">
           <div class="hidden md:flex items-center gap-3 mb-6 select-none">
-            <svg class="w-10 h-10 text-[#303133] dark:text-[#E0C088]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>
+            <svg class="w-10 h-10 text-[#303133] dark:text-[#E0C088]" viewBox="0 0 512 512" fill="none"><path d="M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z" stroke="currentColor" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/><path d="M256 180V320" stroke="currentColor" stroke-width="24" stroke-linecap="round"/><circle cx="256" cy="370" r="24" fill="#BF1E33"/></svg>
             <div>
               <h1 class="font-serif font-bold text-lg text-[var(--c-ink)] tracking-widest leading-none">蛍光ペン <span class="text-xs font-sans text-[var(--c-crimson)]">PRO</span></h1>
-              <p class="text-[9px] text-gray-400 tracking-[0.2em] mt-1">DOCS DRAFTING TOOL v4.0</p>
+              <p class="text-[9px] text-gray-400 tracking-[0.2em] mt-1">DOCS DRAFTING TOOL v4.2</p>
             </div>
           </div>
 
@@ -277,299 +286,138 @@
   </nav>
 
   <script>
-    // --- 1. System Config & State ---
     const Config = {
         locDict: {'質量': '品質', '視頻': '影片', '高清': '高畫質', '硬件': '硬體', '軟件': '軟體', '項目': '專案', '信息': '資訊', '網上': '線上', '服務器': '伺服器', '程序': '程式', '鼠標': '滑鼠', '打印': '列印', '屏幕': '螢幕', '內存': '記憶體'},
+        synonyms: {
+            '旅遊': ['旅行', '自由行', '小旅行', '深度遊'], '便宜': ['平價', '高CP值', '親民', '銅板價'],
+            '好吃': ['美味', '必吃', '饕客首選', '風味獨特'], '推薦': ['精選', '必買', '人氣', '熱銷'],
+            '住宿': ['飯店', '民宿', '旅店', '下榻'], '拍照': ['打卡', '取景', '美拍', '殺底片']
+        },
         titles: (kw) => [`【2025最新】${kw}完全攻略：新手必看的重點整理`, `還在煩惱${kw}？掌握這幾點讓你事半功倍`, `${kw}是什麼？完整解析與實用技巧`, `為什麼你需要${kw}？專家告訴你背後的秘密`, `5分鐘搞懂${kw}：懶人包總整理`]
     };
 
-    // --- 2. Storage Manager (Error Boundary) ---
     const Storage = {
-        save: (key, val) => {
-            try {
-                localStorage.setItem(key, val);
-            } catch (e) {
-                if (e.name === 'QuotaExceededError') alert('⚠️ 儲存空間已滿，請下載備份後清空！');
-                else console.error('Storage Error:', e);
-            }
-        },
+        save: (key, val) => { try { localStorage.setItem(key, val); } catch (e) { if(e.name==='QuotaExceededError') alert('儲存空間已滿'); } },
         get: (key) => localStorage.getItem(key),
-        clear: (type) => {
-            if(!confirm('確定清空？(無法復原，建議先備份)')) return;
-            if(type === 'source' || type === 'all') Dom.source.value = '';
-            if(type === 'kw' || type === 'all') Dom.kwInput.value = '';
-            if(type === 'all') { Dom.editor.innerHTML = ''; localStorage.clear(); }
-            App.Core.forceSync();
-        },
-        downloadBackup: () => {
-            const content = `<html><body>${Dom.editor.innerHTML}</body></html>`;
-            const blob = new Blob([content], {type: 'text/html'});
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `backup_${new Date().toISOString().slice(0,10)}.html`;
-            a.click();
-        }
+        clear: (type) => { if(!confirm('確定清空？(無法復原)')) return; if(type==='source'||type==='all') Dom.source.value=''; if(type==='kw'||type==='all') Dom.kwInput.value=''; if(type==='all') { Dom.editor.innerHTML=''; localStorage.clear(); } App.Core.forceSync(); },
+        downloadBackup: () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([`<html><body>${Dom.editor.innerHTML}</body></html>`], {type:'text/html'})); a.download = `backup_${new Date().toISOString().slice(0,10)}.html`; a.click(); }
     };
 
-    // --- 3. DOM References ---
-    const Dom = {
-        source: document.getElementById('sourceText'),
-        kwInput: document.getElementById('kwList'),
-        editor: document.getElementById('editor'),
-        density: document.getElementById('densityPanel'),
-        loc: document.getElementById('locPanel'),
-        floatMenu: document.getElementById('mobileFloatMenu'),
-        aiModal: document.getElementById('aiModal'),
-        aiContent: document.getElementById('aiContent'),
-        countTotal: document.getElementById('countTotal'),
-        countSel: document.getElementById('countSel'),
-        btnPunc: document.getElementById('btnPunc'),
-        puncIcon: document.getElementById('puncIcon'),
-        themeIcon: document.getElementById('themeIcon')
-    };
+    const Dom = { source: document.getElementById('sourceText'), kwInput: document.getElementById('kwList'), editor: document.getElementById('editor'), density: document.getElementById('densityPanel'), loc: document.getElementById('locPanel'), floatMenu: document.getElementById('mobileFloatMenu'), synonymBtn: document.getElementById('synonymBtn'), aiModal: document.getElementById('aiModal'), aiContent: document.getElementById('aiContent'), countTotal: document.getElementById('countTotal'), countSel: document.getElementById('countSel'), btnPunc: document.getElementById('btnPunc'), puncIcon: document.getElementById('puncIcon'), themeIcon: document.getElementById('themeIcon') };
 
-    // --- 4. Application Logic ---
     const App = {
         state: { isAutoSync: true, includePunctuation: true, saveTimer: null, syncTimer: null },
-
         Init: () => {
             if(Storage.get('fluo_src')) Dom.source.value = Storage.get('fluo_src');
             if(Storage.get('fluo_kw')) Dom.kwInput.value = Storage.get('fluo_kw');
             const cachedHtml = Storage.get('fluo_html');
-            if(cachedHtml) {
-                Dom.editor.innerHTML = cachedHtml;
-                if(Dom.editor.innerText.replace(/\n/g,'').trim() !== Dom.source.value.replace(/\n/g,'').trim()) App.state.isAutoSync = false;
-            } else { App.Core.runSync(true); }
-            
-            if(Storage.get('fluo_theme') === 'dark') { document.body.setAttribute('data-theme', 'dark'); App.UI.updateThemeIcon(true); }
-            
-            // Listeners
-            Dom.source.addEventListener('input', App.Handlers.onInput);
-            Dom.kwInput.addEventListener('input', App.Handlers.onInput);
-            Dom.editor.addEventListener('input', App.Handlers.onEditorInput);
-            document.addEventListener('selectionchange', App.UI.updateStats);
-            
-            App.Core.analyze();
-            App.UI.updateStats();
+            if(cachedHtml) { Dom.editor.innerHTML = cachedHtml; if(Dom.editor.innerText.replace(/\n/g,'').trim()!==Dom.source.value.replace(/\n/g,'').trim()) App.state.isAutoSync=false; } else { App.Core.runSync(true); }
+            if(Storage.get('fluo_theme')==='dark') { document.body.setAttribute('data-theme','dark'); App.UI.updateThemeIcon(true); }
+            Dom.source.addEventListener('input', App.Handlers.onInput); Dom.kwInput.addEventListener('input', App.Handlers.onInput); Dom.editor.addEventListener('input', App.Handlers.onEditorInput); document.addEventListener('selectionchange', App.UI.updateStats);
+            App.Core.analyze(); App.UI.updateStats();
         },
-
         Handlers: {
-            onInput: () => {
-                if(App.state.isAutoSync) { clearTimeout(App.state.syncTimer); App.state.syncTimer = setTimeout(() => App.Core.runSync(true), 500); }
-                else { App.Core.analyze(); }
-                App.Core.triggerSave(); App.UI.updateStats();
-            },
-            onEditorInput: () => {
-                if(App.state.isAutoSync) App.state.isAutoSync = false;
-                App.Core.triggerSave(); App.UI.updateStats();
-            }
+            onInput: () => { if(App.state.isAutoSync) { clearTimeout(App.state.syncTimer); App.state.syncTimer = setTimeout(()=>App.Core.runSync(true),500); } else { App.Core.analyze(); } App.Core.triggerSave(); App.UI.updateStats(); },
+            onEditorInput: () => { if(App.state.isAutoSync) App.state.isAutoSync=false; App.Core.triggerSave(); App.UI.updateStats(); }
         },
-
         Core: {
-            runSync: (silent = false) => {
+            runSync: (silent=false) => {
                 if(!App.state.isAutoSync) return;
-                let text = Dom.source.value;
-                if(!text) { if(!silent) Dom.editor.innerHTML = ''; return; }
-                const rawKws = Dom.kwInput.value.split('\n');
-                const uniqueKws = [...new Set(rawKws.map(k => k.trim()).filter(k => k))];
-                let html = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                uniqueKws.forEach(kw => {
-                    const regex = new RegExp(`(${App.Utils.escapeRegExp(kw)})`, 'gi');
-                    html = html.replace(regex, `<span class="kw-highlight" data-kw="${kw.toLowerCase()}" style="color: #BF1E33; font-weight: 700;">$1</span>`);
-                });
-                Dom.editor.innerHTML = html.split(/\n\s*\n/).map(p => p.trim() ? `<p style="margin-bottom: 12pt;">${p.replace(/\n/g, '<br>')}</p>` : '').join('');
+                let text = Dom.source.value; if(!text) { if(!silent) Dom.editor.innerHTML=''; return; }
+                const uniqueKws = [...new Set(Dom.kwInput.value.split('\n').map(k=>k.trim()).filter(k=>k))];
+                let html = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+                uniqueKws.forEach(kw => { html = html.replace(new RegExp(`(${App.Utils.escapeRegExp(kw)})`,'gi'), `<span class="kw-highlight" data-kw="${kw.toLowerCase()}" style="color: #BF1E33; font-weight: 700;">$1</span>`); });
+                Dom.editor.innerHTML = html.split(/\n\s*\n/).map(p=>p.trim()?`<p style="margin-bottom: 12pt;">${p.replace(/\n/g,'<br>')}</p>`:'').join('');
                 App.Core.analyze(); App.Core.triggerSave();
             },
             analyze: () => {
-                const text = Dom.source.value;
-                const len = text.length;
-                if(len === 0) { Dom.density.innerHTML = '<span class="text-xs text-gray-400">無內容</span>'; return; }
-                
-                const uniqueKws = [...new Set(Dom.kwInput.value.split('\n').map(k => k.trim()).filter(k => k))];
-                if(uniqueKws.length === 0) { Dom.density.innerHTML = '<span class="text-xs text-gray-400">無關鍵字</span>'; }
-                else {
-                    let html = '';
-                    uniqueKws.forEach(kw => {
-                        const regex = new RegExp(App.Utils.escapeRegExp(kw), 'gi');
-                        const count = (text.match(regex) || []).length;
-                        const density = ((count * kw.length / len) * 100).toFixed(1);
-                        let cls = count === 0 ? 'missing' : (density > 0.5 && density < 5 ? 'good' : '');
-                        html += `<div class="kw-tag ${cls}" onmouseenter="App.UI.hlKw('${kw}',true)" onmouseleave="App.UI.hlKw('${kw}',false)">${kw} <span class="count">${count}</span> <span style="font-size:9px; opacity:0.7">(${density}%)</span></div>`;
-                    });
-                    Dom.density.innerHTML = html;
-                }
-                
-                // Localization
+                const text = Dom.source.value; const len = text.length;
+                if(len === 0) { Dom.density.innerHTML='<span class="text-xs text-gray-400">無內容</span>'; return; }
+                const uniqueKws = [...new Set(Dom.kwInput.value.split('\n').map(k=>k.trim()).filter(k=>k))];
+                let html = '';
+                uniqueKws.forEach(kw => {
+                    const count = (text.match(new RegExp(App.Utils.escapeRegExp(kw),'gi'))||[]).length;
+                    const density = ((count*kw.length/len)*100).toFixed(1);
+                    let cls = count===0?'missing':(density>0.5&&density<5?'good':'');
+                    html += `<div class="kw-tag ${cls}" onmouseenter="App.UI.hlKw('${kw}',true)" onmouseleave="App.UI.hlKw('${kw}',false)">${kw} <span class="count">${count}</span> <span style="font-size:9px; opacity:0.7">(${density}%)</span></div>`;
+                });
+                Dom.density.innerHTML = html||'<span class="text-xs text-gray-400">無關鍵字</span>';
                 let locHtml = '';
-                for (const [bad, good] of Object.entries(Config.locDict)) {
-                    if (text.includes(bad)) locHtml += `<div class="loc-item">⚠️ 建議將 <b>${bad}</b> <span class="loc-arrow">➔</span> <b>${good}</b></div>`;
-                }
-                Dom.loc.style.display = locHtml ? 'block' : 'none';
-                if(locHtml) Dom.loc.innerHTML = '<div style="font-weight:700; margin-bottom:4px; color:#D97706">在地化提醒 (TW)</div>' + locHtml;
+                for(const [bad,good] of Object.entries(Config.locDict)) { if(text.includes(bad)) locHtml+=`<div class="loc-item">⚠️ 建議將 <b>${bad}</b> <span class="loc-arrow">➔</span> <b>${good}</b></div>`; }
+                Dom.loc.style.display=locHtml?'block':'none'; if(locHtml) Dom.loc.innerHTML='<div style="font-weight:700; margin-bottom:4px; color:#D97706">在地化提醒 (TW)</div>'+locHtml;
             },
-            triggerSave: () => {
-                clearTimeout(App.state.saveTimer);
-                App.state.saveTimer = setTimeout(() => {
-                    Storage.save('fluo_src', Dom.source.value);
-                    Storage.save('fluo_kw', Dom.kwInput.value);
-                    Storage.save('fluo_html', Dom.editor.innerHTML);
-                }, 800);
-            },
-            forceSync: () => { App.state.isAutoSync = true; App.Core.runSync(); if(window.innerWidth < 768) App.UI.switchTab('preview'); },
-            restore: () => { if(confirm('將預覽區內容還原到輸入框？')) { Dom.source.value = Dom.editor.innerText; App.Core.forceSync(); }},
-            
+            triggerSave: () => { clearTimeout(App.state.saveTimer); App.state.saveTimer = setTimeout(() => { Storage.save('fluo_src',Dom.source.value); Storage.save('fluo_kw',Dom.kwInput.value); Storage.save('fluo_html',Dom.editor.innerHTML); }, 800); },
+            forceSync: () => { App.state.isAutoSync=true; App.Core.runSync(); if(window.innerWidth<768) App.UI.switchTab('preview'); },
+            restore: () => { if(confirm('將預覽區內容還原到輸入框？')) { Dom.source.value=Dom.editor.innerText; App.Core.forceSync(); }},
             copyToDocs: async () => {
-                const wrapper = document.createElement('div');
-                wrapper.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 12pt; line-height: 1.0; color: #303133; text-align: justify; background: white;";
+                const wrapper = document.createElement('div'); wrapper.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 12pt; line-height: 1.0; color: #303133; text-align: justify; background: white;";
                 const clone = Dom.editor.cloneNode(true);
-                clone.querySelectorAll('.kw-highlight').forEach(el => { el.classList.remove('kw-highlight', 'highlight-pulse'); el.removeAttribute('data-kw'); });
-                const recursiveApply = (node) => {
-                    if(node.nodeType === 1) { 
-                        if(node.tagName === 'H2') node.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 18pt; font-weight: 700; color: #2B4B65; border-bottom: 1px solid #E0E0E0; padding-bottom: 8px; margin-top: 24px; margin-bottom: 16px; line-height: 1.2;";
-                        else if(node.tagName === 'H3') node.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 14pt; font-weight: 700; color: #303133; border-left: 4px solid #BF1E33; padding-left: 10px; margin-top: 20px; margin-bottom: 12px; line-height: 1.2;";
-                        else if(node.tagName === 'P') node.style.cssText = "margin-bottom: 12pt;";
-                    }
-                    node.childNodes.forEach(recursiveApply);
-                };
-                recursiveApply(clone);
-                wrapper.innerHTML = clone.innerHTML;
-                try {
-                    const htmlBlob = new Blob([wrapper.outerHTML], {type: 'text/html'});
-                    const textBlob = new Blob([Dom.editor.innerText], {type: 'text/plain'});
-                    await navigator.clipboard.write([new ClipboardItem({'text/html': htmlBlob, 'text/plain': textBlob})]);
-                    alert('✨ 已複製標準格式！\n即使在深色模式，貼上 Docs 也會是正確的白底黑字。');
-                } catch(e) { alert('複製失敗，請手動全選複製。'); }
+                clone.querySelectorAll('.kw-highlight').forEach(el=>{el.classList.remove('kw-highlight','highlight-pulse');el.removeAttribute('data-kw');});
+                const apply = (n) => {
+                    if(n.nodeType===1) {
+                        if(n.tagName==='H2') n.style.cssText="font-family:'Noto Sans TC',sans-serif;font-size:18pt;font-weight:700;color:#2B4B65;border-bottom:1px solid #E0E0E0;padding-bottom:8px;margin:24px 0 16px 0;line-height:1.2;";
+                        else if(n.tagName==='H3') n.style.cssText="font-family:'Noto Sans TC',sans-serif;font-size:14pt;font-weight:700;color:#303133;border-left:4px solid #BF1E33;padding-left:10px;margin:20px 0 12px 0;line-height:1.2;";
+                        else if(n.tagName==='P') n.style.cssText="margin-bottom:12pt;";
+                    } n.childNodes.forEach(apply);
+                }; apply(clone); wrapper.innerHTML = clone.innerHTML;
+                try { await navigator.clipboard.write([new ClipboardItem({'text/html': new Blob([wrapper.outerHTML],{type:'text/html'}), 'text/plain': new Blob([Dom.editor.innerText],{type:'text/plain'})})]); alert('✨ 已複製標準格式！'); } catch(e) { alert('複製失敗'); }
             }
         },
-
         UI: {
-            hlKw: (kw, active) => {
-                const lowerKw = kw.toLowerCase();
-                Dom.editor.querySelectorAll(`span[data-kw="${lowerKw}"]`).forEach(sp => active ? sp.classList.add('highlight-pulse') : sp.classList.remove('highlight-pulse'));
-            },
+            hlKw: (kw, active) => Dom.editor.querySelectorAll(`span[data-kw="${kw.toLowerCase()}"]`).forEach(sp => active?sp.classList.add('highlight-pulse'):sp.classList.remove('highlight-pulse')),
             updateStats: () => {
-                const text = Dom.editor.innerText;
-                const sel = window.getSelection();
-                const selText = sel.toString();
+                const text = Dom.editor.innerText; const sel = window.getSelection(); const selText = sel.toString();
                 Dom.countTotal.innerText = App.Utils.count(text);
-                
                 if(selText) {
-                    document.getElementById('selCountGroup').style.opacity = '1';
-                    Dom.countSel.innerText = App.Utils.count(selText);
-                    if(window.innerWidth < 768) App.UI.showFloatMenu(sel);
+                    document.getElementById('selCountGroup').style.opacity='1'; Dom.countSel.innerText = App.Utils.count(selText);
+                    if(window.innerWidth<768) App.UI.showFloatMenu(sel, selText);
                 } else {
-                    document.getElementById('selCountGroup').style.opacity = '0.5';
-                    Dom.countSel.innerText = '0';
+                    document.getElementById('selCountGroup').style.opacity='0.5'; Dom.countSel.innerText = '0';
                     Dom.floatMenu.classList.remove('show');
                 }
             },
-            showFloatMenu: (sel) => {
-                const range = sel.getRangeAt(0);
-                const rect = range.getBoundingClientRect();
-                let top = rect.top - 60; 
-                let left = rect.left + (rect.width / 2) - 90;
-                if(left < 10) left = 10;
-                if(top < 60) top = rect.bottom + 10;
-                Dom.floatMenu.style.top = `${top}px`;
-                Dom.floatMenu.style.left = `${left}px`;
-                Dom.floatMenu.classList.add('show');
+            showFloatMenu: (sel, text) => {
+                const range = sel.getRangeAt(0); const rect = range.getBoundingClientRect();
+                let top = rect.top - 60; let left = rect.left + (rect.width/2) - 90;
+                if(left<10) left=10; if(top<60) top=rect.bottom+10;
+                Dom.floatMenu.style.top=`${top}px`; Dom.floatMenu.style.left=`${left}px`; Dom.floatMenu.classList.add('show');
+                // Synonym
+                const syns = Config.synonyms[text.trim()];
+                if(syns) { Dom.synonymBtn.classList.remove('hidden'); Dom.synonymBtn.onclick = (e) => { e.preventDefault(); alert(`💡 替換建議：\n${syns.join('、')}`); }; } 
+                else { Dom.synonymBtn.classList.add('hidden'); }
             },
-            togglePunctuation: () => {
-                App.state.includePunctuation = !App.state.includePunctuation;
-                if(App.state.includePunctuation) { Dom.btnPunc.classList.add('active'); Dom.puncIcon.style.color = 'green'; }
-                else { Dom.btnPunc.classList.remove('active'); Dom.puncIcon.style.color = '#DDD'; }
-                App.UI.updateStats();
-            },
-            toggleTheme: () => {
-                const isDark = document.body.getAttribute('data-theme') === 'dark';
-                if(isDark) { document.body.removeAttribute('data-theme'); Storage.save('fluo_theme', 'light'); App.UI.updateThemeIcon(false); }
-                else { document.body.setAttribute('data-theme', 'dark'); Storage.save('fluo_theme', 'dark'); App.UI.updateThemeIcon(true); }
-            },
-            updateThemeIcon: (isDark) => {
-                if(isDark) Dom.themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
-                else Dom.themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
-            },
-            switchTab: (tab) => {
-                const input = document.getElementById('sectionInput'); const preview = document.getElementById('sectionPreview');
-                if(tab === 'input') { input.classList.remove('mobile-hidden'); preview.classList.add('mobile-hidden'); } 
-                else { input.classList.add('mobile-hidden'); preview.classList.remove('mobile-hidden'); }
-            }
+            togglePunctuation: () => { App.state.includePunctuation=!App.state.includePunctuation; if(App.state.includePunctuation){Dom.btnPunc.classList.add('active');Dom.puncIcon.style.color='green';}else{Dom.btnPunc.classList.remove('active');Dom.puncIcon.style.color='#DDD';} App.UI.updateStats(); },
+            toggleTheme: () => { const isDark=document.body.getAttribute('data-theme')==='dark'; if(isDark){document.body.removeAttribute('data-theme');Storage.save('fluo_theme','light');App.UI.updateThemeIcon(false);}else{document.body.setAttribute('data-theme','dark');Storage.save('fluo_theme','dark');App.UI.updateThemeIcon(true);} },
+            updateThemeIcon: (isDark) => { Dom.themeIcon.innerHTML = isDark ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>' : '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>'; },
+            switchTab: (tab) => { const input = document.getElementById('sectionInput'); const preview = document.getElementById('sectionPreview'); if(tab==='input'){input.classList.remove('mobile-hidden');preview.classList.add('mobile-hidden');}else{input.classList.add('mobile-hidden');preview.classList.remove('mobile-hidden');} }
         },
-
         Format: {
-            cmd: (cmd, val) => { document.execCommand(cmd, false, val); if(App.state.isAutoSync) App.state.isAutoSync = false; App.UI.updateStats(); },
-            size: (pt) => {
-                try {
-                    const sel = window.getSelection();
-                    if (!sel.isCollapsed) {
-                        const range = sel.getRangeAt(0); const span = document.createElement("span"); span.style.fontSize = pt;
-                        range.surroundContents(span);
-                    } else { alert('請先選取文字'); }
-                    if(App.state.isAutoSync) App.state.isAutoSync = false; App.UI.updateStats();
-                } catch(e) { alert('跨段落選取無法調整字級'); }
-            },
-            color: (hex) => App.Format.cmd('foreColor', hex),
-            highlight: (hex) => { 
-                if(!document.execCommand('hiliteColor', false, hex)) document.execCommand('backColor', false, hex);
-                if(App.state.isAutoSync) App.state.isAutoSync = false; 
-            },
-            remove: () => {
-                document.execCommand('removeFormat', false, null);
-                document.execCommand('backColor', false, 'transparent');
-                if(App.state.isAutoSync) App.state.isAutoSync = false; App.UI.updateStats();
-            }
+            cmd: (c,v) => { document.execCommand(c,false,v); if(App.state.isAutoSync) App.state.isAutoSync=false; App.UI.updateStats(); },
+            size: (pt) => { try { const s=window.getSelection(); if(!s.isCollapsed){ const r=s.getRangeAt(0); const sp=document.createElement("span"); sp.style.fontSize=pt; r.surroundContents(sp); }else{alert('請先選取文字');} if(App.state.isAutoSync)App.state.isAutoSync=false; App.UI.updateStats(); }catch(e){alert('跨段落無法調整字級');} },
+            color: (h) => App.Format.cmd('foreColor',h),
+            highlight: (h) => { if(!document.execCommand('hiliteColor',false,h)) document.execCommand('backColor',false,h); if(App.state.isAutoSync)App.state.isAutoSync=false; },
+            remove: () => { document.execCommand('removeFormat',false,null); document.execCommand('backColor',false,'transparent'); if(App.state.isAutoSync)App.state.isAutoSync=false; App.UI.updateStats(); }
         },
-
         AI: {
             generate: () => {
-                const text = Dom.source.value;
-                if(text.length < 50) { alert('文章內容太少，無法分析。'); return; }
-                const rawKws = Dom.kwInput.value.split('\n').map(k => k.trim()).filter(k => k);
-                let topKw = rawKws.length > 0 ? rawKws[0] : "您的主題";
-                
-                const cleanText = text.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
-                let metaDesc = cleanText.substring(0, 85);
-                if(metaDesc.length >= 85) metaDesc += "...";
-                metaDesc += ` 本文將深入探討 ${topKw} 的核心觀念與應用技巧，立即點擊閱讀完整內容！`;
-
-                let html = `<div class="ai-label">SEO 標題建議</div>`;
-                Config.titles(topKw).forEach(t => { html += `<div class="ai-result-item" onclick="App.AI.copy('${t}')">${t}</div>`; });
-                html += `<div class="ai-label mt-4">Meta Description 建議</div>`;
-                html += `<div class="ai-result-item" onclick="App.AI.copy('${metaDesc}')">${metaDesc}</div>`;
-
-                Dom.aiContent.innerHTML = html; Dom.aiModal.style.display = 'flex';
+                const text=Dom.source.value; if(text.length<50){alert('內容太少');return;}
+                const raw=Dom.kwInput.value.split('\n').map(k=>k.trim()).filter(k=>k); let topKw=raw.length>0?raw[0]:"您的主題";
+                const clean=text.replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim();
+                let meta=clean.substring(0,85); if(meta.length>=85)meta+="..."; meta+=` 本文將深入探討 ${topKw} 的核心觀念與應用技巧，立即點擊閱讀完整內容！`;
+                let html=`<div class="ai-label">SEO 標題建議</div>`; Config.titles(topKw).forEach(t=>{html+=`<div class="ai-result-item" onclick="App.AI.copy('${t}')">${t}</div>`;});
+                html+=`<div class="ai-label mt-4">Meta Description 建議</div><div class="ai-result-item" onclick="App.AI.copy('${meta}')">${meta}</div>`;
+                Dom.aiContent.innerHTML=html; Dom.aiModal.style.display='flex';
             },
-            close: () => Dom.aiModal.style.display = 'none',
-            copy: (txt) => navigator.clipboard.writeText(txt).then(() => alert('已複製：' + txt))
+            close: () => Dom.aiModal.style.display='none',
+            copy: (t) => navigator.clipboard.writeText(t).then(()=>alert('已複製'))
         },
-
         Utils: {
-            escapeRegExp: (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
-            count: (str) => {
-                if(!str) return 0;
-                return App.state.includePunctuation ? str.replace(/[\n\r]/g, '').length : str.replace(/[^\w\u4e00-\u9fa5]/g, '').length;
-            }
+            escapeRegExp: (s) => s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),
+            count: (s) => App.state.includePunctuation?s.replace(/[\n\r]/g,'').length:s.replace(/[^\w\u4e00-\u9fa5]/g,'').length
         }
     };
-
-    // 🚀 Bootstrap
     App.Init();
-    // Expose needed functions to global for HTML attributes
-    window.App = App;
-    window.removeFormatting = App.Format.remove;
-    window.applyColor = App.Format.color;
-    window.applyHighlight = App.Format.highlight;
-    window.execCmd = App.Format.cmd;
-    window.changeFontSize = App.Format.size;
-    window.toggleTheme = App.UI.toggleTheme;
-    window.togglePunctuation = App.UI.togglePunctuation;
-    window.switchTab = App.UI.switchTab;
-    window.copyToClipboard = App.Core.copyToDocs;
-    window.forceSync = App.Core.forceSync;
-    window.clearData = Storage.clear;
-    window.restoreFromPreview = App.Core.restore;
-    window.generateAI = App.AI.generate;
-    window.closeAiModal = App.AI.close;
+    window.App=App; window.removeFormatting=App.Format.remove; window.applyColor=App.Format.color; window.applyHighlight=App.Format.highlight; window.execCmd=App.Format.cmd; window.changeFontSize=App.Format.size; window.toggleTheme=App.UI.toggleTheme; window.togglePunctuation=App.UI.togglePunctuation; window.switchTab=App.UI.switchTab; window.copyToClipboard=App.Core.copyToDocs; window.forceSync=App.Core.forceSync; window.clearData=Storage.clear; window.restoreFromPreview=App.Core.restore; window.generateAI=App.AI.generate; window.closeAiModal=App.AI.close;
   </script>
 </body>
 </html>
