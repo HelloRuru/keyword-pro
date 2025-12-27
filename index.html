@@ -5,478 +5,453 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>蛍光ペン PRO | SEO文案數位工具</title>
-<meta name="description" content="專為內容創作者打造的數位文房具。提供 SEO 關鍵字密度檢測、字數統計、Google Docs 格式無縫貼上功能。離線可用，支援深色模式與 PWA 安裝。">
-<meta name="keywords" content="SEO工具, 文案寫作, 字數統計, 關鍵字密度, Google Docs 排版, 網頁螢光筆, 數位文具, PWA">
-<meta name="author" content="Kaoru Tsai">
+<meta name="description" content="日系極簡 SEO 文案工具。支援 PWA 離線寫作、Google Docs 格式無縫貼上、關鍵字密度檢測。">
 <meta name="robots" content="index, follow">
-<meta property="og:type" content="website">
 <meta property="og:title" content="蛍光ペン PRO">
-<meta property="og:description" content="讓寫作回歸優雅的數位文具，解決 Google Docs 貼上跑版痛點。">
-<meta property="og:url" content=""> 
+<meta property="og:description" content="讓寫作回歸優雅的數位文具。">
 
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#F9F8F4">
 <link rel="apple-touch-icon" href="icon-192.png">
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "蛍光ペン PRO",
-  "operatingSystem": "Web, iOS, Android",
-  "applicationCategory": "ProductivityApplication",
-  "description": "SEO writing tool with auto-save and Google Docs formatting."
-}
-</script>
-
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='none'><path d='M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z' stroke='%232B4B65' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 180V320' stroke='%232B4B65' stroke-width='24' stroke-linecap='round'/><circle cx='256' cy='370' r='24' fill='%23BF1E33'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='none'><circle cx='256' cy='256' r='256' fill='%23F9F8F4'/><path d='M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z' stroke='%232B4B65' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 180V320' stroke='%232B4B65' stroke-width='24' stroke-linecap='round'/><circle cx='256' cy='370' r='24' fill='%23BF1E33'/></svg>">
 
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Shippori+Mincho:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <script>
-  // 1. 智慧型右鍵防護：只在編輯區允許右鍵，其他地方鎖住
+  // 智慧右鍵防護 (保留編輯區右鍵功能)
   document.addEventListener('contextmenu', e => {
-    const isEditable = e.target.tagName === 'TEXTAREA' || 
-                       e.target.tagName === 'INPUT' || 
-                       e.target.isContentEditable ||
-                       (e.target.closest && e.target.closest('[contenteditable="true"]'));
-    if (isEditable) return; // 允許編輯區右鍵
-    e.preventDefault();     // 其他地方鎖住
+    const isEditable = e.target.closest('textarea, input, [contenteditable="true"]');
+    if (isEditable) return; 
+    e.preventDefault();     
   });
-  
-  // 2. 禁止 Ctrl+S / Ctrl+U，保留 F12 方便您除錯
+  // 禁止另存，允許 F12
   document.addEventListener('keydown', e => {
-    if((e.ctrlKey && ['u','U','s','S'].includes(e.key))){
-      e.preventDefault(); 
-    }
+    if((e.ctrlKey && ['s','S','u','U'].includes(e.key))){ e.preventDefault(); }
   });
-
-  // 3. 註冊 PWA
+  // PWA
   if ('serviceWorker' in navigator) {
-     window.addEventListener('load', () => { 
-       navigator.serviceWorker.register('./sw.js').catch(e => console.log('SW Fail')); 
-     });
+     window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(e => console.log('SW Fail')); });
   }
 </script>
 
 <style>
-  /* --- 變數系統 --- */
   :root {
-    --bg-canvas: #F9F8F4; --bg-sidebar: #FFFFFF; --bg-panel: #F8F9FA; --border-color: #EBEBEB;
-    --c-ink: #303133; --c-sub: #555555; 
-    --c-iron: #2B4B65; --c-crimson: #BF1E33; --c-forest: #2F5D50; --c-purple: #6A4C9C;
-    --hl-yellow: #F0DC70; --hl-pink: #F5B199; --hl-blue: #A0D8EF; --hl-green: #C6Eac5; --hl-purple: #E0C8F2;
-    --font-ui: 'Zen Kaku Gothic New', sans-serif; --font-serif: 'Shippori Mincho', serif; --font-docs: 'Noto Sans TC', sans-serif;
-    --grid-pattern: linear-gradient(#E5E5E5 1px, transparent 1px), linear-gradient(90deg, #E5E5E5 1px, transparent 1px);
+    --bg-canvas: #F9F8F4; --bg-sidebar: #FFFFFF; --border-color: #E0E0E0;
+    --c-ink: #333333; --c-sub: #666666; --c-accent: #2B4B65; --c-highlight: #BF1E33;
+    --font-serif: 'Shippori Mincho', serif; --font-sans: 'Zen Kaku Gothic New', sans-serif; --font-editor: 'Noto Sans TC', sans-serif;
+    --shadow-soft: 0 4px 20px rgba(0,0,0,0.04);
   }
   [data-theme="dark"] {
-    --bg-canvas: #1A1A1A; --bg-sidebar: #222222; --bg-panel: #2C2C2C; --border-color: #333333;
-    --c-ink: #E0C088; --c-sub: #A0A0A0; --c-iron: #8AB4D6; --c-crimson: #FF6B6B;
-    --grid-pattern: linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px);
+    --bg-canvas: #1A1A1A; --bg-sidebar: #242424; --border-color: #333;
+    --c-ink: #E0E0E0; --c-sub: #999; --c-accent: #8AB4D6; --c-highlight: #FF6B6B;
   }
 
-  /* --- 基礎樣式 --- */
-  body { background: var(--bg-canvas); color: var(--c-ink); font-family: var(--font-ui); height: 100vh; overflow: hidden; display: flex; flex-direction: column; transition: 0.3s; user-select: none; }
-  input, textarea, [contenteditable] { user-select: text; } /* 確保可選取 */
-  .bg-grid { position: fixed; inset: 0; background-image: var(--grid-pattern); background-size: 20px 20px; opacity: 0.4; pointer-events: none; z-index: -1; }
-  .custom-scroll::-webkit-scrollbar { width: 6px; }
-  .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-  .custom-scroll::-webkit-scrollbar-thumb { background: #E0E0E0; border-radius: 3px; }
+  body { background: var(--bg-canvas); color: var(--c-ink); font-family: var(--font-sans); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+  
+  /* 雜誌網格背景 */
+  .bg-grid { position: fixed; inset: 0; background-image: linear-gradient(#E5E5E5 1px, transparent 1px), linear-gradient(90deg, #E5E5E5 1px, transparent 1px); background-size: 24px 24px; opacity: 0.3; pointer-events: none; z-index: -1; }
+  [data-theme="dark"] .bg-grid { opacity: 0.05; }
+
+  /* 捲軸美化 */
+  .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
+  .custom-scroll::-webkit-scrollbar-thumb { background: #DDD; border-radius: 2px; }
   [data-theme="dark"] .custom-scroll::-webkit-scrollbar-thumb { background: #444; }
 
-  /* --- 佈局組件 --- */
-  .sidebar-container { background: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 20; box-shadow: 2px 0 10px rgba(0,0,0,0.02); transition: 0.3s; }
-  .section-title { font-family: var(--font-serif); font-weight: 800; font-size: 0.95rem; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 8px; position: relative; padding-left: 12px; }
-  .section-title::before { content: ''; position: absolute; left: 0; top: 15%; bottom: 15%; width: 3px; background: var(--c-iron); border-radius: 2px; }
-  .section-title.accent::before { background: var(--c-crimson); }
+  /* 左側側邊欄 */
+  .sidebar { background: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 20; box-shadow: var(--shadow-soft); }
+  .sidebar-header { font-family: var(--font-serif); letter-spacing: 0.05em; color: var(--c-ink); }
+  
+  /* 輸入框樣式 */
+  .input-area { width: 100%; background: var(--bg-canvas); border: 1px solid var(--border-color); border-radius: 4px; padding: 12px; font-size: 14px; font-family: var(--font-sans); resize: none; outline: none; transition: 0.2s; line-height: 1.6; }
+  .input-area:focus { border-color: var(--c-accent); background: var(--bg-sidebar); }
 
-  .input-field { width: 100%; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 6px; padding: 12px; font-size: 14px; color: var(--c-ink); line-height: 1.6; transition: 0.3s; resize: none; outline: none; font-family: var(--font-ui); }
-  .input-field:focus { background: var(--bg-sidebar); border-color: var(--c-iron); box-shadow: 0 4px 12px rgba(43, 75, 101, 0.08); }
+  /* 右側預覽區 (編輯核心) */
+  .preview-container { flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+  
+  /* 長條形工具列 (Ribbon Bar) */
+  .toolbar { 
+    background: var(--bg-sidebar); border-bottom: 1px solid var(--border-color); 
+    padding: 8px 16px; display: flex; align-items: center; gap: 12px; 
+    overflow-x: auto; white-space: nowrap; z-index: 30;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+  }
+  .tool-btn { 
+    display: flex; align-items: center; justify-content: center; 
+    height: 32px; min-width: 32px; padding: 0 8px; border-radius: 4px; 
+    color: var(--c-sub); font-size: 13px; font-family: var(--font-serif); font-weight: 500;
+    cursor: pointer; transition: 0.2s; border: 1px solid transparent; 
+  }
+  .tool-btn:hover { background: var(--bg-canvas); color: var(--c-accent); border-color: var(--border-color); }
+  .tool-btn svg { width: 16px; height: 16px; stroke-width: 1.5; }
+  .tool-sep { width: 1px; height: 20px; background: var(--border-color); flex-shrink: 0; }
+  
+  .color-dot { width: 18px; height: 18px; border-radius: 50%; cursor: pointer; border: 2px solid var(--bg-sidebar); box-shadow: 0 0 0 1px var(--border-color); transition: 0.2s; flex-shrink: 0; }
+  .color-dot:hover { transform: scale(1.2); }
 
-  .density-panel { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; margin-bottom: 10px; max-height: 100px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 6px; }
-  .kw-tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; background: var(--bg-sidebar); border: 1px solid var(--border-color); color: var(--c-sub); display: flex; align-items: center; gap: 4px; cursor: default; transition: 0.2s; }
-  .kw-tag:hover { border-color: var(--c-iron); transform: translateY(-1px); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-  .kw-tag .count { font-weight: 800; color: var(--c-iron); }
-  .kw-tag.missing { border-color: #FECACA; background: #FFF5F5; color: #C9171E; }
-  .kw-tag.good { border-color: #C6F6D5; background: #F0FFF4; color: #276749; }
-
-  .localization-panel { background: rgba(255, 200, 0, 0.1); border: 1px solid rgba(255, 200, 0, 0.3); border-radius: 6px; padding: 8px; margin-bottom: 15px; font-size: 11px; color: var(--c-ink); display: none; }
-  .loc-item { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
-
-  /* --- 編輯器 (Google Docs 適配) --- */
-  .preview-wrapper { flex: 1; display: flex; flex-direction: column; background: var(--bg-canvas); position: relative; overflow: hidden; transition: 0.3s; }
-  .editor-container { flex: 1; overflow-y: auto; padding: 20px 0; scroll-behavior: smooth; }
+  /* 編輯紙張 (Paper) */
   .editor-paper { 
-    width: 100%; max-width: 820px; min-height: 100%; margin: 0 auto; 
+    width: 100%; max-width: 800px; min-height: 100%; margin: 0 auto; 
     background: var(--bg-sidebar); padding: 60px 80px 100px 80px; 
-    box-shadow: 0 0 40px rgba(0,0,0,0.03); outline: none; 
-    font-family: var(--font-docs); font-size: 12pt; 
-    line-height: 1.6; /* 確保行高舒適且不切字 */
-    color: var(--c-ink); letter-spacing: 0.02em; text-align: justify; 
-    transition: background 0.3s, color 0.3s; 
+    outline: none; font-family: var(--font-editor); 
+    font-size: 12pt; line-height: 1.0; /* 🟢 單行行距 (User Request) */
+    color: var(--c-ink); text-align: justify; 
   }
   
-  .editor-paper h2 { font-family: var(--font-docs); font-size: 18pt; font-weight: 700; color: var(--c-iron); border-bottom: 1px solid var(--border-color); padding-bottom: 8px; margin: 24px 0 16px 0; line-height: 1.4; }
-  .editor-paper h3 { font-family: var(--font-docs); font-size: 14pt; font-weight: 700; color: var(--c-ink); border-left: 4px solid var(--c-crimson); padding-left: 10px; margin: 20px 0 12px 0; line-height: 1.4; }
-  .editor-paper p { margin-bottom: 12pt; }
-  .highlight-pulse { background-color: rgba(255, 255, 0, 0.4); border-radius: 2px; box-shadow: 0 0 8px rgba(255, 255, 0, 0.6); transition: 0.2s; }
-  [data-theme="dark"] .highlight-pulse { background-color: rgba(255, 215, 0, 0.3); color: #FFF; }
-
-  /* --- 工具列 --- */
-  .toolbar-sticky { position: sticky; top: 0; z-index: 40; background: var(--bg-canvas); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; backdrop-filter: blur(8px); transition: 0.3s; }
-  [data-theme="dark"] .toolbar-sticky { background: rgba(34, 34, 34, 0.65); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
-  .toolbar-inner { display: flex; align-items: center; gap: 6px; background: var(--bg-sidebar); padding: 4px 8px; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.04); flex-wrap: wrap; }
-  .btn-tool { height: 32px; width: 32px; border-radius: 4px; color: var(--c-sub); transition: 0.2s; cursor: pointer; border: 1px solid transparent; display: flex; align-items: center; justify-content: center; }
-  .btn-tool svg { width: 16px; height: 16px; stroke-width: 1.5; }
-  .btn-tool:hover { background: var(--bg-panel); color: var(--c-iron); }
-  .divider { width: 1px; height: 18px; background: var(--border-color); margin: 0 4px; }
-  .color-dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--bg-sidebar); box-shadow: 0 0 0 1px var(--border-color); cursor: pointer; transition: 0.2s; }
-  .color-dot:hover { transform: scale(1.15); z-index: 10; }
-  select.tool-select { height: 32px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px; padding: 0 4px; color: var(--c-sub); background: var(--bg-sidebar); outline: none; cursor: pointer; font-family: var(--font-docs); }
-
-  /* --- 浮動選單 & Modal --- */
-  .floating-menu { position: fixed; z-index: 999; background: var(--bg-sidebar); border: 1px solid var(--border-color); border-radius: 50px; padding: 6px 12px; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); opacity: 0; pointer-events: none; transform: translateY(10px); transition: 0.2s; }
-  .floating-menu.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
-  .float-divider { width: 1px; height: 16px; background: var(--border-color); }
-
-  .ai-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
-  .ai-modal { background: var(--bg-sidebar); width: 90%; max-width: 500px; border-radius: 12px; padding: 20px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-height: 80vh; overflow-y: auto; }
-  .ai-result-item { margin-bottom: 12px; padding: 10px; background: var(--bg-panel); border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer; transition: 0.2s; font-size: 13px; color: var(--c-ink); }
-  .ai-result-item:hover { border-color: var(--c-iron); background: var(--bg-sidebar); }
-  .ai-label { font-size: 10px; color: var(--c-sub); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; font-weight: bold; }
-
-  /* --- 元件 --- */
-  .btn-primary { width: 100%; background: var(--c-crimson); color: white; border: none; padding: 12px; border-radius: 6px; font-family: var(--font-serif); letter-spacing: 0.1em; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(191, 30, 51, 0.3); transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; }
-  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(191, 30, 51, 0.4); }
-  .btn-secondary { flex: 1; background: var(--bg-sidebar); border: 1px solid var(--border-color); color: var(--c-sub); padding: 8px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 4px; }
-  .btn-secondary:hover { border-color: var(--c-iron); color: var(--c-iron); background: var(--bg-panel); }
-  .stats-bar { background: var(--bg-sidebar); border-top: 1px solid var(--border-color); padding: 6px 20px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--c-sub); font-family: var(--font-ui); z-index: 30; }
-  .stat-group { display: flex; gap: 15px; align-items: center; }
-  .stat-item { display: flex; gap: 4px; }
-  .stat-val { font-weight: 700; color: var(--c-iron); }
-  .toggle-btn { display: flex; align-items: center; gap: 6px; cursor: pointer; padding: 2px 8px; border-radius: 12px; border: 1px solid var(--border-color); transition: 0.2s; }
-  .toggle-btn.active { background: #E6FFFA; border-color: #38B2AC; color: #2C7A7B; }
-  [data-theme="dark"] .toggle-btn.active { background: #1D4044; color: #4FD1C5; border-color: #2C7A7B; }
-  .clear-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 6px; }
-  .copyright-text { text-align: center; margin-top: 20px; font-size: 10px; color: #AAA; font-family: sans-serif; letter-spacing: 0.5px; }
-
-  @media (max-width: 768px) {
-    .sidebar-container, .preview-wrapper { width: 100% !important; height: auto; }
-    #sectionInput { height: calc(100vh - 120px); }
-    .editor-paper { padding: 30px 20px; min-height: 80vh; }
-    .toolbar-sticky { flex-wrap: wrap; gap: 8px; padding: 8px 10px; }
-    .toolbar-inner { flex: 1; overflow-x: auto; padding-right: 20px; -webkit-overflow-scrolling: touch; }
-    .stats-bar { flex-direction: column; gap: 8px; align-items: flex-start; padding: 10px 15px; }
-    .mobile-hidden { display: none !important; }
+  /* 區塊樣式 (Block Styles) */
+  .editor-paper p { margin-bottom: 1em; line-height: 1.6; /* 閱讀時保持舒適，複製時會被強制改為1.0 */ }
+  .editor-paper h2 { 
+    font-family: var(--font-editor); font-size: 18pt; font-weight: 700; color: var(--c-accent); 
+    border-bottom: 1px solid #DDD; padding-bottom: 6px; margin: 24px 0 12px 0; line-height: 1.2;
   }
-  @media (min-width: 769px) { .floating-menu { display: none !important; } }
+  .editor-paper h3 { 
+    font-family: var(--font-editor); font-size: 14pt; font-weight: 700; color: var(--c-ink); 
+    border-left: 4px solid var(--c-highlight); padding-left: 10px; margin: 18px 0 10px 0; line-height: 1.2;
+  }
+
+  /* 底部狀態列 */
+  .stats-bar { background: var(--bg-sidebar); border-top: 1px solid var(--border-color); padding: 8px 20px; font-size: 11px; color: var(--c-sub); display: flex; justify-content: space-between; align-items: center; }
+
+  /* 手機版適配 */
+  @media (max-width: 768px) {
+    .sidebar { display: none; } /* 手機預設隱藏左側 */
+    .editor-paper { padding: 30px 20px; }
+    .toolbar { padding: 8px 10px; gap: 8px; }
+    .mobile-tab-bar { display: flex; }
+  }
+  @media (min-width: 769px) { .mobile-tab-bar { display: none; } }
+  
+  .mobile-tab-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 50px; background: var(--bg-sidebar); border-top: 1px solid var(--border-color); z-index: 50; justify-content: space-around; align-items: center; }
+  .tab-btn { flex: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; color: var(--c-sub); }
+  .tab-btn.active { color: var(--c-highlight); font-weight: bold; }
 </style>
 </head>
 <body>
   <div class="bg-grid"></div>
 
-  <div id="aiModal" class="ai-modal-overlay" onclick="App.AI.close()">
-     <div class="ai-modal" onclick="event.stopPropagation()">
-        <div class="flex justify-between items-center mb-4">
-           <h3 class="font-serif font-bold text-lg text-[var(--c-iron)]">✨ AI 智慧建議</h3>
-           <button onclick="App.AI.close()" class="text-2xl text-[var(--c-sub)]">&times;</button>
-        </div>
-        <div id="aiContent"></div>
-     </div>
-  </div>
-
-  <header class="h-14 flex md:hidden items-center px-4 bg-white border-b z-50 justify-between sticky top-0">
-    <span class="font-serif font-bold text-lg text-gray-800 flex items-center gap-2">
-      <svg class="w-5 h-5" viewBox="0 0 512 512" fill="none"><path d="M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z" stroke="#303133" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/><path d="M256 180V320" stroke="#303133" stroke-width="24" stroke-linecap="round"/><circle cx="256" cy="370" r="24" fill="#BF1E33"/></svg>
-      蛍光ペン <span class="text-xs font-sans text-red-600">PRO</span>
-    </span>
+  <header class="h-12 md:hidden flex items-center justify-between px-4 bg-[var(--bg-sidebar)] border-b border-[var(--border-color)] sticky top-0 z-40">
+    <div class="flex items-center gap-2 font-serif text-[var(--c-ink)]">
+      <svg class="w-5 h-5" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="20"><circle cx="256" cy="256" r="236"/><path d="M256 100v200M180 300h152"/></svg>
+      <span>蛍光ペン</span>
+    </div>
+    <button onclick="App.UI.toggleTheme()" class="text-[var(--c-sub)]"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
   </header>
 
-  <div id="mobileFloatMenu" class="floating-menu">
-     <div onmousedown="event.preventDefault()" onclick="App.Format.color('#BF1E33')" class="color-dot" style="background:#BF1E33" title="真紅"></div>
-     <div onmousedown="event.preventDefault()" onclick="App.Format.color('#2B4B65')" class="color-dot" style="background:#2B4B65" title="藍鉄"></div>
-     <div class="float-divider"></div>
-     <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#F0DC70')" class="color-dot" style="background:var(--hl-yellow)" title="刈安"></div>
-     <div class="float-divider"></div>
-     <div onmousedown="event.preventDefault()" onclick="App.Format.remove()" class="btn-tool w-6 h-6 p-0" title="清除">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-     </div>
-     <div id="synonymBtn" onmousedown="event.preventDefault()" class="hidden btn-tool w-6 h-6 p-0 text-yellow-600" title="替換詞">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3M3.337 17h4.673M12 21v-1"/></svg>
-     </div>
-  </div>
+  <div class="flex-1 flex overflow-hidden relative">
+    
+    <aside id="tabInput" class="sidebar w-full md:w-[320px] lg:w-[360px] custom-scroll overflow-y-auto p-5 hidden md:flex flex-col h-full">
+      <div class="sidebar-header flex items-center gap-3 mb-6">
+        <svg class="w-8 h-8 text-[var(--c-accent)]" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="20"><circle cx="256" cy="256" r="236"/><path d="M256 100v200M180 300h152"/></svg>
+        <div>
+          <h1 class="text-lg font-bold">蛍光ペン <span class="text-xs text-[var(--c-highlight)] font-sans">PRO</span></h1>
+          <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v5.0</p>
+        </div>
+      </div>
 
-  <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative h-screen">
-    <aside id="sectionInput" class="sidebar-container w-full md:w-[360px] custom-scroll overflow-y-auto">
-      <div class="p-5 flex flex-col min-h-full">
-          <div class="hidden md:flex items-center gap-3 mb-6 select-none">
-            <svg class="w-10 h-10 text-[#303133] dark:text-[#E0C088]" viewBox="0 0 512 512" fill="none"><path d="M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z" stroke="currentColor" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/><path d="M256 180V320" stroke="currentColor" stroke-width="24" stroke-linecap="round"/><circle cx="256" cy="370" r="24" fill="#BF1E33"/></svg>
-            <div>
-              <h1 class="font-serif font-bold text-lg text-[var(--c-ink)] tracking-widest leading-none">蛍光ペン <span class="text-xs font-sans text-[var(--c-crimson)]">PRO</span></h1>
-              <p class="text-[9px] text-gray-400 tracking-[0.2em] mt-1">DOCS DRAFTING TOOL v4.8</p>
-            </div>
+      <div class="flex-1 flex flex-col gap-4">
+        <div>
+          <div class="flex justify-between items-baseline mb-2">
+            <h3 class="font-serif font-bold text-sm border-l-2 border-[var(--c-accent)] pl-2">原文輸入 (Input)</h3>
+            <button onclick="App.Core.restore()" class="text-[10px] text-blue-500 hover:underline">還原</button>
           </div>
+          <textarea id="sourceText" class="input-area h-64" placeholder="請在此貼上文章..."></textarea>
+        </div>
 
-          <div class="mb-4">
-            <div class="flex justify-between items-end mb-2">
-              <div class="section-title mb-0">原文輸入</div>
-              <button onclick="App.Core.restore()" class="text-[10px] text-blue-600 hover:underline flex items-center gap-1">
-                 <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> 還原
-              </button>
-            </div>
-            <textarea id="sourceText" class="input-field min-h-[220px]" placeholder="在此輸入文章...&#10;編輯後會自動同步至右側預覽。"></textarea>
-          </div>
-          
-          <div class="mb-4 flex-1">
-             <div class="section-title accent">SEO 關鍵字</div>
-             <textarea id="kwList" class="input-field h-20 mb-2" placeholder="關鍵字 (每行一個)..."></textarea>
-             <div id="densityPanel" class="density-panel custom-scroll"><span class="text-xs text-gray-400 w-full text-center py-2">等待輸入...</span></div>
-             <div id="locPanel" class="localization-panel"></div>
-          </div>
+        <div>
+          <h3 class="font-serif font-bold text-sm border-l-2 border-[var(--c-highlight)] pl-2 mb-2">SEO 關鍵字</h3>
+          <textarea id="kwList" class="input-area h-20 mb-2" placeholder="關鍵字 (一行一個)"></textarea>
+          <div id="densityPanel" class="flex flex-wrap gap-2 text-xs"></div>
+        </div>
+      </div>
 
-          <div class="mt-auto pb-4">
-            <button onclick="App.AI.generate()" class="btn-primary mb-3 !bg-indigo-600 !shadow-indigo-200">
-               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> <span>✨ AI 智慧建議</span>
-            </button>
-            <button onclick="App.Core.forceSync()" class="btn-primary mb-3">
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> <span>一鍵標註 (Sync & Check)</span>
-            </button>
-            <button onclick="App.Core.copyToDocs()" class="btn-secondary w-full mb-3 !text-[var(--c-crimson)] !border-[var(--c-crimson)]/30 !bg-red-50 dark:!bg-red-900/20 hover:!bg-red-100">
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg> 複製到 Docs
-            </button>
-
-            <div class="section-title sub text-xs mt-4">清空與備份</div>
-            <div class="clear-options">
-              <button onclick="App.Storage.clear('source')" class="btn-secondary text-[10px]">清空原文</button>
-              <button onclick="App.Storage.clear('kw')" class="btn-secondary text-[10px]">清空關鍵字</button>
-              <button onclick="App.Storage.downloadBackup()" class="btn-secondary text-[10px] text-blue-600">下載備份</button>
-            </div>
-            <button onclick="App.Storage.clear('all')" class="btn-secondary w-full mt-2 text-[10px] !text-red-500 hover:bg-red-50">全部重置</button>
-            <div class="copyright-text">Production by Kaoru Tsai，於2025製作</div>
-          </div>
+      <div class="mt-6 space-y-2">
+        <button onclick="App.AI.generate()" class="w-full py-2 bg-indigo-600 text-white rounded shadow-sm hover:bg-indigo-700 transition flex items-center justify-center gap-2 text-sm font-serif">
+          ✨ AI 標題建議
+        </button>
+        <button onclick="App.Core.forceSync()" class="w-full py-2 bg-[var(--c-accent)] text-white rounded shadow-sm hover:opacity-90 transition text-sm font-serif">
+          ⟳ 一鍵標註 (Sync to Editor)
+        </button>
+        <button onclick="App.Core.copyToDocs()" class="w-full py-2 border border-[var(--c-highlight)] text-[var(--c-highlight)] rounded hover:bg-red-50 transition text-sm">
+          📋 複製到 Docs (格式鎖定)
+        </button>
+        <div class="flex gap-2 mt-2">
+           <button onclick="App.Storage.clear('all')" class="flex-1 py-1 text-xs text-gray-400 border border-gray-200 rounded hover:text-red-500">重置</button>
+           <button onclick="App.Storage.downloadBackup()" class="flex-1 py-1 text-xs text-gray-400 border border-gray-200 rounded hover:text-blue-500">備份</button>
+        </div>
       </div>
     </aside>
 
-    <main id="sectionPreview" class="preview-wrapper mobile-hidden custom-scroll">
-      <div class="toolbar-sticky">
-        <div class="toolbar-inner">
-          <div class="tool-group">
-            <button onmousedown="event.preventDefault()" onclick="document.execCommand('undo')" class="btn-tool" title="復原"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg></button>
-            <button onmousedown="event.preventDefault()" onclick="document.execCommand('redo')" class="btn-tool" title="重做"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l6 3.7"/></svg></button>
-          </div>
-          <div class="divider"></div>
-          <div class="tool-group">
-             <button onmousedown="event.preventDefault()" onclick="App.Format.cmd('formatBlock','h2')" class="btn-tool font-bold" title="H2">H2</button>
-             <button onmousedown="event.preventDefault()" onclick="App.Format.cmd('formatBlock','h3')" class="btn-tool font-bold" title="H3">H3</button>
-             <button onmousedown="event.preventDefault()" onclick="App.Format.cmd('formatBlock','p')" class="btn-tool" title="P">P</button>
-             <button onmousedown="event.preventDefault()" onclick="App.Format.remove()" class="btn-tool" title="清除格式"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l5 5L22 2l-5-5L2 12zM12 2l10 10M12 22h10"/></svg></button>
-          </div>
-          <div class="divider"></div>
-          <div class="tool-group">
-            <select onchange="App.Format.size(this.value)" class="tool-select" title="字級">
-              <option value="10pt">10</option><option value="11pt">11</option><option value="12pt" selected>12</option><option value="14pt">14</option><option value="18pt">18</option>
-            </select>
-          </div>
-          <div class="divider"></div>
-          <div class="tool-group px-1">
-            <div onmousedown="event.preventDefault()" onclick="App.Format.color('#303133')" class="color-dot" style="background:#303133"></div>
-            <div onmousedown="event.preventDefault()" onclick="App.Format.color('#2B4B65')" class="color-dot" style="background:#2B4B65"></div>
-            <div onmousedown="event.preventDefault()" onclick="App.Format.color('#BF1E33')" class="color-dot" style="background:#BF1E33"></div>
-            <div onmousedown="event.preventDefault()" onclick="App.Format.color('#2F5D50')" class="color-dot" style="background:#2F5D50"></div>
-            <div onmousedown="event.preventDefault()" onclick="App.Format.color('#6A4C9C')" class="color-dot" style="background:#6A4C9C"></div>
-          </div>
-          <div class="divider"></div>
-          <div class="tool-group px-1">
-            <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#F0DC70')" class="color-dot" style="background:var(--hl-yellow)"></div>
-            <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#F5B199')" class="color-dot" style="background:var(--hl-pink)"></div>
-            <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#A0D8EF')" class="color-dot" style="background:var(--hl-blue)"></div>
-            <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#C6Eac5')" class="color-dot" style="background:var(--hl-green)"></div>
-            <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#E0C8F2')" class="color-dot" style="background:var(--hl-purple)"></div>
-          </div>
+    <main id="tabPreview" class="preview-wrapper bg-[var(--bg-canvas)] w-full flex flex-col h-full">
+      
+      <div class="toolbar custom-scroll">
+        <div class="flex items-center gap-1">
+          <button onclick="document.execCommand('undo')" class="tool-btn" title="Undo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg></button>
+          <button onclick="document.execCommand('redo')" class="tool-btn" title="Redo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l6 3.7"/></svg></button>
         </div>
-        <button onclick="App.UI.toggleTheme()" class="btn-tool rounded-full w-8 h-8 ml-2 border border-gray-200 dark:border-gray-600">
-          <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        <div class="tool-sep"></div>
+        
+        <div class="flex items-center gap-1">
+          <button onclick="App.Format.cmd('formatBlock','h2')" class="tool-btn font-bold text-lg" title="H2 章節">H2</button>
+          <button onclick="App.Format.cmd('formatBlock','h3')" class="tool-btn font-bold text-base" title="H3 子題">H3</button>
+          <button onclick="App.Format.cmd('formatBlock','p')" class="tool-btn" title="內文">P</button>
+        </div>
+        <div class="tool-sep"></div>
+
+        <select onchange="App.Format.size(this.value)" class="h-8 border border-[var(--border-color)] rounded text-xs bg-[var(--bg-sidebar)] px-1 outline-none">
+          <option value="10pt">10</option>
+          <option value="11pt">11</option>
+          <option value="12pt" selected>12</option>
+          <option value="14pt">14</option>
+          <option value="18pt">18</option>
+        </select>
+        <div class="tool-sep"></div>
+
+        <div class="flex gap-2 px-1">
+          <div onclick="App.Format.color('#333333')" class="color-dot bg-[#333333]" title="墨色"></div>
+          <div onclick="App.Format.color('#2B4B65')" class="color-dot bg-[#2B4B65]" title="藍鉄"></div>
+          <div onclick="App.Format.color('#BF1E33')" class="color-dot bg-[#BF1E33]" title="茜色"></div>
+          <div onclick="App.Format.color('#2F5D50')" class="color-dot bg-[#2F5D50]" title="千歲綠"></div>
+          <div onclick="App.Format.color('#6A4C9C')" class="color-dot bg-[#6A4C9C]" title="京紫"></div>
+        </div>
+        <div class="tool-sep"></div>
+
+        <div class="flex gap-2 px-1">
+          <div onclick="App.Format.highlight('#F0DC70')" class="color-dot bg-[#F0DC70]" title="刈安"></div>
+          <div onclick="App.Format.highlight('#F5B199')" class="color-dot bg-[#F5B199]" title="桃色"></div>
+          <div onclick="App.Format.highlight('#A0D8EF')" class="color-dot bg-[#A0D8EF]" title="空色"></div>
+          <div onclick="App.Format.highlight('#C6Eac5')" class="color-dot bg-[#C6Eac5]" title="薄綠"></div>
+          <div onclick="App.Format.highlight('#E0C8F2')" class="color-dot bg-[#E0C8F2]" title="藤色"></div>
+        </div>
+        <div class="tool-sep"></div>
+
+        <button onclick="App.Format.remove()" class="tool-btn" title="清除格式">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
       </div>
 
       <div class="editor-container custom-scroll">
-        <div id="editor" contenteditable="true" class="editor-paper" placeholder="預覽內容..."></div>
+        <div id="editor" contenteditable="true" class="editor-paper shadow-lg" spellcheck="false"></div>
       </div>
-      
+
       <div class="stats-bar">
-        <div class="stat-group">
-          <div class="stat-item"><span>總字數:</span> <span id="countTotal" class="stat-val">0</span></div>
-          <div class="stat-item" style="opacity:0.6" id="selCountGroup"><span>選取:</span> <span id="countSel" class="stat-val">0</span></div>
+        <div class="flex gap-4">
+          <span>字數: <b id="countTotal" class="text-[var(--c-accent)]">0</b></span>
+          <span id="selCountGroup" class="opacity-50">選取: <b id="countSel">0</b></span>
         </div>
-        <div class="stat-group">
-           <div id="btnPunc" class="toggle-btn" onclick="App.UI.togglePunctuation()" title="點擊切換">
-             <svg id="puncIcon" class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg> 含標點
-           </div>
-        </div>
+        <button id="btnPunc" onclick="App.UI.togglePunctuation()" class="flex items-center gap-1 text-xs px-2 py-1 rounded border border-[var(--border-color)] hover:bg-gray-100">
+          <span class="w-2 h-2 rounded-full bg-green-500" id="puncDot"></span> 含標點
+        </button>
       </div>
     </main>
   </div>
 
-  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t h-14 flex z-50">
-    <button onclick="App.UI.switchTab('input')" class="flex-1 text-xs font-bold text-gray-500 hover:text-red-600 flex flex-col items-center justify-center">
-      <svg class="w-5 h-5 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg> <span>編輯</span>
+  <nav class="mobile-tab-bar">
+    <button onclick="App.UI.switchMobileTab('input')" class="tab-btn active" id="tabBtnInput">
+      <svg class="w-5 h-5 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      編輯
     </button>
-    <button onclick="App.UI.switchTab('preview')" class="flex-1 text-xs font-bold text-gray-500 hover:text-red-600 flex flex-col items-center justify-center">
-      <svg class="w-5 h-5 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg> <span>預覽</span>
+    <button onclick="App.UI.switchMobileTab('preview')" class="tab-btn" id="tabBtnPreview">
+      <svg class="w-5 h-5 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      預覽
     </button>
   </nav>
 
   <script>
+    /* 核心邏輯 v5.0 */
     const Config = {
-        locDict: {'質量': '品質', '視頻': '影片', '高清': '高畫質', '硬件': '硬體', '軟件': '軟體', '項目': '專案', '信息': '資訊', '網上': '線上', '服務器': '伺服器', '程序': '程式', '鼠標': '滑鼠', '打印': '列印', '屏幕': '螢幕', '內存': '記憶體'},
-        synonyms: {
-            '旅遊': ['旅行', '自由行', '小旅行', '深度遊'], '便宜': ['平價', '高CP值', '親民', '銅板價'],
-            '好吃': ['美味', '必吃', '饕客首選', '風味獨特'], '推薦': ['精選', '必買', '人氣', '熱銷'],
-            '住宿': ['飯店', '民宿', '旅店', '下榻'], '拍照': ['打卡', '取景', '美拍', '殺底片']
-        },
-        titles: (kw) => [`【2025最新】${kw}完全攻略：新手必看的重點整理`, `還在煩惱${kw}？掌握這幾點讓你事半功倍`, `${kw}是什麼？完整解析與實用技巧`, `為什麼你需要${kw}？專家告訴你背後的秘密`, `5分鐘搞懂${kw}：懶人包總整理`]
+        titles: (kw) => [`${kw}懶人包：2025最新攻略`, `為什麼${kw}這麼受歡迎？`, `${kw}完全解析：新手必看`],
+        defaultHTML: '<p>請在左側輸入文字...</p>'
     };
 
-    const Storage = {
-        save: (key, val) => { try { localStorage.setItem(key, val); } catch (e) { if(e.name==='QuotaExceededError') alert('儲存空間已滿'); } },
-        get: (key) => localStorage.getItem(key),
-        clear: (type) => { if(!confirm('確定清空？(無法復原)')) return; if(type==='source'||type==='all') Dom.source.value=''; if(type==='kw'||type==='all') Dom.kwInput.value=''; if(type==='all') { Dom.editor.innerHTML=''; localStorage.clear(); } App.Core.forceSync(); },
-        downloadBackup: () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([`<html><body>${Dom.editor.innerHTML}</body></html>`], {type:'text/html'})); a.download = `backup_${new Date().toISOString().slice(0,10)}.html`; a.click(); }
+    const Dom = {
+        source: document.getElementById('sourceText'),
+        kw: document.getElementById('kwList'),
+        editor: document.getElementById('editor'),
+        countTotal: document.getElementById('countTotal'),
+        countSel: document.getElementById('countSel'),
+        puncDot: document.getElementById('puncDot')
     };
-
-    let Dom = {};
 
     const App = {
-        state: { isAutoSync: true, includePunctuation: true, saveTimer: null, syncTimer: null },
+        state: { isAutoSync: true, includePunctuation: true },
+        
         Init: () => {
-            Dom = { source: document.getElementById('sourceText'), kwInput: document.getElementById('kwList'), editor: document.getElementById('editor'), density: document.getElementById('densityPanel'), loc: document.getElementById('locPanel'), floatMenu: document.getElementById('mobileFloatMenu'), synonymBtn: document.getElementById('synonymBtn'), aiModal: document.getElementById('aiModal'), aiContent: document.getElementById('aiContent'), countTotal: document.getElementById('countTotal'), countSel: document.getElementById('countSel'), btnPunc: document.getElementById('btnPunc'), puncIcon: document.getElementById('puncIcon'), themeIcon: document.getElementById('themeIcon') };
-
-            if(Storage.get('fluo_src')) Dom.source.value = Storage.get('fluo_src');
-            if(Storage.get('fluo_kw')) Dom.kwInput.value = Storage.get('fluo_kw');
-            const cachedHtml = Storage.get('fluo_html');
-            if(cachedHtml) { Dom.editor.innerHTML = cachedHtml; if(Dom.editor.innerText.replace(/\n/g,'').trim()!==Dom.source.value.replace(/\n/g,'').trim()) App.state.isAutoSync=false; } else { App.Core.runSync(true); }
-            if(Storage.get('fluo_theme')==='dark') { document.body.setAttribute('data-theme','dark'); App.UI.updateThemeIcon(true); }
+            if(localStorage.getItem('fluo_src')) Dom.source.value = localStorage.getItem('fluo_src');
+            if(localStorage.getItem('fluo_kw')) Dom.kw.value = localStorage.getItem('fluo_kw');
             
-            Dom.source.addEventListener('input', App.Handlers.onInput); Dom.kwInput.addEventListener('input', App.Handlers.onInput); Dom.editor.addEventListener('input', App.Handlers.onEditorInput); document.addEventListener('selectionchange', App.UI.updateStats);
-            App.Core.analyze(); App.UI.updateStats();
+            // 初始化同步
+            App.Core.runSync();
+
+            // 事件監聽
+            Dom.source.addEventListener('input', () => { App.state.isAutoSync=true; App.Core.runSync(); });
+            Dom.kw.addEventListener('input', () => { App.Core.runSync(); });
+            Dom.editor.addEventListener('input', () => { 
+                App.state.isAutoSync = false; // 右側編輯後，暫停左側同步，避免覆蓋
+                App.UI.updateStats();
+            });
+            document.addEventListener('selectionchange', App.UI.updateStats);
         },
-        Handlers: {
-            onInput: () => { if(App.state.isAutoSync) { clearTimeout(App.state.syncTimer); App.state.syncTimer = setTimeout(()=>App.Core.runSync(true),500); } else { App.Core.analyze(); } App.Core.triggerSave(); App.UI.updateStats(); },
-            onEditorInput: () => { if(App.state.isAutoSync) App.state.isAutoSync=false; App.Core.triggerSave(); App.UI.updateStats(); }
-        },
+
         Core: {
-            runSync: (silent=false) => {
+            // 🟢 核心同步：確保每一行都是獨立的 <p>，解決整篇變 H2 的問題
+            runSync: () => {
                 if(!App.state.isAutoSync) return;
-                let text = Dom.source.value; if(!text) { if(!silent) Dom.editor.innerHTML=''; return; }
-                const uniqueKws = [...new Set(Dom.kwInput.value.split('\n').map(k=>k.trim()).filter(k=>k))];
-                let html = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-                uniqueKws.forEach(kw => { html = html.replace(new RegExp(`(${App.Utils.escapeRegExp(kw)})`,'gi'), `<span class="kw-highlight" data-kw="${kw.toLowerCase()}" style="color: #BF1E33; font-weight: 700;">$1</span>`); });
-                Dom.editor.innerHTML = html.split(/\n\s*\n/).map(p=>p.trim()?`<p style="margin-bottom: 12pt;">${p.replace(/\n/g,'<br>')}</p>`:'').join('');
-                App.Core.analyze(); App.Core.triggerSave();
-            },
-            analyze: () => {
-                const text = Dom.source.value; const len = text.length;
-                if(len === 0) { Dom.density.innerHTML='<span class="text-xs text-gray-400">無內容</span>'; return; }
-                const uniqueKws = [...new Set(Dom.kwInput.value.split('\n').map(k=>k.trim()).filter(k=>k))];
-                let html = '';
-                uniqueKws.forEach(kw => {
-                    const count = (text.match(new RegExp(App.Utils.escapeRegExp(kw),'gi'))||[]).length;
-                    const density = ((count*kw.length/len)*100).toFixed(1);
-                    let cls = count===0?'missing':(density>0.5&&density<5?'good':'');
-                    html += `<div class="kw-tag ${cls}" onmouseenter="App.UI.hlKw('${kw}',true)" onmouseleave="App.UI.hlKw('${kw}',false)">${kw} <span class="count">${count}</span> <span style="font-size:9px; opacity:0.7">(${density}%)</span></div>`;
+                
+                const raw = Dom.source.value;
+                const kws = Dom.kw.value.split('\n').filter(k => k.trim());
+                
+                // 1. 轉義 HTML
+                let safeText = raw.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                
+                // 2. 關鍵字標註 (Highlight)
+                kws.forEach(k => {
+                    if(k) safeText = safeText.replace(new RegExp(k, 'gi'), `<b style="color:#BF1E33">${k}</b>`);
                 });
-                Dom.density.innerHTML = html||'<span class="text-xs text-gray-400">無關鍵字</span>';
-                let locHtml = '';
-                for(const [bad,good] of Object.entries(Config.locDict)) { if(text.includes(bad)) locHtml+=`<div class="loc-item">⚠️ 建議將 <b>${bad}</b> <span class="loc-arrow">➔</span> <b>${good}</b></div>`; }
-                Dom.loc.style.display=locHtml?'block':'none'; if(locHtml) Dom.loc.innerHTML='<div style="font-weight:700; margin-bottom:4px; color:#D97706">在地化提醒 (TW)</div>'+locHtml;
+
+                // 3. 分段處理：將 \n 轉為 <p> 包裹
+                const paragraphs = safeText.split('\n').map(line => {
+                    return line.trim() ? `<p>${line}</p>` : '<p><br></p>';
+                }).join('');
+
+                Dom.editor.innerHTML = paragraphs || Config.defaultHTML;
+                
+                // Save
+                localStorage.setItem('fluo_src', raw);
+                localStorage.setItem('fluo_kw', Dom.kw.value);
+                App.UI.updateStats();
             },
-            triggerSave: () => { clearTimeout(App.state.saveTimer); App.state.saveTimer = setTimeout(() => { Storage.save('fluo_src',Dom.source.value); Storage.save('fluo_kw',Dom.kwInput.value); Storage.save('fluo_html',Dom.editor.innerHTML); }, 800); },
-            forceSync: () => { App.state.isAutoSync=true; App.Core.runSync(); if(window.innerWidth<768) App.UI.switchTab('preview'); },
-            restore: () => { if(confirm('將預覽區內容還原到輸入框？')) { Dom.source.value=Dom.editor.innerText; App.Core.forceSync(); }},
-            copyToDocs: async () => {
-                const wrapper = document.createElement('div'); 
-                // 🟢 確保樣式寫入 wrapper
-                wrapper.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 12pt; line-height: 1.6; color: #303133; text-align: justify; background: white;";
-                const clone = Dom.editor.cloneNode(true);
-                clone.querySelectorAll('.kw-highlight').forEach(el=>{el.classList.remove('kw-highlight','highlight-pulse');el.removeAttribute('data-kw');});
-                const apply = (n) => {
-                    if(n.nodeType===1) {
-                        if(n.tagName==='H2') n.style.cssText="font-family:'Noto Sans TC',sans-serif;font-size:18pt;font-weight:700;color:#2B4B65;border-bottom:1px solid #E0E0E0;padding-bottom:8px;margin:24px 0 16px 0;line-height:1.4;";
-                        else if(n.tagName==='H3') n.style.cssText="font-family:'Noto Sans TC',sans-serif;font-size:14pt;font-weight:700;color:#303133;border-left:4px solid #BF1E33;padding-left:10px;margin:20px 0 12px 0;line-height:1.4;";
-                        else if(n.tagName==='P') n.style.cssText="margin-bottom:12pt;line-height:1.6;";
-                    } n.childNodes.forEach(apply);
-                }; apply(clone); wrapper.innerHTML = clone.innerHTML;
-                try { await navigator.clipboard.write([new ClipboardItem({'text/html': new Blob([wrapper.outerHTML],{type:'text/html'}), 'text/plain': new Blob([Dom.editor.innerText],{type:'text/plain'})})]); alert('✨ 已複製標準格式！\n包含：12pt 字級, 1.6 倍行高, 正黑體'); } catch(e) { alert('複製失敗'); }
-            }
-        },
-        UI: {
-            hlKw: (kw, active) => Dom.editor.querySelectorAll(`span[data-kw="${kw.toLowerCase()}"]`).forEach(sp => active?sp.classList.add('highlight-pulse'):sp.classList.remove('highlight-pulse')),
-            updateStats: () => {
-                const text = Dom.editor.innerText; const sel = window.getSelection(); const selText = sel.toString();
-                Dom.countTotal.innerText = App.Utils.count(text);
-                if(selText) {
-                    document.getElementById('selCountGroup').style.opacity='1'; Dom.countSel.innerText = App.Utils.count(selText);
-                    if(window.innerWidth<768) App.UI.showFloatMenu(sel, selText);
-                } else {
-                    document.getElementById('selCountGroup').style.opacity='0.5'; Dom.countSel.innerText = '0';
-                    Dom.floatMenu.classList.remove('show');
+
+            restore: () => {
+                if(confirm('確定還原？這會覆蓋目前的修改。')) {
+                    Dom.source.value = Dom.editor.innerText;
+                    App.state.isAutoSync = true;
+                    App.Core.runSync();
                 }
             },
-            showFloatMenu: (sel, text) => {
-                const range = sel.getRangeAt(0); const rect = range.getBoundingClientRect();
-                let top = rect.top - 60; let left = rect.left + (rect.width/2) - 90;
-                if(left<10) left=10; if(top<60) top=rect.bottom+10;
-                Dom.floatMenu.style.top=`${top}px`; Dom.floatMenu.style.left=`${left}px`; Dom.floatMenu.classList.add('show');
-                const syns = Config.synonyms[text.trim()];
-                if(syns) { Dom.synonymBtn.classList.remove('hidden'); Dom.synonymBtn.onclick = (e) => { e.preventDefault(); alert(`💡 替換建議：\n${syns.join('、')}`); }; } 
-                else { Dom.synonymBtn.classList.add('hidden'); }
+
+            // 🟢 複製到 Docs：強制單行行距與樣式
+            copyToDocs: async () => {
+                const wrapper = document.createElement('div');
+                // Google Docs 關鍵樣式：12pt, 單行行距(1.0), 正黑體
+                wrapper.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 12pt; line-height: 1.0; color: #333; background: white;";
+                
+                const clone = Dom.editor.cloneNode(true);
+                
+                // 遍歷所有子元素，強制寫入 Inline Style (Docs 才吃得到)
+                const applyStyle = (node) => {
+                    if (node.nodeType === 1) { // Element
+                        // 保留原有顏色與粗體，但強制行高
+                        node.style.lineHeight = "1.0";
+                        node.style.marginBottom = "12pt"; // 段落間距用 margin 模擬
+                        
+                        if (node.tagName === 'H2') {
+                            node.style.fontSize = "18pt";
+                            node.style.fontWeight = "bold";
+                            node.style.color = "#2B4B65";
+                            node.style.borderBottom = "1px solid #DDD";
+                            node.style.lineHeight = "1.2";
+                        }
+                        if (node.tagName === 'H3') {
+                            node.style.fontSize = "14pt";
+                            node.style.fontWeight = "bold";
+                            node.style.color = "#333";
+                            node.style.borderLeft = "4px solid #BF1E33";
+                            node.style.paddingLeft = "8px";
+                            node.style.lineHeight = "1.2";
+                        }
+                    }
+                    node.childNodes.forEach(applyStyle);
+                };
+                applyStyle(clone);
+                
+                wrapper.innerHTML = clone.innerHTML;
+
+                try {
+                    const blobHtml = new Blob([wrapper.outerHTML], {type: 'text/html'});
+                    const blobText = new Blob([Dom.editor.innerText], {type: 'text/plain'});
+                    await navigator.clipboard.write([new ClipboardItem({'text/html': blobHtml, 'text/plain': blobText})]);
+                    alert('✨ 已複製！貼上 Google Docs 即可呈現完美格式。');
+                } catch(e) {
+                    alert('複製失敗，請手動全選複製。');
+                }
             },
-            togglePunctuation: () => { App.state.includePunctuation=!App.state.includePunctuation; if(App.state.includePunctuation){Dom.btnPunc.classList.add('active');Dom.puncIcon.style.color='green';}else{Dom.btnPunc.classList.remove('active');Dom.puncIcon.style.color='#DDD';} App.UI.updateStats(); },
-            toggleTheme: () => { const isDark=document.body.getAttribute('data-theme')==='dark'; if(isDark){document.body.removeAttribute('data-theme');Storage.save('fluo_theme','light');App.UI.updateThemeIcon(false);}else{document.body.setAttribute('data-theme','dark');Storage.save('fluo_theme','dark');App.UI.updateThemeIcon(true);} },
-            updateThemeIcon: (isDark) => { Dom.themeIcon.innerHTML = isDark ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>' : '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>'; },
-            switchTab: (tab) => { const input = document.getElementById('sectionInput'); const preview = document.getElementById('sectionPreview'); if(tab==='input'){input.classList.remove('mobile-hidden');preview.classList.add('mobile-hidden');}else{input.classList.add('mobile-hidden');preview.classList.remove('mobile-hidden');} }
+            
+            forceSync: () => { App.state.isAutoSync=true; App.Core.runSync(); }
         },
+
         Format: {
-            cmd: (c,v) => { document.execCommand(c,false,v); if(App.state.isAutoSync) App.state.isAutoSync=false; App.UI.updateStats(); },
-            // 🟢 Fix: More robust font sizing using span
-            size: (pt) => { 
-               const sel = window.getSelection();
-               if (!sel.isCollapsed) {
-                  document.execCommand('fontSize', false, '7'); // 先用 execCommand 設為最大
-                  const fontElements = Dom.editor.querySelectorAll('font[size="7"]');
-                  fontElements.forEach(el => {
-                     el.removeAttribute('size');
-                     el.style.fontSize = pt;
-                  });
-               } else { alert('請先選取文字'); }
-               if(App.state.isAutoSync)App.state.isAutoSync=false; App.UI.updateStats(); 
+            cmd: (c, v) => {
+                document.execCommand(c, false, v);
+                App.state.isAutoSync = false; 
+                App.UI.updateStats();
             },
-            color: (h) => App.Format.cmd('foreColor',h),
-            highlight: (h) => { if(!document.execCommand('hiliteColor',false,h)) document.execCommand('backColor',false,h); if(App.state.isAutoSync)App.state.isAutoSync=false; },
-            remove: () => { document.execCommand('removeFormat',false,null); document.execCommand('backColor',false,'transparent'); if(App.state.isAutoSync)App.state.isAutoSync=false; App.UI.updateStats(); }
+            // 字級處理 (使用 span 避免破壞區塊)
+            size: (pt) => {
+                const sel = window.getSelection();
+                if(sel.isCollapsed) return alert('請先選取文字');
+                
+                // 使用 CSS class 或 style 注入
+                const span = document.createElement('span');
+                span.style.fontSize = pt;
+                
+                if (sel.rangeCount) {
+                    const range = sel.getRangeAt(0);
+                    range.surroundContents(span);
+                }
+                App.state.isAutoSync = false;
+            },
+            color: (c) => App.Format.cmd('foreColor', c),
+            highlight: (c) => { document.execCommand('hiliteColor', false, c) || document.execCommand('backColor', false, c); App.state.isAutoSync=false; },
+            remove: () => { App.Format.cmd('removeFormat'); App.Format.cmd('backColor', 'transparent'); }
         },
+
+        UI: {
+            updateStats: () => {
+                const text = Dom.editor.innerText || '';
+                const clean = App.state.includePunctuation ? text : text.replace(/[^\w\u4e00-\u9fa5]/g, '');
+                Dom.countTotal.innerText = clean.replace(/[\n\r]/g, '').length;
+                
+                const sel = window.getSelection().toString();
+                Dom.countSel.innerText = App.state.includePunctuation ? sel.length : sel.replace(/[^\w\u4e00-\u9fa5]/g, '').length;
+            },
+            togglePunctuation: () => {
+                App.state.includePunctuation = !App.state.includePunctuation;
+                Dom.puncDot.className = App.state.includePunctuation ? "w-2 h-2 rounded-full bg-green-500" : "w-2 h-2 rounded-full bg-gray-300";
+                App.UI.updateStats();
+            },
+            switchMobileTab: (tab) => {
+                const input = document.getElementById('tabInput');
+                const preview = document.getElementById('tabPreview');
+                const btnInput = document.getElementById('tabBtnInput');
+                const btnPreview = document.getElementById('tabBtnPreview');
+                
+                if(tab === 'input') {
+                    input.classList.remove('hidden'); input.classList.add('flex');
+                    preview.classList.add('hidden'); preview.classList.remove('flex');
+                    btnInput.classList.add('active'); btnPreview.classList.remove('active');
+                } else {
+                    input.classList.add('hidden'); input.classList.remove('flex');
+                    preview.classList.remove('hidden'); preview.classList.add('flex');
+                    btnInput.classList.remove('active'); btnPreview.classList.add('active');
+                }
+            },
+            toggleTheme: () => {
+               const isDark = document.body.getAttribute('data-theme') === 'dark';
+               document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            }
+        },
+        
         AI: {
             generate: () => {
-                const text=Dom.source.value; if(text.length<50){alert('內容太少');return;}
-                const raw=Dom.kwInput.value.split('\n').map(k=>k.trim()).filter(k=>k); let topKw=raw.length>0?raw[0]:"您的主題";
-                const clean=text.replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim();
-                let meta=clean.substring(0,85); if(meta.length>=85)meta+="..."; meta+=` 本文將深入探討 ${topKw} 的核心觀念與應用技巧，立即點擊閱讀完整內容！`;
-                let html=`<div class="ai-label">SEO 標題建議</div>`; Config.titles(topKw).forEach(t=>{html+=`<div class="ai-result-item" onclick="App.AI.copy('${t}')">${t}</div>`;});
-                html+=`<div class="ai-label mt-4">Meta Description 建議</div><div class="ai-result-item" onclick="App.AI.copy('${meta}')">${meta}</div>`;
-                Dom.aiContent.innerHTML=html; Dom.aiModal.style.display='flex';
+                const kw = Dom.kw.value.split('\n')[0] || '您的主題';
+                alert(`💡 AI 標題建議：\n\n1. ${kw}懶人包：2025最新攻略\n2. 為什麼${kw}這麼受歡迎？\n3. ${kw}完全解析：新手必看`);
             },
-            close: () => Dom.aiModal.style.display='none',
-            copy: (t) => navigator.clipboard.writeText(t).then(()=>alert('已複製'))
-        },
-        Utils: {
-            escapeRegExp: (s) => s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),
-            count: (s) => App.state.includePunctuation?s.replace(/[\n\r]/g,'').length:s.replace(/[^\w\u4e00-\u9fa5]/g,'').length
+            close: () => document.getElementById('aiModal').style.display = 'none'
         }
     };
-    
+
     document.addEventListener('DOMContentLoaded', App.Init);
-    window.App=App; window.removeFormatting=App.Format.remove; window.applyColor=App.Format.color; window.applyHighlight=App.Format.highlight; window.execCmd=App.Format.cmd; window.changeFontSize=App.Format.size; window.toggleTheme=App.UI.toggleTheme; window.togglePunctuation=App.UI.togglePunctuation; window.switchTab=App.UI.switchTab; window.copyToClipboard=App.Core.copyToDocs; window.forceSync=App.Core.forceSync; window.clearData=Storage.clear; window.restoreFromPreview=App.Core.restore; window.generateAI=App.AI.generate; window.closeAiModal=App.AI.close;
+    window.App = App;
   </script>
 </body>
 </html>
