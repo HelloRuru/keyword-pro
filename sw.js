@@ -1,5 +1,5 @@
-// sw.js - v7.1 (Fix Copy Bold Issue)
-const CACHE_NAME = 'fluo-v7.1'; 
+// sw.js - v7.2 (Dark Mode Aesthetic Upgrade)
+const CACHE_NAME = 'fluo-v7.2'; 
 const ASSETS = [
   './',
   './index.html',
