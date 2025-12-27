@@ -1,4 +1,4 @@
-// sw.js - v6.9 (Smart Highlight Engine)
+// sw.js - v6.9 (Non-destructive Highlight)
 const CACHE_NAME = 'fluo-v6.9'; 
 const ASSETS = [
   './',
