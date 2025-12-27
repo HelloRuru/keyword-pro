@@ -1,5 +1,5 @@
-// sw.js - v8.0 (Standard Typography Scale)
-const CACHE_NAME = 'fluo-v8.0'; 
+// sw.js - v8.1 (Performance Boost)
+const CACHE_NAME = 'fluo-v8.1'; 
 const ASSETS = [
   './',
   './index.html',
