@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
 <title>蛍光ペン PRO | SEO文案數位工具</title>
-<meta name="description" content="專為內容創作者設計的日系數位文房具。具備 PWA 離線寫作、SEO 關鍵字密度檢測、Google Docs 格式無縫貼上功能。">
+<meta name="description" content="專為內容創作者設計的日系數位文房具。">
 <meta name="robots" content="index, follow">
 <meta property="og:title" content="蛍光ペン PRO">
 
@@ -18,58 +18,39 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <script>
-  // 智慧右鍵
   document.addEventListener('contextmenu', e => {
     const isEditable = e.target.closest('textarea, input, [contenteditable="true"]');
     if (isEditable) return; 
     e.preventDefault();     
   });
-  // 禁止 Ctrl+S
   document.addEventListener('keydown', e => {
     if((e.ctrlKey && ['s','S','u','U'].includes(e.key))){ e.preventDefault(); }
   });
-  // PWA Register
   if ('serviceWorker' in navigator) {
      window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(e => console.log('SW Fail')); });
   }
 </script>
 
 <style>
-  /* --- 日系色票系統 --- */
   :root {
-    --bg-canvas: #F9F8F4; 
-    --bg-sidebar: #FFFFFF; 
-    --border-color: #E0E0E0;
-    --c-ink: #333333;      
-    --c-sub: #666666;      
-    --c-accent: #2B4B65;   
-    --c-highlight: #BF1E33;
-    --font-serif: 'Shippori Mincho', serif;
-    --font-sans: 'Zen Kaku Gothic New', sans-serif;
-    --font-editor: 'Noto Sans TC', sans-serif;
+    --bg-canvas: #F9F8F4; --bg-sidebar: #FFFFFF; --border-color: #E0E0E0;
+    --c-ink: #333333; --c-sub: #666666; --c-accent: #2B4B65; --c-highlight: #BF1E33;
+    --font-serif: 'Shippori Mincho', serif; --font-sans: 'Zen Kaku Gothic New', sans-serif; --font-editor: 'Noto Sans TC', sans-serif;
   }
   [data-theme="dark"] {
     --bg-canvas: #1A1A1A; --bg-sidebar: #242424; --border-color: #444;
     --c-ink: #E0E0E0; --c-sub: #999; --c-accent: #8AB4D6; --c-highlight: #FF6B6B;
   }
 
-  body { 
-    background: var(--bg-canvas); color: var(--c-ink); font-family: var(--font-sans); 
-    height: 100vh; height: 100dvh; 
-    overflow: hidden; display: flex; flex-direction: column; 
-  }
-  
+  body { background: var(--bg-canvas); color: var(--c-ink); font-family: var(--font-sans); height: 100vh; height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
   .bg-grid { position: fixed; inset: 0; background-image: linear-gradient(#E5E5E5 1px, transparent 1px), linear-gradient(90deg, #E5E5E5 1px, transparent 1px); background-size: 24px 24px; opacity: 0.5; pointer-events: none; z-index: 0; }
   [data-theme="dark"] .bg-grid { opacity: 0.08; background-image: linear-gradient(#555 1px, transparent 1px), linear-gradient(90deg, #555 1px, transparent 1px); }
-
   .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
   .custom-scroll::-webkit-scrollbar-thumb { background: #CCC; border-radius: 2px; }
 
   .sidebar { background: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 20; box-shadow: 2px 0 15px rgba(0,0,0,0.03); }
-  
   .input-area { width: 100%; background: var(--bg-canvas); border: 1px solid var(--border-color); border-radius: 4px; padding: 12px; font-size: 14px; font-family: var(--font-sans); resize: none; outline: none; transition: 0.2s; line-height: 1.6; }
   .input-area:focus { border-color: var(--c-accent); background: #FFF; box-shadow: 0 2px 8px rgba(43, 75, 101, 0.1); }
-
   .density-panel { background: var(--bg-canvas); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; margin-bottom: 10px; max-height: 120px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 6px; }
   .kw-tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; background: #FFF; border: 1px solid var(--border-color); color: var(--c-sub); display: flex; align-items: center; gap: 4px; cursor: default; }
   .kw-tag .count { font-weight: 800; color: var(--c-accent); }
@@ -77,48 +58,24 @@
   .kw-tag.missing { border-color: #FECACA; background: #FFF5F5; color: #C9171E; }
 
   .preview-container { flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden; z-index: 10; }
-  
-  .toolbar { 
-    background: var(--bg-sidebar); border-bottom: 1px solid var(--border-color); 
-    padding: 8px 16px; display: flex; align-items: center; gap: 12px; 
-    overflow-x: auto; white-space: nowrap; z-index: 30; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-  }
-  .tool-btn { 
-    display: flex; align-items: center; justify-content: center; 
-    height: 32px; min-width: 32px; padding: 0 8px; border-radius: 4px; 
-    color: var(--c-sub); font-size: 13px; font-family: var(--font-serif); font-weight: 500;
-    cursor: pointer; transition: 0.2s; border: 1px solid transparent; 
-  }
+  .toolbar { background: var(--bg-sidebar); border-bottom: 1px solid var(--border-color); padding: 8px 16px; display: flex; align-items: center; gap: 12px; overflow-x: auto; white-space: nowrap; z-index: 30; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+  .tool-btn { display: flex; align-items: center; justify-content: center; height: 32px; min-width: 32px; padding: 0 8px; border-radius: 4px; color: var(--c-sub); font-size: 13px; font-family: var(--font-serif); font-weight: 500; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
   .tool-btn:hover { background: var(--bg-canvas); color: var(--c-accent); border-color: var(--border-color); }
   .tool-sep { width: 1px; height: 20px; background: var(--border-color); flex-shrink: 0; }
-  
   .color-dot { width: 18px; height: 18px; border-radius: 50%; cursor: pointer; border: 2px solid var(--bg-sidebar); box-shadow: 0 0 0 1px var(--border-color); flex-shrink: 0; transition: transform 0.1s; display: flex; align-items: center; justify-content: center; }
   .color-dot:active { transform: scale(0.9); }
   .color-none { border: 1px solid #CCC; background: transparent; }
   .color-none svg { width: 10px; height: 10px; color: #999; }
 
-  .editor-paper { 
-    width: 100%; max-width: 800px; 
-    min-height: calc(100vh - 140px); 
-    margin: 0 auto; 
-    background: var(--bg-sidebar); padding: 60px 80px; 
-    outline: none; font-family: var(--font-editor); 
-    font-size: 12pt; line-height: 1.6; 
-    color: var(--c-ink); text-align: justify; 
-    box-shadow: 0 0 40px rgba(0,0,0,0.03);
-  }
-  
+  .editor-paper { width: 100%; max-width: 800px; min-height: calc(100vh - 140px); margin: 0 auto; background: var(--bg-sidebar); padding: 60px 80px; outline: none; font-family: var(--font-editor); font-size: 12pt; line-height: 1.6; color: var(--c-ink); text-align: justify; box-shadow: 0 0 40px rgba(0,0,0,0.03); }
   .editor-paper h2 { font-family: var(--font-serif); font-size: 18pt; font-weight: 700; color: var(--c-accent); border-bottom: 1px solid #DDD; padding-bottom: 6px; margin: 24px 0 12px 0; display: block; line-height: 1.4; }
   .editor-paper h3 { font-family: var(--font-serif); font-size: 14pt; font-weight: 700; color: var(--c-ink); border-left: 4px solid var(--c-highlight); padding-left: 10px; margin: 18px 0 10px 0; display: block; line-height: 1.4; }
   .editor-paper p { margin-bottom: 12pt; display: block; }
   .highlight-pulse { background-color: rgba(255, 255, 0, 0.4); box-shadow: 0 0 8px rgba(255, 255, 0, 0.6); }
-
   .stats-bar { background: var(--bg-sidebar); border-top: 1px solid var(--border-color); padding: 8px 20px; font-size: 11px; color: var(--c-sub); display: flex; justify-content: space-between; align-items: center; }
-
   .floating-menu { position: fixed; z-index: 999; background: var(--bg-sidebar); border: 1px solid var(--border-color); border-radius: 50px; padding: 6px 12px; display: flex; gap: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); opacity: 0; pointer-events: none; transform: translateY(10px); transition: 0.2s; }
   .floating-menu.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
 
-  /* RWD 手機版 */
   @media (max-width: 768px) {
     .sidebar { display: none; width: 100% !important; border-right: none; }
     .editor-paper { padding: 20px 16px; width: 100%; box-shadow: none; min-height: calc(100dvh - 150px); }
@@ -127,7 +84,6 @@
     .mobile-active-page { display: flex !important; flex-direction: column; height: calc(100dvh - 48px - 50px); overflow: hidden; }
     .mobile-scroll-area { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 20px; }
   }
-  
   .mobile-tab-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 50px; background: var(--bg-sidebar); border-top: 1px solid var(--border-color); z-index: 50; justify-content: space-around; align-items: center; display: none; padding-bottom: env(safe-area-inset-bottom); }
   .tab-btn { flex: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; color: var(--c-sub); font-family: var(--font-serif); }
   .tab-btn.active { color: var(--c-highlight); font-weight: bold; background: rgba(0,0,0,0.02); }
@@ -155,7 +111,6 @@
   </div>
 
   <div class="flex-1 flex overflow-hidden relative">
-    
     <aside id="tabInput" class="sidebar w-full md:w-[320px] lg:w-[360px] custom-scroll overflow-y-auto p-5 hidden md:flex flex-col h-full mobile-active-page">
       <div class="mobile-scroll-area flex flex-col gap-4 h-full">
           <div class="flex items-center justify-between mb-2">
@@ -188,8 +143,8 @@
           </div>
 
           <div class="mt-4 space-y-3 pb-8">
-            <button onclick="App.Core.forceSync()" class="w-full py-3 bg-[var(--c-highlight)] text-white font-bold rounded shadow-md hover:opacity-90 transition text-sm font-serif tracking-wide">
-              ⟳ 一鍵標註 (不破壞格式)
+            <button onclick="App.Core.smartHighlight()" class="w-full py-3 bg-[var(--c-highlight)] text-white font-bold rounded shadow-md hover:opacity-90 transition text-sm font-serif tracking-wide">
+              ⟳ 一鍵標註 (Sync & Check)
             </button>
             
             <button onclick="App.Core.copyToDocs()" class="w-full py-2 border border-[var(--c-accent)] text-[var(--c-accent)] rounded hover:bg-blue-50 transition text-sm flex justify-center items-center gap-2 font-serif">
@@ -214,17 +169,14 @@
         <button onmousedown="event.preventDefault()" onclick="document.execCommand('undo')" class="tool-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg></button>
         <button onmousedown="event.preventDefault()" onclick="document.execCommand('redo')" class="tool-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l6 3.7"/></svg></button>
         <div class="tool-sep"></div>
-        
         <button onmousedown="event.preventDefault()" onclick="document.execCommand('bold')" class="tool-btn font-serif font-bold text-lg" title="粗體">B</button>
         <button onmousedown="event.preventDefault()" onclick="document.execCommand('italic')" class="tool-btn font-serif italic text-lg" title="斜體">I</button>
         <button onmousedown="event.preventDefault()" onclick="document.execCommand('underline')" class="tool-btn font-serif underline text-lg" title="底線">U</button>
         <div class="tool-sep"></div>
-
         <button onmousedown="event.preventDefault()" onclick="App.Format.cmd('formatBlock','h2')" class="tool-btn font-bold text-lg font-serif">H2</button>
         <button onmousedown="event.preventDefault()" onclick="App.Format.cmd('formatBlock','h3')" class="tool-btn font-bold text-base font-serif">H3</button>
         <button onmousedown="event.preventDefault()" onclick="App.Format.cmd('formatBlock','p')" class="tool-btn font-serif">P</button>
         <div class="tool-sep"></div>
-        
         <div class="flex items-center gap-1">
             <button onmousedown="event.preventDefault()" onclick="App.Format.stepSize(-1)" class="tool-btn font-serif text-sm px-1" title="縮小字級">A-</button>
             <select id="fontSizeSelect" onchange="App.Format.setSize(this.value)" class="h-8 border border-[var(--border-color)] rounded text-xs bg-[var(--bg-sidebar)] px-1 outline-none font-sans w-12 text-center">
@@ -237,7 +189,6 @@
             <button onmousedown="event.preventDefault()" onclick="App.Format.stepSize(1)" class="tool-btn font-serif text-lg px-1" title="放大字級">A+</button>
         </div>
         <div class="tool-sep"></div>
-        
         <div class="flex gap-2 px-1">
           <div onmousedown="event.preventDefault()" onclick="App.Format.removeColor()" class="color-dot color-none" title="重置文字顏色"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
           <div onmousedown="event.preventDefault()" onclick="App.Format.color('#333333')" class="color-dot bg-[#333333]" title="墨色"></div>
@@ -310,8 +261,7 @@
                     document.getElementById('editor').innerHTML = '';
                     localStorage.clear();
                 }
-                // Only sync if clearing all, otherwise leave editor alone
-                if(type === 'all') App.Core.runSync(); 
+                App.Core.runSync(); // Reset
             },
             download: (format) => { 
                 const content = document.getElementById('editor').innerHTML;
@@ -345,38 +295,31 @@
             if(localStorage.getItem('fluo_theme') === 'dark') document.body.setAttribute('data-theme', 'dark');
             if(App.Storage.get('fluo_src')) App.Dom.source.value = App.Storage.get('fluo_src');
             if(App.Storage.get('fluo_kw')) App.Dom.kw.value = App.Storage.get('fluo_kw');
-            
-            // 初次載入：如果有編輯器緩存，優先使用緩存；否則從 source 同步
-            const cachedHtml = App.Storage.get('fluo_temp');
-            if(cachedHtml) {
-                App.Dom.editor.innerHTML = cachedHtml;
+            // 初次載入時，若 Editor 有備份則優先使用，否則 Sync
+            const savedHtml = App.Storage.get('fluo_temp');
+            if(savedHtml && savedHtml.trim().length > 0) {
+                App.Dom.editor.innerHTML = savedHtml;
                 App.state.isAutoSync = false;
+                App.Core.analyzeDensity();
             } else {
                 App.Core.runSync();
             }
-            App.Core.analyzeDensity(); // 即使是緩存也要更新密度
 
-            App.Dom.source.addEventListener('input', () => { 
-                if(App.state.isAutoSync) App.Core.runSync(); 
-                else App.Core.analyzeDensity(); // 即使不同步也要算關鍵字
-                App.Storage.save('fluo_src', App.Dom.source.value);
-            });
-            App.Dom.kw.addEventListener('input', () => { 
-                if(App.state.isAutoSync) App.Core.runSync();
-                else App.Core.analyzeDensity();
-                App.Storage.save('fluo_kw', App.Dom.kw.value);
-            });
+            App.Dom.source.addEventListener('input', () => { App.state.isAutoSync=true; App.Core.runSync(); });
+            App.Dom.kw.addEventListener('input', () => { /* KW changes don't overwrite editor instantly, waiting for sync */ App.Core.analyzeDensity(); App.Storage.save('fluo_kw', App.Dom.kw.value); });
             App.Dom.editor.addEventListener('input', () => { 
                 App.state.isAutoSync=false; 
                 App.UI.updateStats(); 
                 App.Storage.save('fluo_temp', App.Dom.editor.innerHTML); 
             });
+            
             document.addEventListener('selectionchange', () => {
                 App.UI.updateStats();
                 const sel = window.getSelection();
                 if(sel.rangeCount > 0 && !sel.isCollapsed) {
-                    const parent = sel.anchorNode.parentElement;
-                    if(parent.tagName === 'SPAN' && parent.style.fontSize) {
+                    let parent = sel.anchorNode.parentElement;
+                    if(parent.tagName !== 'SPAN') parent = parent.closest('span');
+                    if(parent && parent.style.fontSize) {
                         App.Dom.fontSelect.value = parent.style.fontSize;
                     }
                 }
@@ -387,57 +330,15 @@
             runSync: () => {
                 if(!App.state.isAutoSync) return;
                 const raw = App.Dom.source.value;
-                const html = raw.split('\n').map(line => line.trim() ? `<p>${line}</p>` : '<p><br></p>').join('');
+                const safeText = raw.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                // 原始同步：直接覆蓋 (僅在剛開始或 Source 大改時觸發)
+                const html = safeText.split('\n').map(line => line.trim() ? `<p>${line}</p>` : '<p><br></p>').join('');
                 App.Dom.editor.innerHTML = html || '<p class="text-gray-300">請在左側輸入文字...</p>';
-                App.Core.analyzeDensity();
-                App.UI.updateStats();
+                App.Core.smartHighlight(); // Sync 後自動高亮
+                App.Storage.save('fluo_src', raw);
             },
-            
-            // 🟢 核心：非破壞性標註引擎
-            forceSync: () => {
-                App.state.isAutoSync = false; // 停止同步，避免覆蓋
-                const kws = App.Dom.kw.value.split('\n').filter(k => k.trim());
-                if (kws.length === 0) return alert('請先輸入關鍵字');
-
-                // 遞迴遍歷 Text Node 並標註
-                const highlightNode = (node, kw) => {
-                    if (node.nodeType === 3) { // Text node
-                        const val = node.nodeValue;
-                        const idx = val.toLowerCase().indexOf(kw.toLowerCase());
-                        if (idx >= 0) {
-                            // 檢查父層是否已標註，避免重複
-                            const parent = node.parentNode;
-                            const isAlreadyHigh = parent.tagName === 'B' && 
-                                                  (parent.style.color === 'var(--c-highlight)' || parent.style.color === 'rgb(191, 30, 51)'); 
-                            if (isAlreadyHigh) return;
-
-                            const span = document.createElement('b');
-                            span.style.color = 'var(--c-highlight)'; // 茜色
-                            span.innerText = val.substr(idx, kw.length);
-
-                            const after = node.splitText(idx + kw.length);
-                            node.splitText(idx);
-                            const middle = node.nextSibling;
-                            node.parentNode.replaceChild(span, middle);
-                            return true; // 有變更
-                        }
-                    } else if (node.nodeType === 1 && node.childNodes) {
-                        for (let i = 0; i < node.childNodes.length; i++) {
-                            highlightNode(node.childNodes[i], kw);
-                        }
-                    }
-                };
-
-                kws.forEach(kw => { highlightNode(App.Dom.editor, kw); });
-                
-                App.UI.updateStats();
-                App.Storage.save('fluo_temp', App.Dom.editor.innerHTML);
-                alert('✨ 標註完成！(格式已保留)');
-            },
-
             analyzeDensity: () => {
-                // 從 editor.innerText 取，確保真實反映預覽區
-                const text = App.Dom.editor.innerText; // 使用預覽區文字
+                const text = App.Dom.source.value;
                 const kws = App.Dom.kw.value.split('\n').filter(k => k.trim());
                 if(kws.length === 0) { App.Dom.density.innerHTML = '<span class="text-xs text-gray-400 w-full text-center py-2">無關鍵字</span>'; return; }
                 let html = '';
@@ -449,6 +350,65 @@
                 });
                 App.Dom.density.innerHTML = html;
             },
+            
+            // 🟢 智慧標註 (非破壞性)
+            smartHighlight: () => {
+                const editor = App.Dom.editor;
+                const kws = App.Dom.kw.value.split('\n').filter(k => k.trim());
+                
+                // 1. 清除舊的自動標註 (保留 class="fluo-auto")
+                const oldMarks = editor.querySelectorAll('b[data-auto="true"]');
+                oldMarks.forEach(mark => {
+                    const parent = mark.parentNode;
+                    while(mark.firstChild) parent.insertBefore(mark.firstChild, mark);
+                    parent.removeChild(mark);
+                });
+                editor.normalize(); // 合併斷裂的文字節點
+
+                if(kws.length === 0) { App.UI.updateStats(); return; }
+
+                // 2. 遞迴搜尋文字節點並標註
+                const walk = (node) => {
+                    if (node.nodeType === 3) { // Text Node
+                        const text = node.nodeValue;
+                        // 簡單配對：找第一個符合的關鍵字
+                        // (為了效能與避免巢狀迴圈，一次處理一個最優先的關鍵字，遞迴處理剩餘部分)
+                        kws.sort((a,b) => b.length - a.length); // 長詞優先
+                        let match = null, matchKw = '';
+                        
+                        for (let kw of kws) {
+                            const idx = text.toLowerCase().indexOf(kw.toLowerCase());
+                            if (idx !== -1) {
+                                match = { idx, len: kw.length };
+                                matchKw = text.substr(idx, kw.length);
+                                break; 
+                            }
+                        }
+
+                        if (match) {
+                            const after = node.splitText(match.idx + match.len);
+                            const middle = node.splitText(match.idx);
+                            
+                            const b = document.createElement('b');
+                            b.setAttribute('data-auto', 'true');
+                            b.style.color = '#BF1E33'; // 紅色系
+                            b.textContent = middle.nodeValue;
+                            
+                            middle.parentNode.replaceChild(b, middle);
+                            
+                            walk(after); // 繼續處理後面的文字
+                        }
+                    } else if (node.nodeType === 1 && node.childNodes && !['SCRIPT','STYLE'].includes(node.tagName)) {
+                        Array.from(node.childNodes).forEach(walk);
+                    }
+                };
+                
+                walk(editor);
+                App.Core.analyzeDensity(); // 更新密度表
+                App.UI.updateStats();
+                App.Storage.save('fluo_temp', editor.innerHTML);
+            },
+
             restore: () => { if(confirm('將預覽區內容還原到輸入框？')) { App.Dom.source.value = App.Dom.editor.innerText; App.state.isAutoSync=true; App.Core.runSync(); }},
             copyToDocs: async () => {
                 const wrapper = document.createElement('div');
@@ -473,7 +433,10 @@
                     alert('✨ 已複製！(Docs 格式鎖定)');
                 } catch(e) { alert('複製失敗，請手動全選複製。'); }
             },
-            forceSync: () => { App.Core.forceSync(); } // Redundant but kept for safety
+            forceSync: () => { 
+                // 按下按鈕時，不再暴力覆蓋，而是執行智慧標註
+                App.Core.smartHighlight(); 
+            }
         },
 
         Format: {
@@ -495,7 +458,9 @@
                 }
                 let idx = Config.fontScale.findIndex(s => s >= currentPt);
                 if (idx === -1) idx = 2;
-                let newIdx = Math.max(0, Math.min(Config.fontScale.length - 1, idx + step));
+                let newIdx = idx + step;
+                if(newIdx < 0) newIdx = 0;
+                if(newIdx >= Config.fontScale.length) newIdx = Config.fontScale.length - 1;
                 const newSize = Config.fontScale[newIdx] + 'pt';
                 App.Format.setSize(newSize);
                 App.Dom.fontSelect.value = newSize;
@@ -514,6 +479,7 @@
                 App.Dom.countTotal.innerText = clean.replace(/[\n\r]/g, '').length;
                 const sel = window.getSelection().toString();
                 App.Dom.countSel.innerText = App.state.includePunctuation ? sel.length : sel.replace(/[^\w\u4e00-\u9fa5]/g, '').length;
+                
                 const floatMenu = document.getElementById('mobileFloatMenu');
                 if(window.innerWidth < 768 && sel.length > 0) {
                     floatMenu.classList.add('show');
