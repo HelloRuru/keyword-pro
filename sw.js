@@ -1,4 +1,4 @@
-// sw.js - v7.3 (iOS Icon Fix)
+// sw.js - v7.3 (Final Stable Release)
 const CACHE_NAME = 'fluo-v7.3'; 
 const ASSETS = [
   './',
