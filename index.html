@@ -60,12 +60,30 @@
   [data-theme="dark"] .kw-tag.good { background: #1C3325; border-color: #276749; color: #81E6D9; }
   [data-theme="dark"] .kw-tag.missing { background: #3B1C1C; border-color: #742A2A; color: #FC8181; }
 
-  /* 🟢 CSS 防護：強制預設文字為 400 (正常)，防止手動複製時污染 */
+  .preview-container { flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden; z-index: 10; }
+  
+  /* 🟢 工具列修復：強制單行不換行 */
+  .toolbar { 
+    background: var(--bg-sidebar); border-bottom: 1px solid var(--border-color); 
+    padding: 8px 16px; display: flex; align-items: center; gap: 12px; 
+    overflow-x: auto; white-space: nowrap; z-index: 30; transition: background 0.3s;
+    flex-wrap: nowrap !important; /* 強制不換行 */
+    flex-shrink: 0; /* 禁止壓縮 */
+    height: 50px; /* 固定高度 */
+  }
+  
+  .tool-btn { display: flex; align-items: center; justify-content: center; height: 32px; min-width: 32px; padding: 0 8px; border-radius: 4px; color: var(--c-sub); font-size: 13px; font-family: var(--font-serif); font-weight: 500; cursor: pointer; border: 1px solid transparent; flex-shrink: 0; }
+  .tool-btn:hover { background: var(--bg-canvas); color: var(--c-accent); border-color: var(--border-color); }
+  .tool-sep { width: 1px; height: 20px; background: var(--border-color); flex-shrink: 0; }
+  .color-dot { width: 18px; height: 18px; border-radius: 50%; cursor: pointer; border: 2px solid var(--bg-sidebar); box-shadow: 0 0 0 1px var(--border-color); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .color-none { border: 1px solid var(--c-sub); background: transparent; }
+  .color-none svg { width: 10px; height: 10px; color: var(--c-sub); }
+
   .editor-paper { 
     width: 100%; max-width: 800px; min-height: calc(100vh - 140px); 
     margin: 0 auto; background: var(--bg-sidebar); padding: 60px 80px; 
     outline: none; font-family: var(--font-editor); 
-    font-size: 12pt; font-weight: 400; /* 強制預設不加粗 */
+    font-size: 12pt; font-weight: 400;
     line-height: 1.6; color: var(--c-ink); text-align: justify; 
     box-shadow: 0 0 40px rgba(0,0,0,0.03); transition: background 0.3s; 
   }
@@ -115,7 +133,6 @@
   </div>
 
   <div class="flex-1 flex overflow-hidden relative">
-    
     <aside id="tabInput" class="sidebar flex flex-col w-full md:w-[320px] lg:w-[360px] custom-scroll bg-[var(--bg-sidebar)] z-20 border-r border-[var(--border-color)]">
       <div class="mobile-scroll-area p-5 flex flex-col gap-4">
           <div class="flex items-center justify-between mb-2">
@@ -123,7 +140,7 @@
               <svg class="w-8 h-8 text-[var(--c-accent)] hidden md:block" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="20"><path d="M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z" stroke='currentColor' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 180V320' stroke='currentColor' stroke-width='24' stroke-linecap='round'/><circle cx='256' cy='370' r='24' fill='var(--c-highlight)' stroke="none"/></svg>
               <div class="hidden md:block">
                 <h1 class="text-lg font-bold font-serif">蛍光ペン <span class="text-xs text-[var(--c-highlight)] font-sans">PRO</span></h1>
-                <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v7.4</p>
+                <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v7.5</p>
               </div>
             </div>
             <button onclick="App.UI.toggleTheme()" class="text-[var(--c-sub)] hover:text-[var(--c-accent)] hidden md:block" title="切換深色模式">
@@ -173,13 +190,13 @@
         <button onmousedown="event.preventDefault()" onclick="App.Format.cmd('formatBlock','h3')" class="tool-btn font-bold text-base font-serif">H3</button>
         <button onmousedown="event.preventDefault()" onclick="App.Format.cmd('formatBlock','p')" class="tool-btn font-serif">P</button>
         <div class="tool-sep"></div>
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-1 flex-shrink-0">
             <button onmousedown="event.preventDefault()" onclick="App.Format.stepSize(-1)" class="tool-btn font-serif text-sm px-1">A-</button>
             <select id="fontSizeSelect" onchange="App.Format.setSize(this.value)" class="h-8 border border-[var(--border-color)] rounded text-xs bg-[var(--bg-sidebar)] px-1 outline-none font-sans w-12 text-center text-[var(--c-ink)]"><option value="10pt">10</option><option value="11pt">11</option><option value="12pt" selected>12</option><option value="13pt">13</option><option value="14pt">14</option><option value="15pt">15</option><option value="16pt">16</option><option value="18pt">18</option><option value="20pt">20</option><option value="24pt">24</option><option value="30pt">30</option><option value="36pt">36</option><option value="48pt">48</option></select>
             <button onmousedown="event.preventDefault()" onclick="App.Format.stepSize(1)" class="tool-btn font-serif text-lg px-1">A+</button>
         </div>
         <div class="tool-sep"></div>
-        <div class="flex gap-2 px-1">
+        <div class="flex gap-2 px-1 flex-shrink-0">
           <div onmousedown="event.preventDefault()" onclick="App.Format.removeColor()" class="color-dot color-none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
           <div onmousedown="event.preventDefault()" onclick="App.Format.color('#333333')" class="color-dot bg-[#333333]"></div>
           <div onmousedown="event.preventDefault()" onclick="App.Format.color('#2B4B65')" class="color-dot bg-[#2B4B65]"></div>
@@ -188,7 +205,7 @@
           <div onmousedown="event.preventDefault()" onclick="App.Format.color('#6A4C9C')" class="color-dot bg-[#6A4C9C]"></div>
         </div>
         <div class="tool-sep"></div>
-        <div class="flex gap-2 px-1">
+        <div class="flex gap-2 px-1 flex-shrink-0">
           <div onmousedown="event.preventDefault()" onclick="App.Format.removeHighlight()" class="color-dot color-none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
           <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#F0DC70')" class="color-dot bg-[#F0DC70]"></div>
           <div onmousedown="event.preventDefault()" onclick="App.Format.highlight('#F5B199')" class="color-dot bg-[#F5B199]"></div>
@@ -294,10 +311,10 @@
                 walk(editor); App.Core.analyzeDensity(); App.UI.updateStats(); App.Storage.save('fluo_temp', editor.innerHTML);
             },
             restore: () => { if(confirm('將預覽區內容還原到輸入框？')) { App.Dom.source.value = App.Dom.editor.innerText; App.state.isAutoSync=true; App.Core.runSync(); }},
-            // 🟢 核心修正：嚴格區分 700 與 400
+            // 🟢 Docs 複製：樣式鎖定與粗體防護 (Style Baking)
             copyToDocs: async () => {
                 const wrapper = document.createElement('div');
-                // 預設樣式全部設為 400 (正常), 防止預設變粗
+                // 預設樣式：Noto Sans TC, 12pt, 400, 1.0 行高
                 wrapper.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 12pt; font-weight: 400; line-height: 1.0; color: #333; background: white;";
                 const clone = App.Dom.editor.cloneNode(true);
                 
@@ -306,8 +323,8 @@
                         const style = window.getComputedStyle(node);
                         if (node.style.color && node.style.color.includes('var(')) { const v = node.style.color.match(/var\(([^)]+)\)/)[1]; if (Config.colors[v]) node.style.color = Config.colors[v]; }
                         
-                        // 判斷是否為粗體：只有 H 標籤, B/STRONG 標籤, 或 fontWeight >= 700 才是粗體
-                        const isBold = (parseInt(style.fontWeight) >= 700) || ['H2','H3','B','STRONG'].includes(node.tagName);
+                        // 🟢 核心修正：嚴格粗體判斷
+                        const isBold = (parseInt(style.fontWeight) >= 700) || node.tagName === 'B' || node.tagName === 'STRONG' || /^H[1-6]$/.test(node.tagName);
                         node.style.fontWeight = isBold ? '700' : '400';
                         
                         node.style.lineHeight = "1.0"; node.style.marginBottom = "12pt"; 
