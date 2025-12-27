@@ -1,5 +1,5 @@
-// sw.js - v7.5 (Toolbar Layout Hotfix)
-const CACHE_NAME = 'fluo-v7.5'; 
+// sw.js - v7.6 (Clipboard Interceptor)
+const CACHE_NAME = 'fluo-v7.6'; 
 const ASSETS = [
   './',
   './index.html',
