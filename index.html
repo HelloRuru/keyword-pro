@@ -162,7 +162,7 @@
               <svg class="w-8 h-8 text-[var(--c-accent)] hidden md:block" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="20"><path d="M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z" stroke='currentColor' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 180V320' stroke='currentColor' stroke-width='24' stroke-linecap='round'/><circle cx='256' cy='370' r='24' fill='var(--c-highlight)' stroke="none"/></svg>
               <div class="hidden md:block">
                 <h1 class="text-lg font-bold font-serif">蛍光ペン <span class="text-xs text-[var(--c-highlight)] font-sans">PRO</span></h1>
-                <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v8.4</p>
+                <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v8.7</p>
               </div>
             </div>
             <button onclick="App.UI.toggleTheme()" class="text-[var(--c-sub)] hover:text-[var(--c-accent)] hidden md:block" title="切換深色模式">
@@ -215,18 +215,7 @@
         <div class="flex items-center gap-1 flex-shrink-0">
             <button onmousedown="event.preventDefault()" onclick="App.Format.stepSize(-1)" class="tool-btn font-serif text-sm px-1">A-</button>
             <select id="fontSizeSelect" onchange="App.Format.setSize(this.value)" class="h-8 border border-[var(--border-color)] rounded text-xs bg-[var(--bg-sidebar)] px-1 outline-none font-sans w-12 text-center text-[var(--c-ink)]">
-              <option value="10pt">10</option>
-              <option value="11pt">11</option>
-              <option value="12pt" selected>12</option>
-              <option value="14pt">14</option>
-              <option value="16pt">16</option>
-              <option value="18pt">18</option>
-              <option value="20pt">20</option>
-              <option value="24pt">24</option>
-              <option value="28pt">28</option>
-              <option value="36pt">36</option>
-              <option value="48pt">48</option>
-              <option value="72pt">72</option>
+              <option value="10pt">10</option><option value="11pt">11</option><option value="12pt" selected>12</option><option value="14pt">14</option><option value="16pt">16</option><option value="18pt">18</option><option value="20pt">20</option><option value="24pt">24</option><option value="28pt">28</option><option value="36pt">36</option><option value="48pt">48</option><option value="72pt">72</option>
             </select>
             <button onmousedown="event.preventDefault()" onclick="App.Format.stepSize(1)" class="tool-btn font-serif text-lg px-1">A+</button>
         </div>
@@ -348,67 +337,49 @@
                 if (editorEmpty && sourceHasText) { App.state.isAutoSync = true; App.Core.runSync(); alert('✨ 已從原文同步並標註！'); } 
                 else { App.Core.smartHighlight(); const kws = App.Dom.kw.value.trim(); if(!kws) alert('⚠️ 請先輸入關鍵字'); else alert('✨ 標註檢查完成！'); }
             },
-            // 🟢 v8.4 關鍵字標註邏輯重寫：全字串遍歷，解決重複與漏標
             smartHighlight: () => {
                 const editor = App.Dom.editor;
                 const kws = App.Dom.kw.value.split('\n').filter(k => k.trim());
-                
-                // 1. 清除舊的自動標註 (保留手動樣式)
                 editor.querySelectorAll('b[data-auto="true"]').forEach(mark => {
                     const text = document.createTextNode(mark.textContent);
                     mark.parentNode.replaceChild(text, mark);
                 });
                 editor.normalize();
-
                 if (kws.length === 0) { App.UI.updateStats(); return; }
-
-                // 2. 遞迴遍歷所有 Text Node
                 const walk = (node) => {
-                    // 只處理文字節點
                     if (node.nodeType === 3) {
                         const text = node.nodeValue;
-                        // 尋找最早出現的關鍵字
                         let bestMatch = null;
-                        
                         kws.forEach(kw => {
                             const idx = text.toLowerCase().indexOf(kw.toLowerCase());
                             if (idx !== -1) {
-                                // 如果尚未找到，或者這個關鍵字出現得更早
-                                // 或者同時出現但這個關鍵字更長 (長詞優先)
                                 if (!bestMatch || idx < bestMatch.idx || (idx === bestMatch.idx && kw.length > bestMatch.len)) {
                                     bestMatch = { idx, len: kw.length, str: kw };
                                 }
                             }
                         });
-
-                        // 3. 如果找到關鍵字，進行切割與替換
                         if (bestMatch) {
                             const matchText = text.substr(bestMatch.idx, bestMatch.len);
-                            const afterText = node.splitText(bestMatch.idx + bestMatch.len); // 切出後半段
-                            const middleNode = node.splitText(bestMatch.idx); // 切出關鍵字 (中間段)
-                            
+                            const afterText = node.splitText(bestMatch.idx + bestMatch.len);
+                            const middleNode = node.splitText(bestMatch.idx);
                             const b = document.createElement('b');
                             b.setAttribute('data-auto', 'true');
                             b.style.color = '#BF1E33';
                             b.textContent = middleNode.nodeValue;
-                            
                             middleNode.parentNode.replaceChild(b, middleNode);
-                            
-                            // 遞迴處理後半段 (這樣才能抓到後面的關鍵字，即使是短詞)
                             walk(afterText); 
                         }
                     } else if (node.nodeType === 1 && node.childNodes && !['SCRIPT', 'STYLE'].includes(node.tagName)) {
-                        // 遍歷子節點 (必須轉為 Array 避免動態更新導致的無限迴圈)
                         Array.from(node.childNodes).forEach(walk);
                     }
                 };
-
                 walk(editor);
                 App.Core.analyzeDensity(); 
                 App.UI.updateStats(); 
                 App.Storage.save('fluo_temp', editor.innerHTML);
             },
             restore: () => { if(confirm('確定要還原預覽區？')) { App.state.isAutoSync=true; App.Core.runSync(); }},
+            // 🟢 v8.7 行高修正：P 標籤強制 1.0 (單行間距)
             bakeStyles: (rootNode) => {
                 const bake = (node) => {
                     if (node.nodeType === 1) { 
@@ -416,9 +387,26 @@
                         if (node.style.color && node.style.color.includes('var(')) { const v = node.style.color.match(/var\(([^)]+)\)/)[1]; if (Config.colors[v]) node.style.color = Config.colors[v]; }
                         const isBold = (parseInt(style.fontWeight) >= 700) || ['H2','H3','B','STRONG'].includes(node.tagName);
                         node.style.fontWeight = isBold ? '700' : '400';
-                        node.style.lineHeight = "1.0"; node.style.marginBottom = "12pt"; 
-                        if(node.tagName === 'H2') { node.style.fontSize="18pt"; node.style.fontWeight="700"; node.style.color="#2B4B65"; node.style.lineHeight="1.2"; node.style.borderBottom="1px solid #DDD"; }
-                        if(node.tagName === 'H3') { node.style.fontSize="14pt"; node.style.fontWeight="700"; node.style.color="#333"; node.style.lineHeight="1.2"; node.style.borderLeft="4px solid #BF1E33"; node.style.paddingLeft="8px"; }
+                        
+                        // 🟢 通用行高設為 1.0 (極致緊湊)
+                        node.style.lineHeight = "1.0"; 
+                        node.style.marginBottom = "12pt"; 
+                        node.style.fontFamily = "'Microsoft JhengHei', 'Noto Sans TC', sans-serif";
+
+                        if(node.tagName === 'H2') { 
+                            node.style.fontSize="18pt"; node.style.fontWeight="700"; node.style.color="#2B4B65"; 
+                            node.style.lineHeight="1.2"; // 標題稍微保留空間避免切字
+                            node.style.borderBottom="1px solid #DDD"; node.style.paddingBottom="4px";
+                        }
+                        if(node.tagName === 'H3') { 
+                            node.style.fontSize="14pt"; node.style.fontWeight="700"; node.style.color="#333"; 
+                            node.style.lineHeight="1.2"; 
+                            node.style.borderLeft="4px solid #BF1E33"; node.style.paddingLeft="8px"; 
+                        }
+                        if(node.tagName === 'P') { 
+                            node.style.fontSize = "12pt";
+                            node.style.lineHeight = "1.0"; // 內文強制單行
+                        }
                     }
                     node.childNodes.forEach(bake);
                 };
@@ -433,13 +421,14 @@
                 div.appendChild(range.cloneContents());
                 App.Core.bakeStyles(div);
                 const wrapper = document.createElement('div');
-                wrapper.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 12pt; font-weight: 400; line-height: 1.0; color: #333; background: white;";
+                // 🟢 Wrapper 也強制 1.0
+                wrapper.style.cssText = "font-family: 'Microsoft JhengHei', 'Noto Sans TC', sans-serif; font-size: 12pt; font-weight: 400; line-height: 1.0; color: #333; background: white;";
                 wrapper.appendChild(div);
                 if (e.clipboardData) { e.clipboardData.setData('text/html', wrapper.outerHTML); e.clipboardData.setData('text/plain', sel.toString()); }
             },
             copyToDocs: async () => {
                 const wrapper = document.createElement('div');
-                wrapper.style.cssText = "font-family: 'Noto Sans TC', sans-serif; font-size: 12pt; font-weight: 400; line-height: 1.0; color: #333; background: white;";
+                wrapper.style.cssText = "font-family: 'Microsoft JhengHei', 'Noto Sans TC', sans-serif; font-size: 12pt; font-weight: 400; line-height: 1.0; color: #333; background: white;";
                 const clone = App.Dom.editor.cloneNode(true);
                 App.Core.bakeStyles(clone);
                 wrapper.innerHTML = clone.innerHTML;
