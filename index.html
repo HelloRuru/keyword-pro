@@ -24,7 +24,7 @@
     --c-crimson: #BF1E33;  /* 真紅 */
     --c-forest: #2F5D50;   /* 千歲綠 */
     --c-purple: #6A4C9C;   /* 京紫 */
-    --c-gold: #B49658;     /* 枯茶 (Dark Mode Accent) */
+    --c-gold: #B49658;     /* 枯茶 */
     
     /* 螢光筆色票 */
     --hl-yellow: #F0DC70;
@@ -49,12 +49,11 @@
     --bg-panel: #2C2C2C;
     --border-color: #333333;
     
-    --c-ink: #E0C088;         /* 流金 (主要文字變為金色) */
+    --c-ink: #E0C088;         /* 流金 */
     --c-sub: #A0A0A0;
     --c-iron: #8AB4D6;        /* 淺藍 */
     --c-crimson: #FF6B6B;     /* 亮紅 */
     
-    /* Grid 變淡以適應深色 */
     --grid-pattern: linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px);
   }
 
@@ -125,7 +124,7 @@
   .localization-panel {
     background: rgba(255, 200, 0, 0.1); border: 1px solid rgba(255, 200, 0, 0.3);
     border-radius: 6px; padding: 8px; margin-bottom: 15px;
-    font-size: 11px; color: var(--c-ink); display: none; /* 預設隱藏 */
+    font-size: 11px; color: var(--c-ink); display: none;
   }
   .loc-item { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
   .loc-arrow { color: #999; font-size: 10px; }
@@ -137,12 +136,10 @@
     font-family: var(--font-ui); font-weight: 500;
     cursor: default; transition: all 0.2s;
   }
-  /* 懸停左側標籤時的效果 */
   .kw-tag:hover {
      border-color: var(--c-iron); transform: translateY(-1px);
      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
   }
-  
   .kw-tag .count { font-weight: 800; color: var(--c-iron); }
   .kw-tag.missing { border-color: #FECACA; background: #FFF5F5; color: #C9171E; }
   .kw-tag.good { border-color: #C6F6D5; background: #F0FFF4; color: #276749; }
@@ -151,8 +148,7 @@
   .preview-wrapper {
     flex: 1; display: flex; flex-direction: column; 
     background: var(--bg-canvas); position: relative;
-    overflow-y: hidden;
-    transition: background 0.3s;
+    overflow-y: hidden; transition: background 0.3s;
   }
   
   .editor-container {
@@ -161,21 +157,18 @@
 
   .editor-paper {
     width: 100%; max-width: 820px; 
-    min-height: 100%; 
-    margin: 0 auto; 
+    min-height: 100%; margin: 0 auto; 
     background: var(--bg-sidebar); 
     padding: 60px 80px 100px 80px; 
     box-shadow: 0 0 40px rgba(0,0,0,0.03);
     outline: none;
     font-family: var(--font-docs);
-    font-size: 12pt; 
-    line-height: 1.0; 
-    color: var(--c-ink);
+    font-size: 12pt; line-height: 1.0; color: var(--c-ink);
     letter-spacing: 0.02em; text-align: justify;
     transition: background 0.3s, color 0.3s;
   }
   
-  /* H2, H3 Style Mapping */
+  /* H2, H3 Style */
   .editor-paper h2 { 
     font-family: var(--font-docs); font-size: 18pt; font-weight: 700; color: var(--c-iron); 
     border-bottom: 1px solid var(--border-color); padding-bottom: 8px; margin: 24px 0 16px 0;
@@ -186,53 +179,50 @@
   }
   .editor-paper p { margin-bottom: 12pt; }
 
-  /* 懸停高亮效果 (右側) */
   .highlight-pulse {
-     background-color: rgba(255, 255, 0, 0.4);
-     border-radius: 2px;
-     box-shadow: 0 0 8px rgba(255, 255, 0, 0.6);
-     transition: all 0.2s;
+     background-color: rgba(255, 255, 0, 0.4); border-radius: 2px;
+     box-shadow: 0 0 8px rgba(255, 255, 0, 0.6); transition: all 0.2s;
   }
   [data-theme="dark"] .highlight-pulse {
      background-color: rgba(255, 215, 0, 0.3);
-     box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
-     color: #FFF;
+     box-shadow: 0 0 8px rgba(255, 215, 0, 0.4); color: #FFF;
   }
 
   /* --- 工具列 (Toolbar) --- */
   .toolbar-sticky {
     position: sticky; top: 0; z-index: 40;
-    background: var(--bg-canvas);
-    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-canvas); border-bottom: 1px solid var(--border-color);
     display: flex; justify-content: space-between; align-items: center;
-    padding: 8px 20px;
-    backdrop-filter: blur(8px);
+    padding: 8px 12px; backdrop-filter: blur(8px);
   }
   .toolbar-inner {
-    display: flex; align-items: center; gap: 4px; 
+    display: flex; align-items: center; gap: 6px; 
     background: var(--bg-sidebar); padding: 4px 8px; border-radius: 8px;
     border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-    flex-wrap: wrap; justify-content: center;
+    flex-wrap: wrap;
   }
   
   .btn-tool {
-    height: 30px; padding: 0 10px; border-radius: 4px;
-    font-size: 12px; font-family: var(--font-serif); color: var(--c-sub);
+    height: 32px; width: 32px; /* 固定寬高適合手指點擊 */
+    border-radius: 4px;
+    color: var(--c-sub);
     transition: all 0.2s; cursor: pointer; border: 1px solid transparent;
     display: flex; align-items: center; justify-content: center;
   }
+  .btn-tool svg { width: 16px; height: 16px; stroke-width: 1.5; }
   .btn-tool:hover { background: var(--bg-panel); color: var(--c-iron); }
-  .divider { width: 1px; height: 16px; background: var(--border-color); margin: 0 6px; }
+  
+  .divider { width: 1px; height: 18px; background: var(--border-color); margin: 0 4px; }
 
   .color-dot { 
-    width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--bg-sidebar); 
+    width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--bg-sidebar); 
     box-shadow: 0 0 0 1px var(--border-color); cursor: pointer; transition: all 0.2s; 
   }
   .color-dot:hover { transform: scale(1.15); z-index: 10; }
 
   select.tool-select {
-    height: 30px; border: 1px solid var(--border-color); border-radius: 4px;
-    font-size: 12px; padding: 0 4px; color: var(--c-sub); background: var(--bg-sidebar); 
+    height: 32px; border: 1px solid var(--border-color); border-radius: 4px;
+    font-size: 13px; padding: 0 4px; color: var(--c-sub); background: var(--bg-sidebar); 
     outline: none; cursor: pointer; font-family: var(--font-docs);
   }
 
@@ -247,7 +237,6 @@
   .stat-item { display: flex; gap: 4px; }
   .stat-val { font-weight: 700; color: var(--c-iron); }
   
-  /* Toggle Switch */
   .toggle-btn {
     display: flex; align-items: center; gap: 6px; cursor: pointer;
     padding: 2px 8px; border-radius: 12px; border: 1px solid var(--border-color);
@@ -256,7 +245,7 @@
   .toggle-btn.active { background: #E6FFFA; border-color: #38B2AC; color: #2C7A7B; }
   [data-theme="dark"] .toggle-btn.active { background: #1D4044; color: #4FD1C5; border-color: #2C7A7B; }
 
-  /* --- 側邊欄按鈕 --- */
+  /* --- 按鈕與通用 --- */
   .btn-primary {
     width: 100%; background: var(--c-crimson); color: white; border: none; 
     padding: 12px; border-radius: 6px; 
@@ -274,17 +263,18 @@
   }
   .btn-secondary:hover { border-color: var(--c-iron); color: var(--c-iron); background: var(--bg-panel); }
 
-  .clear-options {
-    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 6px;
-  }
+  .clear-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 6px; }
+  .copyright-text { text-align: center; margin-top: 20px; font-size: 10px; color: #AAA; font-family: sans-serif; letter-spacing: 0.5px; }
 
   /* --- RWD --- */
   @media (max-width: 768px) {
     .sidebar-container, .preview-wrapper { width: 100% !important; height: auto; }
     #sectionInput { height: calc(100vh - 120px); }
     .editor-paper { padding: 30px 20px; min-height: 80vh; }
-    .toolbar-sticky { flex-direction: column; align-items: flex-start; gap: 8px; overflow-x: auto; padding: 8px; }
-    .stats-bar { flex-direction: column; gap: 8px; align-items: flex-start; }
+    /* Toolbar Mobile Optimization */
+    .toolbar-sticky { flex-wrap: wrap; gap: 8px; padding: 8px 10px; }
+    .toolbar-inner { flex: 1; overflow-x: auto; padding-right: 20px; -webkit-overflow-scrolling: touch; }
+    .stats-bar { flex-direction: column; gap: 8px; align-items: flex-start; padding: 10px 15px; }
     .mobile-hidden { display: none !important; }
   }
 </style>
@@ -294,7 +284,7 @@
 
   <header class="h-14 flex md:hidden items-center px-4 bg-white border-b z-50 justify-between sticky top-0">
     <span class="font-serif font-bold text-lg text-gray-800 flex items-center gap-2">
-      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="#303133" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#303133" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
          <path d="M16.5 3.5L20.5 7.5L7.5 20.5H3.5V16.5L16.5 3.5Z" />
          <path d="M16 19L20 22" />
          <path d="M4 22h16" />
@@ -317,7 +307,7 @@
             </svg>
             <div>
               <h1 class="font-serif font-bold text-lg text-[var(--c-ink)] tracking-widest leading-none">蛍光ペン <span class="text-xs font-sans text-[var(--c-crimson)]">PRO</span></h1>
-              <p class="text-[9px] text-gray-400 tracking-[0.2em] mt-1">DOCS DRAFTING TOOL v3.2</p>
+              <p class="text-[9px] text-gray-400 tracking-[0.2em] mt-1">DOCS DRAFTING TOOL v3.3</p>
             </div>
           </div>
 
@@ -325,7 +315,8 @@
             <div class="flex justify-between items-end mb-2">
               <div class="section-title mb-0">原文輸入</div>
               <button onclick="restoreFromPreview()" class="text-[10px] text-blue-600 hover:underline flex items-center gap-1" title="將預覽區文字反向同步回此處">
-                 🔄 還原(從預覽)
+                 <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                 還原(從預覽)
               </button>
             </div>
             <textarea id="sourceText" class="input-field min-h-[220px]" placeholder="在此輸入文章...&#10;編輯後會自動同步至右側預覽。"></textarea>
@@ -339,17 +330,18 @@
                 <span class="text-xs text-gray-400 w-full text-center py-2">等待輸入...</span>
              </div>
 
-             <div id="locPanel" class="localization-panel">
-                </div>
+             <div id="locPanel" class="localization-panel"></div>
           </div>
 
           <div class="mt-auto pb-4">
             <button onclick="forceSync()" class="btn-primary mb-3">
-              <span>⚡ 一鍵標註 (Sync & Check)</span>
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              <span>一鍵標註 (Sync & Check)</span>
             </button>
             
             <button onclick="copyToClipboard()" class="btn-secondary w-full mb-3 !text-[var(--c-crimson)] !border-[var(--c-crimson)]/30 !bg-red-50 dark:!bg-red-900/20 hover:!bg-red-100">
-              📋 複製到 Docs (格式最佳化)
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+              複製到 Docs (格式最佳化)
             </button>
 
             <div class="section-title sub text-xs mt-4">清空選項</div>
@@ -359,8 +351,8 @@
               <button onclick="clearData('all')" class="btn-secondary text-[10px] !text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">全部重置</button>
             </div>
             
-            <div class="text-center mt-6 text-[9px] text-gray-300 font-sans">
-              © 2025 Gem Apex Architect.
+            <div class="copyright-text">
+              Production by Kaoru Tsai，於2025製作
             </div>
           </div>
       </div>
@@ -371,8 +363,12 @@
       <div class="toolbar-sticky">
         <div class="toolbar-inner">
           <div class="tool-group">
-            <button onmousedown="event.preventDefault()" onclick="document.execCommand('undo')" class="btn-tool" title="復原 (Ctrl+Z)">↩</button>
-            <button onmousedown="event.preventDefault()" onclick="document.execCommand('redo')" class="btn-tool" title="重做 (Ctrl+Y)">↪</button>
+            <button onmousedown="event.preventDefault()" onclick="document.execCommand('undo')" class="btn-tool" title="復原">
+               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg>
+            </button>
+            <button onmousedown="event.preventDefault()" onclick="document.execCommand('redo')" class="btn-tool" title="重做">
+               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l6 3.7"/></svg>
+            </button>
           </div>
           <div class="divider"></div>
 
@@ -380,6 +376,10 @@
              <button onmousedown="event.preventDefault()" onclick="execCmd('formatBlock','h2')" class="btn-tool font-bold" title="標題 H2">H2</button>
              <button onmousedown="event.preventDefault()" onclick="execCmd('formatBlock','h3')" class="btn-tool font-bold" title="標題 H3">H3</button>
              <button onmousedown="event.preventDefault()" onclick="execCmd('formatBlock','p')" class="btn-tool" title="內文 P">P</button>
+             
+             <button onmousedown="event.preventDefault()" onclick="removeFormatting()" class="btn-tool" title="清除格式 (保留文字)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l5 5L22 2l-5-5L2 12zM12 2l10 10M12 22h10"/></svg>
+             </button>
           </div>
           <div class="divider"></div>
 
@@ -413,7 +413,7 @@
         </div>
 
         <button onclick="toggleTheme()" class="btn-tool rounded-full w-8 h-8 ml-2 border border-gray-200 dark:border-gray-600" title="切換深色模式">
-          <span id="themeIcon">🌓</span>
+          <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
         </button>
       </div>
 
@@ -433,7 +433,8 @@
         
         <div class="stat-group">
            <div id="btnPunc" class="toggle-btn" onclick="togglePunctuation()" title="點擊切換">
-             <span id="puncIcon" class="text-[10px]">⚪</span> 含標點
+             <svg id="puncIcon" class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+             含標點
            </div>
         </div>
       </div>
@@ -442,13 +443,27 @@
 
   <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t h-14 flex z-50">
     <button onclick="switchTab('input')" class="flex-1 text-xs font-bold text-gray-500 hover:text-red-600 flex flex-col items-center justify-center">
-      <span>✏️ 編輯</span>
+      <svg class="w-5 h-5 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+      <span>編輯</span>
     </button>
     <button onclick="switchTab('preview')" class="flex-1 text-xs font-bold text-gray-500 hover:text-red-600 flex flex-col items-center justify-center">
-      <span>👁️ 預覽</span>
+      <svg class="w-5 h-5 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+      <span>預覽</span>
     </button>
   </nav>
 
+// 🛡️ 簡易防護腳本
+document.addEventListener('contextmenu', event => event.preventDefault()); // 禁止右鍵
+document.addEventListener('keydown', event => {
+    // 禁止 F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+    if (event.key === 'F12' || 
+        (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'J')) || 
+        (event.ctrlKey && event.key === 'U')) {
+        event.preventDefault();
+        alert('版權所有，請勿查看原始碼 © 2025 Kaoru Tsai'); // 嚇阻訊息
+    }
+});
+  
   <script>
     // --- Config & State ---
     const source = document.getElementById('sourceText');
@@ -462,6 +477,7 @@
     const elCountSel = document.getElementById('countSel');
     const btnPunc = document.getElementById('btnPunc');
     const puncIcon = document.getElementById('puncIcon');
+    const themeIcon = document.getElementById('themeIcon');
     
     let isAutoSync = true;
     let includePunctuation = true;
@@ -470,20 +486,10 @@
 
     // Localization Dictionary (Mainland/HK -> Taiwan)
     const locDict = {
-       '質量': '品質',
-       '視頻': '影片',
-       '高清': '高畫質',
-       '硬件': '硬體',
-       '軟件': '軟體',
-       '項目': '專案',
-       '信息': '資訊',
-       '網上': '線上',
-       '服務器': '伺服器',
-       '程序': '程式',
-       '鼠標': '滑鼠',
-       '打印': '列印',
-       '屏幕': '螢幕',
-       '內存': '記憶體'
+       '質量': '品質', '視頻': '影片', '高清': '高畫質', '硬件': '硬體',
+       '軟件': '軟體', '項目': '專案', '信息': '資訊', '網上': '線上',
+       '服務器': '伺服器', '程序': '程式', '鼠標': '滑鼠', '打印': '列印',
+       '屏幕': '螢幕', '內存': '記憶體'
     };
 
     // --- Init ---
@@ -505,6 +511,7 @@
       // Load Theme
       if(localStorage.getItem('fluo_theme') === 'dark') {
         document.body.setAttribute('data-theme', 'dark');
+        updateThemeIcon(true);
       }
 
       analyzeDensity();
@@ -563,7 +570,6 @@
                 if(count === 0) statusClass = 'missing';
                 else if(density > 0.5 && density < 5) statusClass = 'good';
 
-                // 🟢 加入 onmouseenter/leave 實現 Hover Preview
                 html += `<div class="kw-tag ${statusClass}" 
                           onmouseenter="highlightKw('${kw}')" 
                           onmouseleave="unhighlightKw('${kw}')">
@@ -621,10 +627,8 @@
     function countText(str) {
        if(!str) return 0;
        if(includePunctuation) {
-          // 移除換行符號後計算長度
           return str.replace(/[\n\r]/g, '').length;
        } else {
-          // 只保留中英數
           const clean = str.replace(/[^\w\u4e00-\u9fa5]/g, '');
           return clean.length;
        }
@@ -634,15 +638,13 @@
        includePunctuation = !includePunctuation;
        if(includePunctuation) {
           btnPunc.classList.add('active');
-          puncIcon.innerText = '🟢';
+          puncIcon.style.color = 'green';
        } else {
           btnPunc.classList.remove('active');
-          puncIcon.innerText = '⚪';
+          puncIcon.style.color = '#DDD';
        }
        updateWordCount();
     }
-    
-    // 監聽選取變化更新字數
     document.addEventListener('selectionchange', updateWordCount);
 
     // --- Theme Logic ---
@@ -651,10 +653,18 @@
        if(isDark) {
           document.body.removeAttribute('data-theme');
           localStorage.setItem('fluo_theme', 'light');
+          updateThemeIcon(false);
        } else {
           document.body.setAttribute('data-theme', 'dark');
           localStorage.setItem('fluo_theme', 'dark');
+          updateThemeIcon(true);
        }
+    }
+    
+    function updateThemeIcon(isDark) {
+       // Sun vs Moon
+       if(isDark) themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+       else themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
     }
 
     // --- Event Listeners ---
@@ -713,17 +723,26 @@
        }
     }
 
+    // --- 🟢 New Feature: Remove Formatting ---
+    function removeFormatting() {
+       // 標準指令，清除選取範圍的樣式 (Bold, Color, etc)
+       document.execCommand('removeFormat', false, null);
+       // 同時清除背景色 (螢光筆)
+       document.execCommand('backColor', false, 'transparent');
+       
+       if(isAutoSync) isAutoSync = false;
+       updateWordCount();
+    }
+
     // --- Copy Logic (Force Clean Style) ---
     async function copyToClipboard() {
       const wrapper = document.createElement('div');
       
-      // 🟢 強制白底黑字，無視 Dark Mode
       const baseStyle = "font-family: 'Noto Sans TC', sans-serif; font-size: 12pt; line-height: 1.0; color: #303133; text-align: justify; background: white;";
       wrapper.style.cssText = baseStyle;
       
       const clone = editor.cloneNode(true);
       
-      // 移除 Hover 用的 class
       clone.querySelectorAll('.kw-highlight').forEach(el => {
          el.classList.remove('kw-highlight', 'highlight-pulse');
          el.removeAttribute('data-kw');
