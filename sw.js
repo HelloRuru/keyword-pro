@@ -1,5 +1,5 @@
-// sw.js - v5.1 (Smart Context Menu Update)
-const CACHE_NAME = 'fluo-v5.1'; // 🟢 版本號更新，瀏覽器會知道要重抓
+// sw.js - v5.3 (Layout & Logic Overhaul)
+const CACHE_NAME = 'fluo-v5.3'; 
 const ASSETS = [
   './',
   './index.html',
@@ -8,7 +8,7 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (e) => {
-  self.skipWaiting(); // 強制跳過等待，立即安裝
+  self.skipWaiting(); 
   e.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)));
 });
 
@@ -18,7 +18,7 @@ self.addEventListener('activate', (e) => {
       return Promise.all(
         keyList.map((key) => {
           if (key !== CACHE_NAME) {
-            return caches.delete(key); // 刪除舊快取
+            return caches.delete(key);
           }
         })
       );
