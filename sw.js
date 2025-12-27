@@ -1,5 +1,5 @@
-// sw.js - v7.4 (Copy Fidelity Fix)
-const CACHE_NAME = 'fluo-v7.4'; 
+// sw.js - v7.5 (Toolbar Layout Hotfix)
+const CACHE_NAME = 'fluo-v7.5'; 
 const ASSETS = [
   './',
   './index.html',
