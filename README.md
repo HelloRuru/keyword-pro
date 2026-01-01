@@ -5,7 +5,7 @@
 > **專為 SEO 內容創作者打造的日系數位文房具。**
 > *Digital Stationery for SEO Content Creators.*
 
-[**查看線上演示 Live Demo**](#) ---
+[**查看線上演示 Live Demo**]((https://helloruru.github.io/keyword-pro/)) ---
 
 ## 📖 專案簡介 (Introduction)
 
