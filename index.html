@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
 
-<title>蛍光ペン PRO | 免費線上 SEO文案編輯器 & 關鍵字檢測工具</title>
+<title>蛍光ペン PRO | 免費線上 SEO 文案編輯器 & 關鍵字檢測工具</title>
 <meta name="description" content="2025 最新 SEO 文案工具。提供關鍵字密度分析、一鍵 HTML 標註、Google Docs 格式相容、Zen Mode 專注模式。免下載、離線可用的 PWA 數位文房具。">
 <meta name="keywords" content="SEO工具, 文案編輯器, 關鍵字密度檢查, PWA, 離線寫作, 數位文房具, HTML轉Word, 螢光筆工具">
 <meta name="robots" content="index, follow">
 <meta name="author" content="Kaoru Tsai">
 <link rel="canonical" href="https://your-domain.com/fluo-pen-pro">
 
-<meta property="og:title" content="蛍光ペン PRO | 職人級SEO文案數位工具">
+<meta property="og:title" content="蛍光ペン PRO | 職人級 SEO文案數位工具">
 <meta property="og:description" content="專為內容創作者設計的日系數位文房具。讓您的文字編輯、關鍵字分析與排版工作更優雅高效。">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="蛍光ペン PRO">
@@ -94,7 +94,8 @@
 
   html, body { 
     background: var(--bg-canvas); color: var(--c-ink); font-family: var(--font-sans); 
-    height: 100dvh; width: 100%; overflow: hidden; overscroll-behavior: none; 
+    /* 🟢 Modified: 使用 svh/dvh 確保移動端網址列收合時高度正確 */
+    height: 100vh; height: 100dvh; width: 100%; overflow: hidden; overscroll-behavior: none; 
     display: flex; flex-direction: column; transition: background 0.3s, color 0.3s; 
     position: fixed; top: 0; left: 0;
   }
@@ -109,7 +110,7 @@
   .sidebar { 
     background: var(--bg-sidebar); border-right: 1px solid var(--border-color); 
     display: flex; flex-direction: column; z-index: 20; box-shadow: 2px 0 15px rgba(0,0,0,0.03); 
-    transition: margin-left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s; 
+    transition: margin-left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s, width 0.3s; /* 🟢 Modified: 增加 width transition */
   }
 
   .input-area { width: 100%; background: var(--bg-canvas); border: 1px solid var(--border-color); border-radius: 4px; padding: 12px; font-size: 14px; font-family: var(--font-sans); resize: none; outline: none; transition: 0.2s; line-height: 1.6; color: var(--c-ink); }
@@ -123,13 +124,16 @@
   [data-theme="dark"] .kw-tag.good { background: #1C3325; border-color: #276749; color: #81E6D9; }
   [data-theme="dark"] .kw-tag.missing { background: #3B1C1C; border-color: #742A2A; color: #FC8181; }
 
-  .preview-container { flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden; z-index: 10; transition: all 0.4s; }
+  /* 🟢 Modified: 加入 min-width:0 防止 flex 子元素在放大縮放時破版 */
+  .preview-container { flex: 1; min-width: 0; display: flex; flex-direction: column; position: relative; overflow: hidden; z-index: 10; transition: all 0.4s; }
   
   .toolbar { 
     background: var(--bg-sidebar); border-bottom: 1px solid var(--border-color); 
     padding: 8px 16px; display: flex; align-items: center; gap: 8px; 
     overflow-x: auto; white-space: nowrap; z-index: 30; transition: background 0.3s;
     flex-wrap: nowrap !important; flex-shrink: 0; height: 50px; position: relative;
+    /* 🟢 Modified: 確保在縮放模式下 Scrollbar 體驗 */
+    -webkit-overflow-scrolling: touch;
   }
 
   .tool-btn { 
@@ -199,9 +203,11 @@
   }
   
   /* Zen Mode */
+  /* 🟢 Modified: 優化 Zen Mode 的響應式判斷，確保放大時行為正常 */
   @media (min-width: 769px) {
     body.zen-mode .sidebar { margin-left: -320px; opacity: 0; pointer-events: none; }
-    body.zen-mode .sidebar.lg\:w-\[360px\] { margin-left: -360px; }
+    /* 配合變動寬度調整負邊距 */
+    body.zen-mode .sidebar.w-responsive { margin-left: -100%; } 
     body.zen-mode .editor-paper { transform: scale(1.02); box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
     body.zen-mode .mobile-scroll-area.editor-container { background: var(--bg-canvas); }
   }
@@ -275,14 +281,14 @@
   </div>
 
   <div class="flex-1 flex overflow-hidden relative w-full h-full pt-12 md:pt-0">
-    <aside id="tabInput" class="sidebar flex-mobile w-full md:w-[320px] lg:w-[360px] custom-scroll bg-[var(--bg-sidebar)] z-20 border-r border-[var(--border-color)]">
+    <aside id="tabInput" class="sidebar w-responsive flex-mobile w-full md:w-[260px] lg:w-[300px] xl:w-[360px] custom-scroll bg-[var(--bg-sidebar)] z-20 border-r border-[var(--border-color)] shrink-0">
       <div class="mobile-scroll-area p-5 flex flex-col gap-4">
           <div class="flex items-center justify-between mb-2">
             <div class="flex items-center gap-3">
               <svg class="w-8 h-8 text-[var(--c-accent)] hidden md:block" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="20"><path d="M256 86C256 86 160 190 160 310C160 380 200 426 256 426C312 426 352 380 352 310C352 190 256 86 256 86Z" stroke='currentColor' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/><path d='M256 180V320' stroke='currentColor' stroke-width='24' stroke-linecap='round'/><circle cx='256' cy='370' r='24' fill='var(--c-highlight)' stroke="none"/></svg>
               <div class="hidden md:block">
                 <h1 class="text-lg font-bold font-serif">蛍光ペン <span class="text-xs text-[var(--c-highlight)] font-sans">PRO</span></h1>
-                <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v8.7</p>
+                <p class="text-[9px] tracking-widest opacity-60">DIGITAL STATIONERY v8.8</p>
               </div>
             </div>
             <button onclick="App.UI.toggleTheme()" class="text-[var(--c-sub)] hover:text-[var(--c-accent)] hidden md:block" title="切換深色模式">
