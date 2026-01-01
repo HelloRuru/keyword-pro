@@ -5,8 +5,6 @@
 > **專為 SEO 內容創作者打造的日系數位文房具。**
 > *Digital Stationery for SEO Content Creators.*
 
-[**查看線上演示 Live Demo**]((https://helloruru.github.io/keyword-pro/)) ---
-
 ## 📖 專案簡介 (Introduction)
 
 **蛍光ペン PRO** 是一款輕量級、無需後端的 **PWA (Progressive Web App)** 網頁應用程式。它旨在解決內容創作者在「SEO 關鍵字佈局」與「格式化輸出」之間的痛點。
