@@ -11,7 +11,7 @@
 <meta name="author" content="Kaoru Tsai">
 <link rel="canonical" href="https://your-domain.com/fluo-pen-pro">
 
-<meta property="og:title" content="蛍光ペン PRO | 職人級 SEO文案數位工具">
+<meta property="og:title" content="蛍光ペン PRO | 職人級 SEO 文案工具">
 <meta property="og:description" content="專為內容創作者設計的日系數位文房具。讓您的文字編輯、關鍵字分析與排版工作更優雅高效。">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="蛍光ペン PRO">
@@ -181,8 +181,23 @@
   .editor-paper h2 { font-family: var(--font-serif); font-size: 18pt; font-weight: 700; color: var(--c-accent); border-bottom: 1px solid var(--border-color); padding-bottom: 6px; margin: 24px 0 12px 0; display: block; line-height: 1.4; }
   .editor-paper h3 { font-family: var(--font-serif); font-size: 14pt; font-weight: 700; color: var(--c-ink); border-left: 4px solid var(--c-highlight); padding-left: 10px; margin: 18px 0 10px 0; display: block; line-height: 1.4; }
   .editor-paper p { margin-bottom: 12pt; display: block; }
+  
+  /* 🟢 Modified: Google Docs Style List Hierarchy */
+  /* Level 1: 實心圓點 */
   .editor-paper ul { list-style-type: disc; padding-left: 2em; margin-bottom: 12pt; }
+  /* Level 1: 數字 */
   .editor-paper ol { list-style-type: decimal; padding-left: 2em; margin-bottom: 12pt; }
+  
+  /* Level 2: 空心圓 (Hollow Circle) / 小寫英文字母 */
+  .editor-paper ul ul { list-style-type: circle; margin-bottom: 0; }
+  .editor-paper ol ol { list-style-type: lower-alpha; margin-bottom: 0; }
+  
+  /* Level 3: 實心方塊 (Square) / 小寫羅馬數字 */
+  .editor-paper ul ul ul { list-style-type: square; }
+  .editor-paper ol ol ol { list-style-type: lower-roman; }
+  
+  /* Fix spacing for nested lists */
+  .editor-paper li { margin-bottom: 4px; }
   
   .highlight-pulse { background-color: rgba(255, 255, 0, 0.4); box-shadow: 0 0 8px rgba(255, 255, 0, 0.6); }
   [data-theme="dark"] .highlight-pulse { background-color: rgba(255, 215, 0, 0.2); }
