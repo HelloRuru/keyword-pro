@@ -1,90 +1,119 @@
-# 蛍光ペン PRO (Fluo Pen PRO)
+<div align="center">
 
-![Version](https://img.shields.io/badge/version-3.3-blue.svg) ![License](https://img.shields.io/badge/license-MIT-green.svg) ![Status](https://img.shields.io/badge/status-stable-success)
+# 蛍光ペン <sub>PRO</sub>
+### 𝐹𝑙𝑢𝑜 𝑃𝑒𝑛 𝑃𝑅𝑂 ｜ 𝐴𝐼𝑂 𝐸𝑑𝑖𝑡𝑖𝑜𝑛
 
-> **專為 SEO 內容創作者打造的日系數位文房具。**
-> *Digital Stationery for SEO Content Creators.*
+![Version](https://img.shields.io/badge/Ver-8.8-2B4B65.svg?style=flat-square)
+![PWA](https://img.shields.io/badge/Mode-Offline_Ready-BF1E33.svg?style=flat-square)
+![License](https://img.shields.io/badge/License-MIT-gray.svg?style=flat-square)
 
-## 📖 專案簡介 (Introduction)
+<br>
 
-**蛍光ペン PRO** 是一款輕量級、無需後端的 **PWA (Progressive Web App)** 網頁應用程式。它旨在解決內容創作者在「SEO 關鍵字佈局」與「格式化輸出」之間的痛點。
+**「 中文，是組成 SEO 的原生程式碼；**<br>
+**然而，如何佈局關鍵字及架構文章，則是文案們規劃的靈魂技巧。」**
 
-透過獨家的「雙欄同步架構」，使用者可以專注於純文字寫作，系統則自動處理 HTML 標籤、樣式渲染與關鍵字密度分析。最終產出的內容可完美相容於 Google Docs 與 WordPress，實現「寫作即交付」的高效工作流。
+專為 SEO 內容創作者打造的數位文房具。
+將寫作視為程式開發，在數據與感性之間，建構完美的流量邏輯。
 
-### ✨ 核心價值
-* **職人級體驗**：日系極簡介面，提供 Zen Mode 沉浸式寫作環境。
-* **SEO 視覺化**：即時計算關鍵字密度，並以螢光筆自動標註，視覺化檢視佈局策略。
-* **跨平台交付**：一鍵複製帶有樣式的 HTML，解決貼上 Google Docs 格式跑版問題。
+[ 立即體驗 ](https://your-domain.com/fluo-pen-pro) · [ 檢視原始碼 ](https://github.com/your-repo)
 
----
-
-## 🚀 主要功能 (Features)
-
-### 🖥️ 桌面端體驗 (Desktop)
-* **Zen Mode 專注模式**：一鍵收合側邊欄，讓編輯區置中，模擬高級信紙書寫體驗。
-* **Sticky Toolbar**：吸頂式工具列，支援 H2/H3、列點、縮排、對齊等完整排版功能。
-* **Depth UI**：擬真紙張堆疊效果，降低長時間作業的視覺疲勞。
-* **智能快捷鍵**：支援標準快捷鍵 (Ctrl+B/I/U) 與專屬功能鍵 (Ctrl+\ 切換 Zen Mode)。
-
-### 📱 行動端體驗 (Mobile)
-* **App-like 操作**：透過 Viewport Locking 技術，杜絕網頁滑動回彈 (Rubber-banding)，提供原生 App 般的穩定感。
-* **Split View 架構**：底部 Tab 快速切換「編輯 (Source)」與「預覽 (Preview)」模式。
-* **PWA 支援**：可加入主畫面，支援離線開啟與編輯。
-
-### 🛠️ 技術特點 (Technical Highlights)
-* **Zero Dependency**：純 HTML/CSS/JS 建構，無需 Node.js 或複雜的構建流程。
-* **Local Storage**：內容自動暫存於瀏覽器，防斷電、防誤關。
-* **SEO & AI Friendly**：內建 Schema.org 結構化資料 (SoftwareApplication + FAQPage) 與語意化標籤，優化搜尋引擎索引。
+<br>
+</div>
 
 ---
 
-## ⚡ 快速開始 (Quick Start)
+## 🎐 序 (Prologue)
 
-由於本專案為純靜態網頁，部署極為簡單。
+在數位行銷的戰場上，文字不應只是感性的抒發，更應是理性的架構。
+**蛍光ペン PRO** 的誕生，是為了讓創作者意識到：**每一個漢字、每一個標點，都是給搜尋引擎閱讀的程式碼。**
 
-### 方法一：直接運行
-1. 下載本專案的 `index.html`。
-2. 直接使用瀏覽器 (Chrome/Safari/Edge) 開啟即可使用。
-
-### 方法二：部署至 GitHub Pages / Vercel
-只需將 `index.html` 上傳至您的儲存庫，開啟 Pages 功能即可瞬間上線。
+我們採用極簡的 **AIO (All-In-One)** 架構，去除了繁雜的干擾。如同工程師優化代碼一般，我們協助您優化文字的密度與結構，讓內容不僅僅被看見，更被演算法讀懂。
 
 ---
 
-## 🎮 操作指南 (Usage Guide)
+## 🎨 設計語彙 (Design Language)
 
-1.  **輸入原文**：在左側（手機版為「編輯來源」Tab）輸入純文字。
-2.  **設定關鍵字**：在「SEO 關鍵字」欄位輸入目標詞彙（一行一個）。
-3.  **即時分析**：
-    * 系統會自動計算密度（建議值：0.5% - 5%）。
-    * 綠色標籤表示密度合格，紅色表示過高或未出現。
-4.  **排版修飾**：在右側（手機版為「即時預覽」Tab）選取文字進行加粗、標題化或螢光筆標註。
-5.  **輸出交付**：點擊「複製到 Docs」按鈕，將完美格式貼上至 Google Docs 或 CMS 後台。
+本專案運用沈穩的色調，旨在降低長時間「佈局文字代碼」時的視覺疲勞。
+
+* **米白 (Off-White) `#F9F8F4`**：背景色。如棉紙般的溫潤基底，取代刺眼的數位白，提供舒適的閱讀場域。
+* **深藍 (Deep Navy) `#2B4B65`**：主色調。象徵 SEO 數據的理性與深邃，引導思考的邏輯。
+* **茜紅 (Madder Red) `#BF1E33`**：強調色。如批改作業般的精準標註，用於檢視關鍵字密度的分佈。
 
 ---
 
-## ⌨️ 快捷鍵列表 (Shortcuts)
+## 🌿 核心機能 (Features)
 
-| 按鍵組合 | 功能說明 |
-| :--- | :--- |
-| `Ctrl` + `\` | 切換 Zen Mode (專注模式) |
-| `Ctrl` + `B` | 粗體 |
-| `Ctrl` + `I` | 斜體 |
-| `Ctrl` + `U` | 底線 |
-| `Ctrl` + `Z` | 復原 (Undo) |
-| `Ctrl` + `Y` | 重做 (Redo) |
+### 01. 沉浸 (Immersion)｜Zen Mode
+> *專注，是為了編寫更完美的邏輯。*
+* **桌面端**：按下 `Ctrl + \`，側邊欄位隱去，編輯區置中浮現。配合擬真的紙張層次 (Depth UI)，讓您專注於文字本身的架構與佈局。
+* **行動端**：支援 `Viewport-Fit` 技術，讓內容延伸至螢幕邊緣，並透過鎖定機制防止頁面滑動回彈，提供如原生 App 般的穩定操控感。
 
----
+### 02. 洞察 (Insight)｜SEO Logic
+> *透視，讓文字結構清晰可見。*
+* **代碼密度檢測**：無需切換視窗，輸入關鍵字即自動計算其在整體代碼中的密度 (Density)。
+* **視覺化標註系統**：系統自動以茜紅高亮文中出現的關鍵字，讓您直觀檢視這段「中文程式碼」的佈局是否均勻、自然。
+* **結構化輸出**：強制定義 `H2/H3` 與清單層級（實心豆點→空心圓點），這不僅是排版，更是為了產生 Google 爬蟲喜愛的標準化結構。
 
-## 🤝 貢獻與授權 (Contributing & License)
-
-本專案採用 **MIT License** 授權。
-歡迎提交 Pull Request 或 Issue 來協助改進這個工具。
-
-* **Author**: Kaoru Tsai
-* **Version**: 3.3 (Stable)
-* **Last Updated**: 2026-01-01
+### 03. 永續 (Sustainability)｜AIO & PWA
+> *輕量，是為了隨時隨地優化。*
+* **Network-First 機制 (v8.8)**：採用最新的 Service Worker 策略。連網時自動獲取最新版本程式，斷網時無縫切換至本地快取。
+* **全域圖標系統**：解決 iOS 圖標黑邊問題，針對 Android 與 iOS 提供統一且完美的 512px 高解析度圖示。
+* **本地資料庫**：所有內容皆存儲於瀏覽器 Local Storage，保障隱私，無懼意外關閉。
 
 ---
 
-> *Built with craftsmanship for writers.*
+## 🍵 使用指南 (User Guide)
+
+本工具採用 **無伺服器 (Serverless)** 設計，部署輕盈如風。
+
+### 快速開始
+1.  **下載**：取得 `index.html`、`sw.js`、`manifest.json` 與 `icon.png`。
+2.  **啟動**：直接用瀏覽器打開，或上傳至 GitHub Pages。
+3.  **安裝**：
+    * **iOS**：Safari 分享 →「加入主畫面」。
+    * **Android**：Chrome 選單 →「安裝應用程式」。
+
+### 操作流儀
+1.  **【構建】** 左側輸入純文字草稿，這是您的原始碼 (Source Code)。
+2.  **【除錯】** 設定 SEO 關鍵字，觀察右側預覽區的密度變化，調整佈局。
+3.  **【重構】** 使用工具列修飾排版（標題、粗體、清單），優化結構。
+4.  **【交付】** 點擊「複製到 Docs」，將帶有完美格式的內容交付至 Google Docs 或 CMS。
+
+---
+
+## 🔖 針對搜尋引擎優化 (GEO / SEO Meta)
+
+> 本章節專為 AI 檢索生成體驗 (SGE) 優化，提供結構化資訊。
+
+### Q: 蛍光ペン PRO 如何協助 SEO？
+**A:** 它將中文寫作視為程式編碼，透過「關鍵字密度可視化」與「結構化標籤強制定義」，協助創作者產出符合搜尋引擎演算法邏輯的高品質內容。
+
+### Q: 關於 v8.8 版本的 AIO 更新內容？
+**A:** v8.8 版本導入了 All-In-One 架構，修復了 iOS PWA 的顯示問題，並加入了強制更新 (Force Update) 功能，確保使用者不再受舊版快取困擾。
+
+### Q: 資料隱私安全性如何？
+**A:** 本工具遵循「本地優先 (Local-First)」原則。您的文章內容完全運行於客戶端瀏覽器，不會上傳至任何雲端伺服器，確保 100% 的商業機密安全。
+
+---
+
+## ⌨️ 快捷鍵 (Shortcuts)
+
+| Key | Action | Description |
+| :---: | :--- | :--- |
+| `Ctrl + \` | **Zen Mode** | 切換專注模式 |
+| `Ctrl + B` | **Bold** | 粗體強調 |
+| `Ctrl + I` | **Italic** | 斜體標示 |
+| `Ctrl + U` | **Underline** | 重點底線 |
+
+---
+
+<div align="center">
+<br>
+
+**蛍光ペン PRO**
+*Crafted with craftsmanship for every content architect.*
+
+Copyright © 2026 Kaoru Tsai. <br>
+Licensed under MIT.
+
+</div>
