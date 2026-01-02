@@ -2,6 +2,7 @@
   "name": "蛍光ペン PRO - SEO文案數位工具",
   "short_name": "蛍光ペン",
   "start_url": "./index.html",
+  "id": "/fluo-pen-pro/",
   "display": "standalone",
   "background_color": "#F9F8F4",
   "theme_color": "#F9F8F4",
@@ -9,12 +10,12 @@
   "orientation": "any",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "icon.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "icon-512.png",
+      "src": "icon.png",
       "sizes": "512x512",
       "type": "image/png"
     }
